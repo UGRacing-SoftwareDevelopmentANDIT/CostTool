@@ -1,0 +1,17 @@
+from django import forms
+from tool.models import UserAccount
+from django.contrib.auth.models import User
+
+#have to specify the password field is a PasswordInput so that the password appears hidden on the template
+class UserForm(forms.ModelForm):
+    password = forms.CharField(widget=forms.PasswordInput())
+    class Meta:
+        model = User
+        fields = ('username','email','password',)
+    
+#the user field is initialised in the views.py file, verified filed is just set to false
+class UserAccountForm(forms.ModelForm):
+    verified = forms.BooleanField(initial=False, widget=forms.HiddenInput(), required=False)
+    class Meta:
+        model = UserAccount
+        fields = ('verified',)

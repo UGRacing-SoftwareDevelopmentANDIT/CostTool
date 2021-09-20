@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+{% load staticfiles %}
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<html>
+  <!-- Header block -->
+  <head lang="en">
+    <link rel="stylesheet" type="text/css" href="{% static 'style.css' %}">
+    {% block css_block %}
+    {% endblock %}
+    <meta charset="UTF-8" />
+    <title>
+      UGRacing -
+      {% block title_block %}
+        Cost Tool
+      {% endblock %}
+  </title>
+  </head>
+
+
+  <!-- HTML Body -->
+  <body>
+
+    <!-- Home Banner & Login -->
+    <div id="banner">
+      {% block banner_block %}
+        <!-- Insert Logo Here, class=logo -->
+        <a href="/">
+        <div id="logo">
+          <h1>UGRacing</h1>
+        </div>
+      </a>
+      {% endblock %}
+    <div id="clear"></div>
+    </div>
+
+
+    <!-- Menu Bar -->
+    <div id="menu">
+      {% block menu_block %}
+        <ul>
+          <li><a href="{% url 'tool:home' %}">Home</a></li>
+        </ul>
+      {% endblock %}
+    </div>
+
+
+    <!-- Body/Content block -->
+    <div id="page_content">
+      {% block body_block %}
+        <!-- Leave blank for template override -->
+      {% endblock %}
+    </div>
+  </body>
+</html>

@@ -1,0 +1,85 @@
+/* General page adjustments such as font */
+html {
+  font-family: sans-serif;
+}
+
+
+/* Header, logo */
+#banner {
+  width: 100%;
+  margin: auto;
+}
+#logo {
+  float: left;
+  width: 75%;
+  height: 115px;
+  vertical-align: middle;
+  text-indent: 5%;
+  font-size: 25px;
+  color: white;
+  background-color: #ffc40a;
+}
+#userspace {
+  float: right;
+  width: 25%;
+  height: 85px;
+  padding-top: 30px;
+  text-align: center;
+  font-size: 25px;
+  font-weight: bold;
+  background-color: #f8de7e;
+}
+#clear {
+  clear: both;
+}
+
+a{
+  color: black;
+  text-decoration: none;
+}
+
+
+/* Menu Bar */
+#menu {
+  background: #050505;
+  font-size: 23px;
+  padding-top: 8px;
+  padding-bottom: 8px;
+}
+#menu ul{
+  display: flex;
+  justify-content: space-between;
+  margin: 0;
+  padding-left: 100px;
+  padding-right: 100px;
+}
+#menu li{
+  display: block;
+  list-style-type: none;
+}
+
+#menu a{
+  color: white;
+  text-decoration: none;
+}
+
+
+/* Actual page content formatting */
+#page_content {
+  margin-top: 2%;
+}
+
+
+/* Footer */
+#footer {
+  margin-top: 2%;
+  padding: 5px 5px 5px;
+  text-indent: 10px;
+  background-color: #f8de7e;
+}
+#footer a{
+  font-size: 17px;
+  color: black;
+  font-weight: bold;
+  text-decoration: none;
+}

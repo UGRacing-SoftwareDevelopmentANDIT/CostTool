@@ -14,6 +14,20 @@
     <h1>Sample Text Here</h1>
   </div>
 
+  <div>
+    <h2>Most Recent Cars</h2>
+      {% if cars %}
+      <ul>
+     {% for car in cars %}
+       <li>
+         <a href="{% url 'tool:car_display' car.carSlug %}">{{ car.carName }}{{car.carYear}}</a>
+       </li>
+      {% endfor %}
+      </ul>
+   {% else %}
+      <strong>There are no cars yet, or its broken?</strong>
+   {% endif %}
+    </div>
 
   <!--</div>-->
   <div id="clear"></div>

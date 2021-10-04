@@ -3,6 +3,9 @@ from django.template.defaultfilters import slugify
 from django.contrib.auth.models import User
 
 
+#we should consider how deletions should work, cascade or set to null could make quite a difference
+
+
 """
 UserAccount model has 2 fields:
 user which implements the django user interface and is pimary key and cascades on dellete
@@ -22,12 +25,14 @@ class UserAccount(models.Model):
 class Car(models.Model):
     #this will be auto created by conjoining name and year
     carID = models.CharField(max_length=8, unique=True, primary_key=True)
-    carName = models.CharField(max_length=4)
+    carName = models.CharField(max_length=10)
     # for simplicity using integerFeild, could implement validation here but given access
     # for higher level users leaving unvalidated
     carYear = models.IntegerField()
+    carSlug = models.SlugField(unique = True, default='car-')
 
     def save(self, *args, **kwargs):
+        self.carSlug += '-'.join((slugify(self.carName), slugify(self.carYear)))
         super(Car, self).save(*args, **kwargs)
         class Meta:
             def __str__(self):

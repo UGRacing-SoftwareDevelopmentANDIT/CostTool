@@ -1,0 +1,29 @@
+{% extends 'tool/base1.html' %}
+{% load staticfiles %}
+
+
+{% block css_block %}
+<link rel="stylesheet" type="text/css" href="{% static 'home.css' %}">
+{% endblock %}
+
+
+{% block title_block %}
+	{% if car %}
+		{{ car.carName }}{{ car.carYear }}
+	{% else %}
+		Unknown Car
+	{% endif %}
+{% endblock %}
+
+{% block body_block %}
+  <div id="content_h">
+    <h1>{{Car.carName }}{{ Car.carYear }}</h1>
+  </div>
+
+  <ul>
+    <li><a href = "{% url 'tool:home' %}"> Home Page </a> </li>
+  </ul>
+
+  <!--</div>-->
+  <div id="clear"></div>
+{% endblock %}

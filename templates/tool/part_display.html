@@ -1,0 +1,37 @@
+{% extends 'tool/base1.html' %}
+{% load staticfiles %}
+
+
+{% block css_block %}
+<link rel="stylesheet" type="text/css" href="{% static 'home.css' %}">
+{% endblock %}
+
+
+{% block body_block %}
+  <div id="content_h">
+    <h1>{{car.carName }}{{ car.carYear }}{{system.systemID}}{{system.systemName}}{{assembly.assemblyName}}{{part.partName}}</h1>
+  </div>
+
+  {% if pmfts %}
+  <ul>
+ {% for pmft in pmfts %}
+   <li>
+     <a href="{% url 'tool:pmft_display' car.carSlug system.systemSlug assembly.assemblySlug part.partSlug pmft.pmftSlug  %}">{{ pmft.partID }}  {{pmft.partName}}</a>
+   </li>
+  {% endfor %}
+  </ul>
+{% else %}
+  <strong>There are no pmfts yet</strong>
+{% endif %}
+
+
+
+
+
+  <ul>
+    <li><a href = "{% url 'tool:home' %}"> Home Page </a> </li>
+  </ul>
+
+  <!--</div>-->
+  <div id="clear"></div>
+{% endblock %}

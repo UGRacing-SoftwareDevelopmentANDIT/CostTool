@@ -10,7 +10,8 @@ class HackAdmin(admin.ModelAdmin):
 
 admin.site.register(UserAccount)
 admin.site.register(Car)
-admin.site.register(System)
-admin.site.register(PMFT)
 admin.site.register(Assembly)
+admin.site.register(System)
 admin.site.register(Part)
+admin.site.register(PMFT)
+

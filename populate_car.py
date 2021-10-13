@@ -25,7 +25,62 @@ def populate():
          ]
     Car = []
     for car in carinfo:
-        Car.append(add_car(car['carID'],car['carName'], car['carYear']))
+        c= add_car(car['carID'],car['carName'], car['carYear'])
+        Car.append(c)
+
+    systeminfo = [
+         {
+          'systemName': 'ELECTRICAL',   
+          'carID': 'Test2021',
+          'costed': True
+          }
+         ]
+    System = []
+    for system in systeminfo:
+        s=add_system(system['systemName'],c, system['costed'])
+        System.append(s)
+
+    assemblyinfo = [
+         {
+          'assemblyName': 'Test 1',   
+          'assemblyQuantity': 10
+          }
+         ]
+    Assembly = []
+    for assembly in assemblyinfo:
+        a=add_assembly(assembly['assemblyName'],s, assembly['assemblyQuantity'])
+        Assembly.append(a)
+
+    partinfo = [
+         {
+          'partName': 'Test part 12',
+          'makeBuy': True ,
+          'partCost': 120 ,
+          'partQuantity': 6,
+          'partCurrency': 'EUR',
+          'partComment': 'This is a comment'
+          }
+         ]
+    Part = []
+    for part in partinfo:
+        p=add_part(part['partName'],a, part['makeBuy'], part['partCost'], part['partQuantity'], part['partCurrency'], part['partComment'])
+        Part.append(p)
+
+    pmftinfo = [
+         {
+          'pmftName': 'test',
+          'pmftComment': 'this is a comment',
+          'pmftCost': 60,
+          'pmftCurrency': 'EUR',
+          'pmftCostComment': 'This is a cost commemt',
+          'pmftQuantity': 8,
+          'pmftType': 'M'
+          }
+         ]
+    PMFT = []
+    for pmft in pmftinfo:
+        pm=add_pmft(pmft['pmftName'],pmft['pmftComment'],pmft['pmftCost'],pmft['pmftCurrency'],pmft['pmftCostComment'],pmft['pmftQuantity'],p,pmft['pmftType'])
+        PMFT.append(pm)
 
 
 def AddUserAccount(userName, email, pword, verified):
@@ -49,29 +104,53 @@ def add_car(carID,carName,carYear):
 
     return c
 
-def add_system(systemName,Costed):
+def add_system(systemName,carID,costed):
 
-    pass
+    s = System.objects.get_or_create(systemName=systemName,carID=carID, costed=costed)[0]
+    s.systemName = systemName
+    s.carID = carID
+    s.costed = costed
+    s.save()
 
-    return 0
+    return s
 
-def add_assembly(assemblyName, assemblyQuantity):
+def add_assembly(assemblyName,systemID,assemblyQuantity):
 
-    pass
+    a = Assembly.objects.get_or_create(assemblyName=assemblyName,systemID=systemID, assemblyQuantity=assemblyQuantity)[0]
+    a.assemblyName = assemblyName
+    a.systemID = systemID
+    a.assemblyQuantity = assemblyQuantity
+    a.save()
 
-    return 0
+    return a
 
-def add_part(partName,makeBuy,partCost,partQuantity,partCurrency,partComment):
+def add_part(partName,assemblyID,makeBuy,partCost,partQuantity,partCurrency,partComment):
 
-    pass
+    p = Part.objects.get_or_create(partName=partName,assemblyID=assemblyID, makeBuy=makeBuy,partCost=partCost,partQuantity=partQuantity,partCurrency=partCurrency,partComment=partComment)[0]
+    p.partName = partName
+    p.assemblyID = assemblyID
+    p.makeBuy = makeBuy
+    p.partCost =partCost
+    p.partQuantity = partQuantity
+    p.partCurrency = partCurrency
+    p.partComment = partComment
+    p.save()
 
-    return 0
+    return p
 
-def add_pmft(pmftName,pmftComment,pmftCost,pmftCurrency,pmftCostComment,pmftQuantity,partType):
+def add_pmft(pmftName,pmftComment,pmftCost,pmftCurrency,pmftCostComment,pmftQuantity,partID,pmftType):
 
-    pass
+    pm = PMFT.objects.get_or_create(pmftName=pmftName,pmftComment=pmftComment, pmftCost=pmftCost,pmftCurrency=pmftCurrency,pmftCostComment=pmftCostComment,pmftQuantity=pmftQuantity,partID=partID,pmftType=pmftType)[0]
+    pm.pmftName = pmftName
+    pm.pmftComment = pmftComment
+    pm.pmftCost = pmftCost
+    pm.pmftCurrency =pmftCurrency
+    pm.pmftCostComment = pmftCostComment
+    pm.partID = partID
+    pm.pmftType = pmftType
+    pm.save()
 
-    return 0
+    return pm
 
 
 

@@ -1,5 +1,5 @@
 from django.db import models
-from django.template.defaultfilters import slugify
+from django.template.defaultfilters import join, slugify
 from django.contrib.auth.models import User
 
 
@@ -32,7 +32,7 @@ class Car(models.Model):
     carSlug = models.SlugField(unique = True, default='car-')
 
     def save(self, *args, **kwargs):
-        self.carSlug += '-'.join((slugify(self.carName), slugify(self.carYear)))
+        self.carSlug = '-'.join((slugify(self.carName), slugify(self.carYear)))
         super(Car, self).save(*args, **kwargs)
         class Meta:
             def __str__(self):
@@ -40,12 +40,13 @@ class Car(models.Model):
 
 class System(models.Model):
     systemID = models.AutoField(primary_key=True)
-    systemName = models.CharField(unique=True, max_length=15)
-    CarID = models.ForeignKey(Car, on_delete=models.SET_NULL, null = True)
-    Costed = models.BooleanField(default=False)
-    
+    systemName = models.CharField(max_length=15)
+    carID = models.ForeignKey(Car, on_delete=models.SET_NULL, null = True)
+    costed = models.BooleanField(default=False)
+    systemSlug = models.SlugField(unique=True, default="system-")
     def save(self, *args, **kwargs):
-        super(Car, self).save(*args, **kwargs)
+        self.systemSlug = (slugify(self.systemName))
+        super(System, self).save(*args, **kwargs)
         class Meta:
             def __str__(self):
                 return self.slug
@@ -55,9 +56,11 @@ class Assembly(models.Model):
     assemblyName = models.CharField(unique=True, max_length=15)
     systemID = models.ForeignKey(System, on_delete=models.SET_NULL, null = True)
     assemblyQuantity = models.IntegerField()
+    assemblySlug = models.SlugField(unique=True, default="assembly-")
     
     def save(self, *args, **kwargs):
-        super(Car, self).save(*args, **kwargs)
+        self.assemblySlug = '-'.join((slugify(self.assemblyID), slugify(self.assemblyName)))
+        super(Assembly, self).save(*args, **kwargs)
         class Meta:
             def __str__(self):
                 return self.slug
@@ -71,9 +74,11 @@ class Part(models.Model):
     partQuantity = models.IntegerField(default=1)
     partCurrency = models.CharField(max_length=3, null = True)
     partComment = models.CharField(max_length=50, null = True)
+    partSlug = models.SlugField(unique=True, default='part-')
 
     def save(self, *args, **kwargs):
-        super(Car, self).save(*args, **kwargs)
+        self.partSlug = '-'.join((slugify(self.partID),slugify(self.partName)))
+        super(Part, self).save(*args, **kwargs)
         class Meta:
             def __str__(self):
                 return self.slug
@@ -86,10 +91,12 @@ class PMFT(models.Model):
     pmftCostComment =  models.CharField(max_length=50,  null=True)
     pmftQuantity = models.IntegerField(default=1)
     partID = models.ForeignKey(Part, on_delete=models.SET_NULL, null = True)
-    partType = models.CharField(max_length=1)
+    pmftType = models.CharField(max_length=1)
+    pmftSlug = models.SlugField(unique=True, default='pmft-')
 
     def save(self, *args, **kwargs):
-        super(Car, self).save(*args, **kwargs)
+        self.pmftSlug = '-'.join((slugify(self.pmftID),slugify(self.pmftName)))
+        super(PMFT, self).save(*args, **kwargs)
         class Meta:
             def __str__(self):
                 return self.slug

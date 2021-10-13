@@ -6,23 +6,27 @@
 <link rel="stylesheet" type="text/css" href="{% static 'home.css' %}">
 {% endblock %}
 
+
 {% block body_block %}
   <div id="content_h">
-    <h1>{{car.carName }}{{ car.carYear }}</h1>
+    <h1>{{car.carName }}{{ car.carYear }}{{system.systemID}}{{system.systemName}}{{assembly.assemblyName}}{{part.partName}}</h1>
   </div>
 
-
-  {% if systems %}
+  {% if pmfts %}
   <ul>
- {% for system in systems %}
+ {% for pmft in pmfts %}
    <li>
-     <a href="{% url 'tool:system_display' car.carSlug system.systemSlug %}">{{ system.systemID }}  {{system.systemName}}</a>
+     <a href="{% url 'tool:pmft_display' car.carSlug system.systemSlug assembly.assemblySlug part.partSlug pmft.pmftSlug  %}">{{ pmft.partID }}  {{pmft.partName}}</a>
    </li>
   {% endfor %}
   </ul>
 {% else %}
-  <strong>There are no systems yet</strong>
+  <strong>There are no pmfts yet</strong>
 {% endif %}
+
+
+
+
 
   <ul>
     <li><a href = "{% url 'tool:home' %}"> Home Page </a> </li>

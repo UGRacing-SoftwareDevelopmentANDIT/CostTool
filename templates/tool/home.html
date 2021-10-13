@@ -1,5 +1,5 @@
-{% extends 'tool/base1.html' %}
-{% load staticfiles %}
+{% extends 'tool/base.html' %}
+{% load static %}
 
 {% block css_block %}
 <link rel="stylesheet" type="text/css" href="{% static 'home.css' %}">
@@ -10,25 +10,54 @@
 {% endblock %}
 
 {% block body_block %}
-  <div id="content_h">
-    <h1>Sample Text Here</h1>
+  <div class="container-fluid">
+    <h3>Cars</h3>
+    <hr>
+    {% if cars %}
+      <ul>
+        {% for car in cars %}
+          <li>
+            <a href="{% url 'tool:car_display' car.carSlug %}">{{ car.carName }}{{car.carYear}}</a>
+          </li>
+        {% endfor %}
+      </ul>
+    {% else %}
+      <div class="card car-card bg-ugr-primary mb-3">
+        <div class="card-body">
+          <h5 class="card-title">UGR22-IC</h5>
+          <p class="card-text">Put a description about the car here, blah blah blah, lorem ipsum etc.</p>
+        </div>
+      </div>
+      <div class="card car-card bg-ugr-electric mb-3">
+        <div class="card-body">
+          <h5 class="card-title">UGR22-EV</h5>
+          <p class="card-text">Put a description about the car here, blah blah blah, lorem ipsum etc.</p>
+        </div>
+      </div>
+      <div class="card car-card bg-ugr-concept mb-3">
+        <div class="card-body">
+          <h5 class="card-title">UGR22-X</h5>
+          <p class="card-text">Put a description about the car here, blah blah blah, lorem ipsum etc.</p>
+        </div>
+      </div>
+    {% endif %}
   </div>
 
-  <div>
-    <h2>Most Recent Cars</h2>
-      {% if cars %}
+  <div class="container-fluid">
+    <h3>Archive Cars</h3>
+    <hr>
+    {% if cars %}
       <ul>
-     {% for car in cars %}
-       <li>
-         <a href="{% url 'tool:car_display' car.carSlug %}">{{ car.carName }}{{car.carYear}}</a>
-       </li>
-      {% endfor %}
+        {% for car in cars %}
+          <li>
+            <a href="{% url 'tool:car_display' car.carSlug %}">{{ car.carName }}{{car.carYear}}</a>
+          </li>
+        {% endfor %}
       </ul>
-   {% else %}
+    {% else %}
       <strong>There are no cars yet, or its broken?</strong>
-   {% endif %}
-    </div>
+    {% endif %}
+  </div>
 
-  <!--</div>-->
   <div id="clear"></div>
 {% endblock %}

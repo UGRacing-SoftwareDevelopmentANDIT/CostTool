@@ -1,24 +1,25 @@
 /* General page adjustments such as font */
 html {
-  font-family: sans-serif;
+  font-family: "Open Sans", sans-serif !important;
 }
 
+body {
+  margin: 0;
+}
+
+.bg-ugr-primary {
+  background-color: #ffcc00;
+}
+
+.bg-ugr-electric {
+  background-color: #009AD7;
+}
+
+.bg-ugr-concept {
+  background-color: #90538F;
+}
 
 /* Header, logo */
-#banner {
-  width: 100%;
-  margin: auto;
-}
-#logo {
-  float: left;
-  width: 75%;
-  height: 115px;
-  vertical-align: middle;
-  text-indent: 5%;
-  font-size: 25px;
-  color: white;
-  background-color: #ffc40a;
-}
 #userspace {
   float: right;
   width: 25%;
@@ -28,9 +29,6 @@ html {
   font-size: 25px;
   font-weight: bold;
   background-color: #f8de7e;
-}
-#clear {
-  clear: both;
 }
 
 a{

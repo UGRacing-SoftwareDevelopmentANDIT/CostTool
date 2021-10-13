@@ -5,14 +5,12 @@
   padding: 1px 0px 1px;
 }
 
-.hack_carousel {
-  position: relative;
+.car-card {
+  height: 25vh;
 }
 
-img{
-  display: inline-block;
-  width: 32.8%;
-  opacity: 0.6;
+.hack_carousel {
+  position: relative;
 }
 
 .hack_carousel a{

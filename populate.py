@@ -7,7 +7,7 @@ import django
 
 django.setup()
 from django.core.files import File
-from tool.models import UserAccount
+from tool.models import *
 from datetime import datetime
 from pytz import utc
 from django.contrib.auth.models import User
@@ -179,14 +179,6 @@ def add_pmft(pmftName,pmftComment,pmftCost,pmftCurrency,pmftCostComment,pmftQuan
     return pm
 
 
-
-
-if __name__ == '__main__':
-    print('Starting population script...')
-    populate()
-
-
-
 def AddUserAccount(userName, email, pword, verified):
     user=User.objects.create_user(userName, email=email, password=pword)
     user.is_superuser=True
@@ -202,3 +194,4 @@ def AddUserAccount(userName, email, pword, verified):
 if __name__ == '__main__':
     print('Starting population script...')
     populate()
+    print('Completed population script, exiting...')

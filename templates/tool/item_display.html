@@ -1,0 +1,27 @@
+{% extends 'tool/base.html' %}
+{% load static %}
+
+
+{% block css_block %}
+<link rel="stylesheet" type="text/css" href="{% static 'home.css' %}">
+{% endblock %}
+
+
+{% block body_block %}
+  <div id="content_h">
+    <h1>{{car.carName }}{{ car.carYear }}{{item.itemID}}{{item.itemName}}</h1>
+  </div>
+
+  <h2>{{message}}</h2>
+
+
+
+
+
+  <ul>
+    <li><a href = "{% url 'tool:home' %}"> Home Page </a> </li>
+  </ul>
+
+  <!--</div>-->
+  <div id="clear"></div>
+{% endblock %}

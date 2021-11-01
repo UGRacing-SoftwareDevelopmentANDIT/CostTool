@@ -24,6 +24,18 @@
   <strong>There are no systems yet</strong>
 {% endif %}
 
+  {% if items %}
+  <ul>
+    {% for item in items %}
+      <li>
+        <a href="{% url 'tool:item_display' car.carSlug item.itemSlug %}">{{ item.itemName }}  {{item.number}}</a>
+      </li>
+     {% endfor %}
+     </ul>
+   {% else %}
+     <strong>There are no items yet</strong>
+   {% endif %}
+   
   <ul>
     <li><a href = "{% url 'tool:home' %}"> Home Page </a> </li>
   </ul>

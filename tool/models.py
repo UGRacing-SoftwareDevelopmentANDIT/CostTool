@@ -30,7 +30,6 @@ class Car(models.Model):
     # for higher level users leaving unvalidated
     carYear = models.IntegerField()
     carSlug = models.SlugField(unique = True, default='car-')
-    carDetails = models.CharField(max_length=10, null = True)
 
     def save(self, *args, **kwargs):
         self.carSlug = '-'.join((slugify(self.carName), slugify(self.carYear)))
@@ -38,6 +37,9 @@ class Car(models.Model):
         class Meta:
             def __str__(self):
                 return self.slug
+
+
+
 
 class System(models.Model):
     systemID = models.AutoField(primary_key=True)
@@ -52,6 +54,18 @@ class System(models.Model):
             def __str__(self):
                 return self.slug
 
+class Item(models.Model):
+    itemID = models.AutoField(primary_key=True)
+    itemName = models.CharField(max_length=15)
+    carID = models.ForeignKey(Car, on_delete=models.SET_NULL, null = True)
+    number = models.IntegerField(default=10)
+    itemSlug = models.SlugField(unique=True, default="item-")
+    def save(self, *args, **kwargs):
+        self.itemSlug = (slugify(self.itemName))
+        super(Item, self).save(*args, **kwargs)
+        class Meta:
+            def __str__(self):
+                return self.slug
 class Assembly(models.Model):
     assemblyID = models.AutoField(primary_key=True)
     assemblyName = models.CharField(unique=True, max_length=15)

@@ -36,10 +36,10 @@ def car_display(request, car_slug):
 	try:
 		car = Car.objects.get(carSlug = car_slug)
 		systems = System.objects.filter(carID = car)
-
+		items = Item.objects.filter(carID = car)
 		context_dict['car'] = car
 		context_dict['systems'] = systems
-
+		context_dict['items'] = items
 	except Car.DoesNotExist:
 		context_dict['car'] = None			
 			
@@ -60,6 +60,20 @@ def system_display(request, system_slug, car_slug):
 		context_dict['System'] = None			
 			
 	return render(request, 'tool/system_display.html', context = context_dict)	
+
+def item_display(request, item_slug, car_slug):
+	context_dict ={}
+	try:
+		item = Item.objects.get(itemSlug = item_slug)
+		car = Car.objects.get(carSlug = car_slug)
+		message = "Yo, Jolie"
+		context_dict['item'] = item
+		context_dict['car'] = car
+		context_dict['message'] = message
+	except Item.DoesNotExist:
+		context_dict['Item'] = None			
+			
+	return render(request, 'tool/item_display.html', context = context_dict)	
 
 def assembly_display(request, assembly_slug, system_slug, car_slug):
 	context_dict ={}

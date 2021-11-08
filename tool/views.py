@@ -110,31 +110,33 @@ def part_display(request, part_slug, assembly_slug, system_slug, car_slug):
 
 
 def pmft_display(request, pmft_slug, part_slug, assembly_slug, system_slug, car_slug):
-    context_dict = {}
-    try:
-        pmft = PMFT.objects.get(pmftSlug=pmft_slug)
-        part = Part.objects.get(partSlug=part_slug)
-        assembly = Assembly.objects.get(assemblySlug=assembly_slug)
-        system = System.objects.get(systemSlug=system_slug)
-        car = Car.objects.get(carSlug=car_slug)
+	context_dict ={}
+	try:
+		pmft = PMFT.objects.get(pmftSlug = pmft_slug)
+		part = Part.objects.get(partSlug = part_slug)
+		assembly = Assembly.objects.get(assemblySlug = assembly_slug)
+		system = System.objects.get(systemSlug = system_slug)
+		car = Car.objects.get(carSlug = car_slug)
+		
+		
+		pmfts = PMFT.objects.filter(partID = part)
 
-        pmfts = PMFT.objects.filter(partID=part)
+		context_dict['pmft'] = pmft
+		context_dict['part'] = part
+		context_dict['system'] = system
+		context_dict['car'] = car
+		context_dict['assembly'] = assembly
 
-        context_dict['pmft'] = pmft
-        context_dict['part'] = part
-        context_dict['system'] = system
-        context_dict['car'] = car
-        context_dict['assembly'] = assembly
-
-    except System.DoesNotExist:
-        context_dict['System'] = None
-
-    return render(request, 'tool/pmft_display.html', context=context_dict)
-
-    ########################################## Forums ###############################################
+	except System.DoesNotExist:
+		context_dict['System'] = None			
+			
+	return render(request, 'tool/pmft_display.html', context = context_dict)	
 
 
-def create_car(request):
+    ########################################## Forms ###############################################
+
+
+def add_car(request):
     # If the request is a HTTP POST, try to pull out the relevant information.
     form = AddCarForm()
     # user verification stuff for later (not an outer if(verifed)) else print (form.errors) and  return HttpResponse("This page is exclusively for cost heads")
@@ -158,3 +160,4 @@ def create_car(request):
             print(form.errors)
 
     return render(request, 'tool/add_car.html', {'form': form})
+

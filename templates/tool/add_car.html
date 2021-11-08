@@ -1,0 +1,38 @@
+{% extends 'tool/base.html' %}
+{% load static %}
+
+{% block css_block %}
+
+<link rel="stylesheet" type="text/css" href="{% static 'home.css' %}">
+
+{% endblock %}
+
+{% block body_block %}
+  <div id="content_h">
+    <h1>Add Car</h1>
+  </div>
+  {% if car %}
+  <ul>
+
+    {% for car in cars %}
+   <li>
+     <a href="{% url 'tool:add_car' car.carSlug car.carSlug %}">{{ car.carID }}  {{car.carName}}</a>
+   </li>
+  {% endfor %}
+  </ul>
+{% else %}
+  <strong>This not a valid entry.</strong>
+{% endif %}
+
+<form action="/add_car/" method="post">
+    {% csrf_token %}
+    {{ form }}
+  <input type="submit" value="Submit">
+</form>
+
+  <ul>
+    <li><a href = "{% url 'tool:home' %}"> Home Page </a> </li>
+  </ul>
+  <!--</div>-->
+  <div id="clear"></div>
+{% endblock %}

@@ -1,5 +1,5 @@
 from django import forms
-from tool.models import UserAccount
+from tool.models import *
 from django.contrib.auth.models import User
 
 #have to specify the password field is a PasswordInput so that the password appears hidden on the template
@@ -15,3 +15,11 @@ class UserAccountForm(forms.ModelForm):
     class Meta:
         model = UserAccount
         fields = ('verified',)
+
+class AddCarForm(forms.ModelForm):
+    carName = forms.CharField(max_length=20, help_text="Please enter the car name.")
+    carYear = forms.CharField(max_length=55, help_text="Please enter the cars year.")
+    carSlug = forms.CharField(widget=forms.HiddenInput(), required=False)
+    class Meta:
+        model = Car
+        fields = ('carName', 'carYear', 'carSlug')        

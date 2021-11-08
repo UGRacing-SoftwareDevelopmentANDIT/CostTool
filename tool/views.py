@@ -127,4 +127,3 @@ def pmft_display(request, pmft_slug, part_slug, assembly_slug, system_slug, car_
 		context_dict['System'] = None			
 			
 	return render(request, 'tool/pmft_display.html', context = context_dict)	
-	

@@ -7,32 +7,49 @@
 
 {% endblock %}
 
+
 {% block body_block %}
-  <div id="content_h">
-    <h1>Add Car</h1>
-  </div>
-  {% if car %}
-  <ul>
+      <div id=sign_in_box>
+      <h1>Create a new car </h1>
 
-    {% for car in cars %}
-   <li>
-     <a href="{% url 'tool:add_car' car.carSlug car.carSlug %}">{{ car.carID }}  {{car.carName}}</a>
-   </li>
-  {% endfor %}
-  </ul>
-{% else %}
-  <strong>This not a valid entry.</strong>
-{% endif %}
+	{% if form.errors %}
+			{% for field in form %}
+				{% for error in field.errors %}
+					<div class="ERROR"
+						<strong>{{ error|escape }}</strong>
+					</div>
+				{% endfor %}
+			{% endfor %}
+			{% for error in form.non_field_errors %}
+				<div class="ERROR">
+					<strong>{{ error|escape }}</strong>
+				</div>
+			{% endfor %}
+		{% endif %}
 
-<form action="/add_car/" method="post">
-    {% csrf_token %}
-    {{ form }}
-  <input type="submit" value="Submit">
-</form>
+      <form id="create_hack_form" method="post" enctype="multipart/form-data"action="{% url 'tool:add_car'%}">
+          {% csrf_token %}
 
-  <ul>
-    <li><a href = "{% url 'tool:home' %}"> Home Page </a> </li>
-  </ul>
-  <!--</div>-->
-  <div id="clear"></div>
+          <label for="carID"><b>Car ID: </b></label>
+          <input type="text" name="carID" value="" size="50"/>
+
+          <br />
+          <br />
+
+          <label for="carName"><b>Car Name: </b></label>
+          <input type="text" name="carName" value="" size="50"/>
+
+          <br />
+          <br />
+
+          <label for="carYear"><b>Car Year: </b></label>
+          <input type="int" name="carYear" value="" size="50"/>
+
+          <br />
+          <br />
+
+          <input type="submit" value="Submit" />
+
+      </form>
+      </div>
 {% endblock %}

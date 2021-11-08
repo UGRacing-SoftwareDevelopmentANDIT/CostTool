@@ -16,7 +16,6 @@ from tool.forms import *
 
 
 def home(request):
-    # for top 3 of week - returns list of length 3 in order
     context_dict = {}
 
     car_list = Car.objects.order_by('carYear')[:5]

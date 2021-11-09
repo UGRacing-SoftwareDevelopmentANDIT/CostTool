@@ -23,3 +23,13 @@ class AddCarForm(forms.ModelForm):
     class Meta:
         model = Car
         fields = ('carName', 'carYear', 'carSlug')        
+
+class AddAssemblyForm(forms.ModelForm):
+    assemblyID = forms.CharField(max_length=20, help_text="Please enter the assembly ID.")
+    assemblyName = forms.CharField(max_length=20, help_text="Please enter the assembly name.")
+    systemID = forms.CharField(max_length=20, help_text="Please enter the system ID.")
+    assemblyQuantity = forms.IntegerField(help_text="Please enter quantity of assembly.")
+    assemblySlug = forms.CharField(widget=forms.HiddenInput(), required=False)
+    class Meta:
+        model = Assembly
+        fields = ('assemblyID', 'assemblyName', 'systemID', 'assemblyQuantity', 'assemblySlug')  

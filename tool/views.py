@@ -161,3 +161,17 @@ def add_car(request):
 
     return render(request, 'tool/add_car.html', {'form': form})
 
+def add_car(request):
+    form = AddAssemblyForm()
+
+    if request.method == 'POST':
+        form = AddAssemblyForm(request.POST)
+        if form.is_valid():
+            newAssembly = form.save(commit=False)
+            newAssembly.save()
+            return redirect(reverse('tool:home'))
+        else:
+            print(form.errors)
+
+    return render(request, 'tool/add_assembly.html', {'form': form})
+

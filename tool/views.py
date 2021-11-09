@@ -161,3 +161,15 @@ def add_car(request):
 
     return render(request, 'tool/add_car.html', {'form': form})
 
+def add_system(request):
+	form = AddSystemForm()
+	
+	if request.method == 'POST':
+		form = AddSystemForm(request.POST)
+		if form.is_valid():
+			newSystem = form.save(commit=False)
+			newSystem.save()
+			return redirect(reverse('tool:home'))
+		else:
+			print(form.errors)
+	return render(request, 'tool/add_system.html', {'form': form})

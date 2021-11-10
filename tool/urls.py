@@ -4,6 +4,8 @@ app_name = 'tool'
 urlpatterns = [
     
 path('', views.home, name='home'), 
+path('car/addCar', views.add_car, name = 'add_car'),
+path('car/addSystem', views.add_system, name = 'add_system'),
 path('car/<slug:car_slug>', views.car_display, name = 'car_display'),
 path('car/<slug:car_slug>/<slug:system_slug>', views.system_display, name = 'system_display'),
 path('car/<slug:car_slug>/<slug:system_slug>/<slug:assembly_slug>', views.assembly_display, name = 'assembly_display'),

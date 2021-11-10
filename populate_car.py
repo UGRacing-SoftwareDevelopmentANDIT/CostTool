@@ -90,10 +90,12 @@ def populate():
                             except:
                                 pass
                     except Exception as e: 
+                        print(assemblyName)
                         print(e)
                         #print('Error',assemblyName)
                         #pass
             except Exception as e: 
+                    print(systemName)
                     print(e)
 
 def AddUserAccount(userName, email, pword, verified):

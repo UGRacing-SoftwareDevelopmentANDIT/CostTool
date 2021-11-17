@@ -1,4 +1,5 @@
 from django import forms
+from django.db.models.expressions import Value
 from tool.models import *
 from django.contrib.auth.models import User
 
@@ -19,17 +20,15 @@ class UserAccountForm(forms.ModelForm):
 class AddCarForm(forms.ModelForm):
     carName = forms.CharField(max_length=20, help_text="Please enter the car name.")
     carYear = forms.CharField(max_length=55, help_text="Please enter the cars year.")
-    carSlug = forms.CharField(widget=forms.HiddenInput(), required=False)
+    carSlug = forms.IntegerField(widget=forms.HiddenInput(), required=False)
     class Meta:
         model = Car
-        fields = ('carName', 'carYear', 'carSlug')        
+        fields = ('carName', 'carYear', 'carSlug')
 
 class AddAssemblyForm(forms.ModelForm):
-    assemblyID = forms.CharField(max_length=20, help_text="Please enter the assembly ID.")
-    assemblyName = forms.CharField(max_length=20, help_text="Please enter the assembly name.")
-    systemID = forms.CharField(max_length=20, help_text="Please enter the system ID.")
-    assemblyQuantity = forms.IntegerField(help_text="Please enter quantity of assembly.")
-    assemblySlug = forms.CharField(widget=forms.HiddenInput(), required=False)
+    assemblyName = forms.CharField(max_length=15)
+    assemblyQuantity = forms.IntegerField()
+    
     class Meta:
         model = Assembly
-        fields = ('assemblyID', 'assemblyName', 'systemID', 'assemblyQuantity', 'assemblySlug')  
+        fields = ['assemblyName', 'assemblyQuantity',]

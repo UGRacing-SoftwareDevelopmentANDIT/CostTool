@@ -161,17 +161,28 @@ def add_car(request):
 
     return render(request, 'tool/add_car.html', {'form': form})
 
-def add_assembly(request):
-    form = AddAssemblyForm()
+def add_assembly(request, car_slug, system_slug):
+    context_dict = {}
+    try:
+        system = System.objects.get(systemSlug=system_slug)
 
+        context_dict['system'] = system
+        context_dict['car_slug'] = car_slug
+        context_dict['system_slug'] = system_slug
+
+    except System.DoesNotExist:
+        context_dict['system'] = None
+
+    form = AddAssemblyForm()
     if request.method == 'POST':
         form = AddAssemblyForm(request.POST)
         if form.is_valid():
             newAssembly = form.save(commit=False)
+            newAssembly.systemID = System.objects.get(systemSlug=system_slug)
             newAssembly.save()
-            return redirect(reverse('tool:home'))
+            return redirect(reverse('tool:system_display', args=[car_slug, system_slug]))
         else:
             print(form.errors)
+    context_dict["form"] = form
 
-    return render(request, 'tool/add_assembly.html', {'form': form})
-
+    return render(request, 'tool/add_assembly.html', context_dict)

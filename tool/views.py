@@ -161,7 +161,7 @@ def add_car(request):
 
     return render(request, 'tool/add_car.html', {'form': form})
 
-def add_car(request):
+def add_assembly(request):
     form = AddAssemblyForm()
 
     if request.method == 'POST':

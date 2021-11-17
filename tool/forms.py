@@ -22,4 +22,13 @@ class AddCarForm(forms.ModelForm):
     carSlug = forms.CharField(widget=forms.HiddenInput(), required=False)
     class Meta:
         model = Car
-        fields = ('carName', 'carYear', 'carSlug')        
+        fields = ('carName', 'carYear', 'carSlug')   
+
+
+class AddSystemForm(forms.ModelForm):
+    systemName = forms.CharField(max_length=20, help_text="Please enter the system name.")
+    costed = forms.BooleanField(help_text="Please check if the system is costed.", required=False)
+    systemSlug = forms.CharField(widget=forms.HiddenInput(), required=False)
+    class Meta:
+        model = System
+        fields = ('systemName', 'costed', 'systemSlug')  

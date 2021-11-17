@@ -161,3 +161,16 @@ def add_car(request):
 
     return render(request, 'tool/add_car.html', {'form': form})
 
+def add_part(request):
+    form = AddPartForm()
+    if request.method == 'POST':
+        form = AddPartForm(request.POST)
+        if form.is_valid():
+            newPart = form.save(commit=False)
+            # save details
+            newPart.save()
+            return redirect(reverse('tool:home'))
+        else:
+            print(form.errors)
+
+    return render(request, 'tool/add_part.html', {'form': form})

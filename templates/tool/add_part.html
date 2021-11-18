@@ -1,0 +1,73 @@
+{% extends 'tool/base.html' %}
+{% load static %}
+
+{% block css_block %}
+
+<link rel="stylesheet" type="text/css" href="{% static 'home.css' %}">
+
+{% endblock %}
+
+
+{% block body_block %}
+      <div id=sign_in_box>
+      <h1>Create a new part</h1>
+
+	{% if form.errors %}
+			{% for field in form %}
+				{% for error in field.errors %}
+					<div class="ERROR"
+						<strong>{{ error|escape }}</strong>
+					</div>
+				{% endfor %}
+			{% endfor %}
+			{% for error in form.non_field_errors %}
+				<div class="ERROR">
+					<strong>{{ error|escape }}</strong>
+				</div>
+			{% endfor %}
+		{% endif %}
+
+      <form id="create_hack_form" method="post" enctype="multipart/form-data"action="{% url 'tool:add_part' context.carSlug context.systemSlug context.assembly.assemblySlug%}">
+          {% csrf_token %}
+
+          <label for="partName"><b>Part Name: </b></label>
+          <input type="text" name="partName" value="" size="50"/>
+
+          <br />
+          <br />
+
+          <input type="checkbox" id="makeBuy" name="makeBuy">
+          <label for="makeBuy">makeBuy</label>
+
+          <br />
+          <br />
+
+          <label for="partCost"><b>Part Cost: </b></label>
+          <input type="float" name="partCost" value="" size="50"/>
+
+          <br />
+          <br />
+
+          <label for="partQuantity"><b>Quantity: </b></label>
+          <input type="int" name="partQuantity" value="" size="50"/>
+
+          <br />
+          <br />
+
+          <label for="partCurrency"><b> Currency: </b></label>
+          <input type="text" name="partCurrency" value="" size="3"/>
+
+          <br />
+          <br />
+
+          <label for="partComment"><b>Comment: </b></label>
+          <input type="text" name="partComment" value="" size="50"/>
+
+          <br />
+          <br />
+          
+          <input type="submit" value="Submit" />
+
+      </form>
+      </div>
+{% endblock %}

@@ -161,16 +161,29 @@ def add_car(request):
 
     return render(request, 'tool/add_car.html', {'form': form})
 
-def add_part(request):
+def add_part(request, car_slug, system_slug, assembly_slug):
+    context_dict = {}
+    
+    assembly = Assembly.objects.get(assemblySlug= assembly_slug)
+    context_dict['assembly'] = assembly
+
+    context_dict['carSlug'] = car_slug
+    context_dict['systemSlug'] = system_slug
+
+
     form = AddPartForm()
     if request.method == 'POST':
         form = AddPartForm(request.POST)
         if form.is_valid():
             newPart = form.save(commit=False)
+
+            newPart = form.save(commit=False)
+            newPart.assemblyID = Assembly.objects.get(assemblySlug=assembly_slug)
+
             # save details
             newPart.save()
             return redirect(reverse('tool:home'))
         else:
             print(form.errors)
 
-    return render(request, 'tool/add_part.html', {'form': form})
+    return render(request, 'tool/add_part.html', {'form': form, 'context': context_dict})

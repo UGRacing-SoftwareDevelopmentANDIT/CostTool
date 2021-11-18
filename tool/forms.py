@@ -22,4 +22,18 @@ class AddCarForm(forms.ModelForm):
     carSlug = forms.CharField(widget=forms.HiddenInput(), required=False)
     class Meta:
         model = Car
-        fields = ('carName', 'carYear', 'carSlug')        
+        fields = ('carName', 'carYear', 'carSlug')
+
+
+class AddPartForm(forms.ModelForm):
+    partName = forms.CharField(max_length=15)
+    makeBuy = forms.BooleanField()
+    partCost = forms.FloatField(required=False)
+    partQuantity = forms.IntegerField()
+    partCurrency = forms.CharField(max_length=3, required=False)
+    partComment = forms.CharField(max_length=50, required=False)
+    partSlug = forms.SlugField(widget=forms.HiddenInput(), required=False)
+
+    class Meta:
+        model = Part
+        fields = ('partName', 'makeBuy', 'partCost', 'partQuantity', 'partCurrency', 'partComment', 'partSlug')

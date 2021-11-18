@@ -11,6 +11,8 @@ path('car/<slug:car_slug>/addSystem', views.add_system, name = 'add_system'),
 path('car/<slug:car_slug>/<slug:system_slug>', views.system_display, name = 'system_display'),
 path('car/<slug:car_slug>/<slug:system_slug>/add-assembly', views.add_assembly, name="add_assembly"),
 path('car/<slug:car_slug>/<slug:system_slug>/<slug:assembly_slug>', views.assembly_display, name = 'assembly_display'),
+
+path('car/<slug:car_slug>/<slug:system_slug>/<slug:assembly_slug>/addPart', views.add_part, name = 'add_part'),
 path('car/<slug:car_slug>/<slug:system_slug>/<slug:assembly_slug>/<slug:part_slug>', views.part_display, name = 'part_display'),
 path('car/<slug:car_slug>/<slug:system_slug>/<slug:assembly_slug>/<slug:part_slug>/<slug:pmft_slug>', views.pmft_display, name = 'pmft_display'),
 ]

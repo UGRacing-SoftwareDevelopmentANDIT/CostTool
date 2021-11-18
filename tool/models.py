@@ -40,7 +40,6 @@ class Car(models.Model):
                 return self.slug
 
 
-
 class System(models.Model):
     systemID = models.AutoField(primary_key=True)
     systemName = models.CharField(max_length=15)
@@ -53,6 +52,7 @@ class System(models.Model):
         class Meta:
             def __str__(self):
                 return self.slug
+
 
 class Assembly(models.Model):
     assemblyID = models.AutoField(primary_key=True)
@@ -91,6 +91,8 @@ class Part(models.Model):
         class Meta:
             def __str__(self):
                 return self.slug
+
+
 class PMFT(models.Model):
     pmftID = models.AutoField(primary_key=True)
     pmftName = models.CharField(max_length=15)
@@ -109,3 +111,4 @@ class PMFT(models.Model):
         class Meta:
             def __str__(self):
                 return self.slug
+               

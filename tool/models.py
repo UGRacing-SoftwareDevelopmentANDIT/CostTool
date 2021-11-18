@@ -1,3 +1,4 @@
+from django.core.exceptions import ValidationError
 from django.db import models
 from django.template.defaultfilters import join, slugify
 from django.contrib.auth.models import User
@@ -38,6 +39,7 @@ class Car(models.Model):
             def __str__(self):
                 return self.slug
 
+
 class System(models.Model):
     systemID = models.AutoField(primary_key=True)
     systemName = models.CharField(max_length=15)
@@ -51,19 +53,26 @@ class System(models.Model):
             def __str__(self):
                 return self.slug
 
+
 class Assembly(models.Model):
     assemblyID = models.AutoField(primary_key=True)
-    assemblyName = models.CharField(unique=True, max_length=15)
+    assemblyName = models.CharField(max_length=15)
     systemID = models.ForeignKey(System, on_delete=models.SET_NULL, null = True)
     assemblyQuantity = models.IntegerField()
     assemblySlug = models.SlugField(unique=True, default="assembly-")
-    
+
+    def validate_unique(self, exclude = None):
+        if Assembly.objects.exclude(assemblyID=self.assemblyID).filter(assemblyName=self.assemblyName, systemID=self.systemID).exists():
+            raise ValidationError('There already exists some assmbly with that name in this system')
+            super(Assembly,self).validate_unique(exclude=exclude)
     def save(self, *args, **kwargs):
         self.assemblySlug = '-'.join((slugify(self.assemblyID), slugify(self.assemblyName)))
         super(Assembly, self).save(*args, **kwargs)
         class Meta:
             def __str__(self):
                 return self.slug
+
+
 class Part(models.Model):
     partID = models.AutoField(primary_key=True)
     partName = models.CharField(max_length=15)
@@ -82,6 +91,8 @@ class Part(models.Model):
         class Meta:
             def __str__(self):
                 return self.slug
+
+
 class PMFT(models.Model):
     pmftID = models.AutoField(primary_key=True)
     pmftName = models.CharField(max_length=15)
@@ -100,3 +111,4 @@ class PMFT(models.Model):
         class Meta:
             def __str__(self):
                 return self.slug
+               

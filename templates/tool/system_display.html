@@ -9,7 +9,10 @@
 
 {% block body_block %}
   <div id="content_h">
-    <h1>{{car.carName }}{{ car.carYear }}{{system.systemID}}{{system.systemName}}</h1>
+    <h1>
+      <a href="{% url 'tool:car_display' car.carSlug %}">{{car.carName }}{{ car.carYear }}</a> / 
+      {{system.systemName}}
+    </h1>
   </div>
 
   {% if assemblys %}
@@ -25,7 +28,11 @@
 {% endif %}
 
 
-
+<div>
+  <li>
+    <a href="{% url 'tool:add_assembly' car.carSlug system.systemSlug %}"> CLICK HERE TO ADD ASSEMBLY</a>
+  </li>
+</div>
 
 
   <ul>

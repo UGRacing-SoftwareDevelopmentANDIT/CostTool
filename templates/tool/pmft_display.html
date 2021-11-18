@@ -9,7 +9,13 @@
 
 {% block body_block %}
   <div id="content_h">
-    <h1>{{car.carName }}{{ car.carYear }}{{system.systemID}}{{system.systemName}}{{assembly.assemblyName}}{{part.partName}}{{pmft.pmftName}}</h1>
+    <h1>
+      <a href="{% url 'tool:car_display' car.carSlug %}">{{car.carName }}{{ car.carYear }}</a> / 
+      <a href="{% url 'tool:system_display' car.carSlug system.systemSlug %}">{{system.systemName}}</a> / 
+      <a href="{% url 'tool:assembly_display' car.carSlug system.systemSlug assembly.assemblySlug %}">{{assembly.assemblyName}}</a> / 
+      <a href="{% url 'tool:part_display' car.carSlug system.systemSlug assembly.assemblySlug part.partSlug %}">{{part.partName}}</a> / 
+      {{pmft.pmftName}}
+    </h1>
   </div>
 
   <ul>

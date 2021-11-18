@@ -110,28 +110,26 @@ def part_display(request, part_slug, assembly_slug, system_slug, car_slug):
 
 
 def pmft_display(request, pmft_slug, part_slug, assembly_slug, system_slug, car_slug):
-	context_dict ={}
-	try:
-		pmft = PMFT.objects.get(pmftSlug = pmft_slug)
-		part = Part.objects.get(partSlug = part_slug)
-		assembly = Assembly.objects.get(assemblySlug = assembly_slug)
-		system = System.objects.get(systemSlug = system_slug)
-		car = Car.objects.get(carSlug = car_slug)
-		
-		
-		pmfts = PMFT.objects.filter(partID = part)
+    context_dict = {}
+    try:
+        pmft = PMFT.objects.get(pmftSlug=pmft_slug)
+        part = Part.objects.get(partSlug=part_slug)
+        assembly = Assembly.objects.get(assemblySlug=assembly_slug)
+        system = System.objects.get(systemSlug=system_slug)
+        car = Car.objects.get(carSlug=car_slug)
 
-		context_dict['pmft'] = pmft
-		context_dict['part'] = part
-		context_dict['system'] = system
-		context_dict['car'] = car
-		context_dict['assembly'] = assembly
+        pmfts = PMFT.objects.filter(partID=part)
 
-	except System.DoesNotExist:
-		context_dict['System'] = None			
-			
-	return render(request, 'tool/pmft_display.html', context = context_dict)	
+        context_dict['pmft'] = pmft
+        context_dict['part'] = part
+        context_dict['system'] = system
+        context_dict['car'] = car
+        context_dict['assembly'] = assembly
 
+    except System.DoesNotExist:
+        context_dict['System'] = None
+
+    return render(request, 'tool/pmft_display.html', context=context_dict)
 
     ########################################## Forms ###############################################
 
@@ -141,11 +139,11 @@ def add_car(request):
     form = AddCarForm()
     # user verification stuff for later (not an outer if(verifed)) else print (form.errors) and  return HttpResponse("This page is exclusively for cost heads")
     '''
-        #get user ID
+        # get user ID
     userID = request.user.get_username()
-        #get user object
+        # get user object
     users = User.objects.filter(username=userID)
-        #get if user is verified
+        # get if user is verified
     verified = UserAccount.objects.filter(user__in=users, verified=True)
         '''
 
@@ -160,6 +158,24 @@ def add_car(request):
             print(form.errors)
 
     return render(request, 'tool/add_car.html', {'form': form})
+
+  
+def add_system(request, car_slug):
+    context_dict = {}
+    form = AddSystemForm()
+    car = Car.objects.get(carSlug=car_slug)
+    context_dict['car'] = car
+    if request.method == 'POST':
+        form = AddSystemForm(request.POST)
+        if form.is_valid():
+            newSystem = form.save(commit=False)
+            newSystem.carID = Car.objects.get(carSlug=car_slug)
+            newSystem.save()
+            return redirect(reverse('tool:home'))
+        else:
+            print(form.errors)
+    return render(request, 'tool/add_system.html', {'form': form, 'context': context_dict})
+
 
 def add_assembly(request, car_slug, system_slug):
     context_dict = {}

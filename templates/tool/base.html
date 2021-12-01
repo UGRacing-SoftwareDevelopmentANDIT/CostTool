@@ -46,9 +46,21 @@
             </li> -->
           </ul>
           <div class="d-flex">
-            <span class="me-2 text-white">Hello, John Doe</span>
+            {% if user.is_authenticated %}
+              <span class="me-2 text-white">Welcome, {{ user.username }}</span>
+            {% endif %}
           </div>
         </div>
+      </div>
+      <div class="d-flex">
+        <ul class="me-2 text-white">
+          {% if user.is_authenticated %}
+          <li><a href="{% url 'tool:logout' %}" class="text-white">Logout</a></li>
+          {% else %}
+          <li><a href="{% url 'tool:register' %}" class="text-white">Sign Up</a></li>
+          <li ><a href="{% url 'tool:login' %}" class="text-white">Login</a></li>
+          {% endif %}
+        </ul>
       </div>
     </nav>
 

@@ -16,4 +16,5 @@ path('car/<slug:car_slug>/<slug:system_slug>/<slug:assembly_slug>/addPart', view
 path('car/<slug:car_slug>/<slug:system_slug>/<slug:assembly_slug>/<slug:part_slug>', views.part_display, name = 'part_display'),
 path('car/<slug:car_slug>/<slug:system_slug>/<slug:assembly_slug>/<slug:part_slug>/<slug:pmft_slug>', views.pmft_display, name = 'pmft_display'),
 path('register/', views.register, name='register'),
+path('login/', views.user_login, name='login'),
 ]

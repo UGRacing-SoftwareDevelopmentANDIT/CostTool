@@ -230,3 +230,29 @@ def add_part(request, car_slug, system_slug, assembly_slug):
             print(form.errors)
 
     return render(request, 'tool/add_part.html', {'form': form, 'context': context_dict})
+
+def register(request):
+    registered = False
+    if request.method == 'POST':
+        user_form = UserForm(request.POST)
+        account_form = UserAccountForm(request.POST)
+        if user_form.is_valid() and account_form.is_valid():
+            user = user_form.save()
+            user.set_password(user.password)
+            user.save()
+            account = account_form.save(commit=False)
+            account.user = user
+            account.save()
+            registered = True
+        else:
+            print(user_form.errors, account_form.errors)
+    else:
+        user_form = UserForm()
+        account_form = UserAccountForm()
+    
+    return render(request,
+                    'tool/register.html',
+                    context={'user_form': user_form,
+                                'account_form': account_form,
+                                'registered': registered})
+

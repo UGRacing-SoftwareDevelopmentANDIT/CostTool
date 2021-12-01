@@ -133,7 +133,7 @@ def pmft_display(request, pmft_slug, part_slug, assembly_slug, system_slug, car_
 
     ########################################## Forms ###############################################
 
-
+@login_required
 def add_car(request):
     # If the request is a HTTP POST, try to pull out the relevant information.
     form = AddCarForm()
@@ -272,3 +272,8 @@ def user_login(request):
             return HttpResponse("Invalid login details.")
     else:
         return render(request, 'tool/login.html')
+
+@login_required
+def user_logout(request):
+    logout(request)
+    return redirect(reverse('tool:home'))

@@ -18,6 +18,9 @@
         {% for car in cars %}
           <li>
             <a href="{% url 'tool:car_display' car.carSlug %}">{{ car.carName }}{{car.carYear}}</a>
+            {% if display_edit_car %}
+            <a href="{% url 'tool:add_car' %}">EDIT CAR</a>
+            {% endif %}
           </li>
         {% endfor %}
       </ul>
@@ -43,11 +46,13 @@
     {% endif %}
   </div>
 
+  {% if display_add_car %}
   <div>
     <li>
       <a href="{% url 'tool:add_car' %}"> CLICK HERE TO ADD CAR</a>
     </li>
   </div>
+  {% endif %}
 
 
   <div class="container-fluid">

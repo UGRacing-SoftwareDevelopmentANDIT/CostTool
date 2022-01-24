@@ -47,7 +47,7 @@
           </ul>
           <div class="d-flex">
             {% if user.is_authenticated %}
-              <span class="me-2 text-white">Welcome, {{ user.username }}</span>
+              <span class="me-2 text-white">Welcome, {{ user.username }} {{ user_rank }}</span>
             {% endif %}
           </div>
         </div>

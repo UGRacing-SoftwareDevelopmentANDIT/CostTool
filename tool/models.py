@@ -45,6 +45,7 @@ class Car(models.Model):
     # for higher level users leaving unvalidated
     carYear = models.IntegerField()
     carSlug = models.SlugField(unique = True, default='car-')
+    archived = models.BooleanField(default=False)
 
     def save(self, *args, **kwargs):
         self.carSlug = '-'.join((slugify(self.carName), slugify(self.carYear)))

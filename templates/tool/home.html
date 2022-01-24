@@ -58,9 +58,9 @@
   <div class="container-fluid">
     <h3>Archive Cars</h3>
     <hr>
-    {% if cars %}
+    {% if archived_cars %}
       <ul>
-        {% for car in cars %}
+        {% for car in archived_cars %}
           <li>
             <a href="{% url 'tool:car_display' car.carSlug %}">{{ car.carName }}{{car.carYear}}</a>
           </li>

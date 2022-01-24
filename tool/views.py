@@ -19,11 +19,13 @@ from tool.consts import USER_RANKS
 def home(request):
     context_dict = {}
 
-    car_list = Car.objects.order_by('carYear')[:5]
+    car_list = Car.objects.filter(archived = False).order_by('carYear')
+    archived_car_list = Car.objects.filter(archived = True).order_by('carYear')
     user_account, user_rank = get_user_details(request)
 
     context_dict['test'] = 'test'
     context_dict['cars'] = car_list
+    context_dict['archived_cars'] = archived_car_list
     context_dict['user_rank'] = user_rank
     context_dict["display_add_car"] = False
     context_dict["display_edit_car"] = False
@@ -47,11 +49,24 @@ def about(request):
 def car_display(request, car_slug):
     context_dict = {}
     try:
+        user_account, user_rank = get_user_details(request)
         car = Car.objects.get(carSlug=car_slug)
         systems = System.objects.filter(carID=car)
 
         context_dict['car'] = car
         context_dict['systems'] = systems
+
+        context_dict['archived'] = car.archived
+        context_dict['user_rank'] = user_rank
+
+        if car.archived == True:
+            context_dict['display_edit_system'] = False
+            context_dict['display_add_system'] = False
+        elif user_account.rank >= 4:
+            context_dict['display_edit_system'] = True
+            context_dict['display_add_system'] = True
+        elif user_account.rank >= 2:
+            pass
 
     except Car.DoesNotExist:
         context_dict['car'] = None
@@ -62,6 +77,7 @@ def car_display(request, car_slug):
 def system_display(request, system_slug, car_slug):
     context_dict = {}
     try:
+        user_account, user_rank = get_user_details(request)
         system = System.objects.get(systemSlug=system_slug)
         car = Car.objects.get(carSlug=car_slug)
         assemblys = Assembly.objects.filter(systemID=system)

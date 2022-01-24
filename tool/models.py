@@ -17,7 +17,9 @@ verified which is a boolean value used to keep track whether a suer is verified 
 class UserAccount(models.Model):
     user = models.OneToOneField(
         User, on_delete=models.CASCADE, unique=True, primary_key=True)
-    rank = models.IntegerField(default=0)
+    # Consider implementing a rank lookup model (instead of hard-coding levels look it up in a model)
+    # 2 being the "baseline" for a standard engineer, gives space to implement lower levels.
+    rank = models.IntegerField(default=2)
 
     def __str__(self):
         return self.user.username
@@ -58,6 +60,7 @@ class System(models.Model):
     carID = models.ForeignKey(Car, on_delete=models.SET_NULL, null = True)
     costed = models.BooleanField(default=False)
     systemSlug = models.SlugField(unique=True, default="system-")
+    subteam = models.ManyToManyField(Subteam)
     def save(self, *args, **kwargs):
         self.systemSlug = (slugify(self.systemName))
         super(System, self).save(*args, **kwargs)

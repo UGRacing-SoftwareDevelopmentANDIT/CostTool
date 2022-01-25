@@ -8,18 +8,40 @@
 
 {% block body_block %}
   <div id="content_h">
-    <h1>
-      {{car.carName }} {{ car.carYear }}
-    </h1>
+    {% if car.archived %}
+      <h1>
+        {{car.carName }} {{ car.carYear }} ARCHIVED
+      </h1>
+    {% else %}
+      <h1>
+        {{car.carName }} {{ car.carYear }}
+      </h1>
+    {% endif %}
   </div>
 
 
   {% if systems %}
   <ul>
  {% for system in systems %}
-   <li>
-     <a href="{% url 'tool:system_display' car.carSlug system.systemSlug %}">{{ system.systemID }}  {{system.systemName}}</a>
-   </li>
+    {% for key, value in access_bool.items %}
+      {% if key == system.systemID %}
+        {% if value.0 %}
+          {% if value.1 %}
+          <li>
+            <a href="{% url 'tool:system_display' car.carSlug system.systemSlug %}">{{ system.systemID }}  {{system.systemName}} ACCESSIBLE TH</a>
+          </li>
+          {% else %}
+          <li>
+            <a href="{% url 'tool:system_display' car.carSlug system.systemSlug %}">{{ system.systemID }}  {{system.systemName}} ACCESSIBLE NOT TH</a>
+          </li>
+          {% endif %}
+        {% else %}
+        <li>
+          <a href="{% url 'tool:system_display' car.carSlug system.systemSlug %}">{{ system.systemID }}  {{system.systemName}} INACCESSIBLE</a>
+        </li>
+        {% endif %}
+      {% endif %}
+    {% endfor %}
   {% endfor %}
   </ul>
 {% else %}

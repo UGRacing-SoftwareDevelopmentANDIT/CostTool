@@ -58,15 +58,45 @@ def car_display(request, car_slug):
 
         context_dict['archived'] = car.archived
         context_dict['user_rank'] = user_rank
+        context_dict['access_bool'] = {}
+        context_dict['th_bool'] = {}
+        access_bool = {}
+        th_bool = {}
 
         if car.archived == True:
             context_dict['display_edit_system'] = False
             context_dict['display_add_system'] = False
+            context_dict['display_edit_subteam'] = False
         elif user_account.rank >= 4:
             context_dict['display_edit_system'] = True
             context_dict['display_add_system'] = True
+            context_dict['display_edit_subteam'] = True
         elif user_account.rank >= 2:
-            pass
+            # If assigned to system check
+            for system in systems:
+                subteams = Subteam.objects.filter(systems=system)
+                found = False
+                th = False
+                for subteam in subteams:
+                    if TeamLinking.objects.filter(user=user_account, subteam=subteam).exists():
+                        found = True
+                    if TeamLinking.objects.filter(user=user_account, subteam=subteam, teamHead=True).exists():
+                        th = True
+                    else:
+                        context_dict['display_edit_system'] = False
+                    
+                    context_dict['display_add_system'] = False
+                    context_dict['display_edit_subteam'] = False
+                if found:
+                    if th:
+                        access_bool[system.systemID] = (True, True)
+                    else:
+                        access_bool[system.systemID] = (True, False)
+                else:
+                    access_bool[system.systemID] = (False, False)
+
+
+        context_dict['access_bool'] = access_bool
 
     except Car.DoesNotExist:
         context_dict['car'] = None

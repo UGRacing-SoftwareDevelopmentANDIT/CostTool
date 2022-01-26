@@ -14,18 +14,6 @@
     </h1>
   </div>
 
-  {% if assemblys %}
-  <ul>
- {% for assembly in assemblys %}
-   <li>
-     <a href="{% url 'tool:assembly_display' car.carSlug system.systemSlug assembly.assemblySlug  %}">{{ assembly.assemblyID }}  {{assembly.assemblyName}}</a>
-   </li>
-  {% endfor %}
-  </ul>
-{% else %}
-  <strong>There are no assemblys yet</strong>
-{% endif %}
-
 <ul>
 {% for assembly_key, parts in output.items %}
   <li>{{ assembly_key.assemblyID }} {{assembly_key.assemblyName}}</li>

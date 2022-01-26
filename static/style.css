@@ -36,7 +36,6 @@ a{
   text-decoration: none;
 }
 
-
 /* Menu Bar */
 #menu {
   background: #050505;
@@ -61,12 +60,21 @@ a{
   text-decoration: none;
 }
 
-
-/* Actual page content formatting */
-#page_content {
-  margin-top: 2%;
+.hr-width {
+  width: -webkit-calc(100% - 3rem)
 }
 
+.car-card {
+  height: 15rem;
+}
+
+.car-card-title {
+  height: 5rem;
+}
+
+.system-wrapper {
+  flex: 1 1 auto;
+}
 
 /* Footer */
 #footer {

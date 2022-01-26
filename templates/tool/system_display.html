@@ -1,7 +1,6 @@
 {% extends 'tool/base.html' %}
 {% load static %}
 
-
 {% block css_block %}
 <link rel="stylesheet" type="text/css" href="{% static 'home.css' %}">
 {% endblock %}
@@ -27,6 +26,21 @@
   <strong>There are no assemblys yet</strong>
 {% endif %}
 
+<ul>
+{% for assembly_key, parts in output.items %}
+  <li>{{ assembly_key.assemblyID }} {{assembly_key.assemblyName}}</li>
+  <ul>
+  {% for part_key, pmfts in parts.items %}
+    <li>{{ part_key.partID }} {{part_key.partName }}</li>
+    <ul>
+    {% for pmft in pmfts %}
+      <li>{{ pmft.pmftID }}{{ pmft.pmftName }}</li>
+    {% endfor %}
+    </ul>
+  {% endfor %}
+  </ul>
+{% endfor %}
+</ul>
 
 <div>
   <li>

@@ -107,85 +107,28 @@ def car_display(request, car_slug):
 def system_display(request, system_slug, car_slug):
     context_dict = {}
     try:
-        user_account, user_rank = get_user_details(request)
         system = System.objects.get(systemSlug=system_slug)
         car = Car.objects.get(carSlug=car_slug)
         assemblys = Assembly.objects.filter(systemID=system)
 
+        output = {}
+        for assembly in assemblys:
+            parts = Part.objects.filter(assemblyID=assembly.assemblyID)
+            output[assembly] = {}
+            for part in parts:
+                pmfts = PMFT.objects.filter(partID=part.partID)
+                output[assembly][part] = list(pmfts)
+
         context_dict['system'] = system
         context_dict['car'] = car
         context_dict['assemblys'] = assemblys
+        context_dict['output'] = output
 
     except System.DoesNotExist:
         context_dict['System'] = None
 
     return render(request, 'tool/system_display.html', context=context_dict)
 
-
-def assembly_display(request, assembly_slug, system_slug, car_slug):
-    context_dict = {}
-    try:
-        assembly = Assembly.objects.get(assemblySlug=assembly_slug)
-        system = System.objects.get(systemSlug=system_slug)
-        car = Car.objects.get(carSlug=car_slug)
-
-        parts = Part.objects.filter(assemblyID=assembly)
-
-        context_dict['system'] = system
-        context_dict['car'] = car
-        context_dict['assembly'] = assembly
-        context_dict['parts'] = parts
-
-    except System.DoesNotExist:
-        context_dict['System'] = None
-
-    return render(request, 'tool/assembly_display.html', context=context_dict)
-
-
-def part_display(request, part_slug, assembly_slug, system_slug, car_slug):
-    context_dict = {}
-    try:
-        part = Part.objects.get(partSlug=part_slug)
-        assembly = Assembly.objects.get(assemblySlug=assembly_slug)
-        system = System.objects.get(systemSlug=system_slug)
-        car = Car.objects.get(carSlug=car_slug)
-
-        pmfts = PMFT.objects.filter(partID=part)
-
-        context_dict['system'] = system
-        context_dict['car'] = car
-        context_dict['assembly'] = assembly
-        context_dict['part'] = part
-
-        context_dict['pmfts'] = pmfts
-
-    except System.DoesNotExist:
-        context_dict['System'] = None
-
-    return render(request, 'tool/part_display.html', context=context_dict)
-
-
-def pmft_display(request, pmft_slug, part_slug, assembly_slug, system_slug, car_slug):
-    context_dict = {}
-    try:
-        pmft = PMFT.objects.get(pmftSlug=pmft_slug)
-        part = Part.objects.get(partSlug=part_slug)
-        assembly = Assembly.objects.get(assemblySlug=assembly_slug)
-        system = System.objects.get(systemSlug=system_slug)
-        car = Car.objects.get(carSlug=car_slug)
-
-        pmfts = PMFT.objects.filter(partID=part)
-
-        context_dict['pmft'] = pmft
-        context_dict['part'] = part
-        context_dict['system'] = system
-        context_dict['car'] = car
-        context_dict['assembly'] = assembly
-
-    except System.DoesNotExist:
-        context_dict['System'] = None
-
-    return render(request, 'tool/pmft_display.html', context=context_dict)
 
     ########################################## Forms ###############################################
 

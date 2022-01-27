@@ -15,4 +15,4 @@ admin.site.register(System)
 admin.site.register(Part)
 admin.site.register(PMFT)
 admin.site.register(Subteam)
-
+admin.site.register(TeamLinking)

@@ -11,17 +11,29 @@ from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 
 from tool.forms import *
+from tool.consts import USER_RANKS
 
 ########################################## Base ###############################################
 
-
+# TODO: Stop logging out, breaking the web app
 def home(request):
     context_dict = {}
 
-    car_list = Car.objects.order_by('carYear')[:5]
+    car_list = Car.objects.filter(archived = False).order_by('carYear')
+    archived_car_list = Car.objects.filter(archived = True).order_by('carYear')
+    user_account, user_rank = get_user_details(request)
 
     context_dict['test'] = 'test'
     context_dict['cars'] = car_list
+    context_dict['archived_cars'] = archived_car_list
+    context_dict['user_rank'] = user_rank
+    context_dict["display_add_car"] = False
+    context_dict["display_edit_car"] = False
+
+    if user_account.rank >= 4:
+        context_dict["display_add_car"] = True
+        context_dict["display_edit_car"] = True
+
     response = render(request, 'tool/home.html', context=context_dict)
     return response
 
@@ -37,11 +49,54 @@ def about(request):
 def car_display(request, car_slug):
     context_dict = {}
     try:
+        user_account, user_rank = get_user_details(request)
         car = Car.objects.get(carSlug=car_slug)
         systems = System.objects.filter(carID=car)
 
         context_dict['car'] = car
         context_dict['systems'] = systems
+
+        context_dict['archived'] = car.archived
+        context_dict['user_rank'] = user_rank
+        context_dict['access_bool'] = {}
+        context_dict['th_bool'] = {}
+        access_bool = {}
+        th_bool = {}
+
+        if car.archived == True:
+            context_dict['display_edit_system'] = False
+            context_dict['display_add_system'] = False
+            context_dict['display_edit_subteam'] = False
+        elif user_account.rank >= 4:
+            context_dict['display_edit_system'] = True
+            context_dict['display_add_system'] = True
+            context_dict['display_edit_subteam'] = True
+        elif user_account.rank >= 2:
+            # If assigned to system check
+            for system in systems:
+                subteams = Subteam.objects.filter(systems=system)
+                found = False
+                th = False
+                for subteam in subteams:
+                    if TeamLinking.objects.filter(user=user_account, subteam=subteam).exists():
+                        found = True
+                    if TeamLinking.objects.filter(user=user_account, subteam=subteam, teamHead=True).exists():
+                        th = True
+                    else:
+                        context_dict['display_edit_system'] = False
+                    
+                    context_dict['display_add_system'] = False
+                    context_dict['display_edit_subteam'] = False
+                if found:
+                    if th:
+                        access_bool[system.systemID] = (True, True)
+                    else:
+                        access_bool[system.systemID] = (True, False)
+                else:
+                    access_bool[system.systemID] = (False, False)
+
+
+        context_dict['access_bool'] = access_bool
 
     except Car.DoesNotExist:
         context_dict['car'] = None
@@ -56,9 +111,18 @@ def system_display(request, system_slug, car_slug):
         car = Car.objects.get(carSlug=car_slug)
         assemblys = Assembly.objects.filter(systemID=system)
 
+        output = {}
+        for assembly in assemblys:
+            parts = Part.objects.filter(assemblyID=assembly.assemblyID)
+            output[assembly] = {}
+            for part in parts:
+                pmfts = PMFT.objects.filter(partID=part.partID)
+                output[assembly][part] = list(pmfts)
+
         context_dict['system'] = system
         context_dict['car'] = car
         context_dict['assemblys'] = assemblys
+        context_dict['output'] = output
 
     except System.DoesNotExist:
         context_dict['System'] = None
@@ -66,74 +130,9 @@ def system_display(request, system_slug, car_slug):
     return render(request, 'tool/system_display.html', context=context_dict)
 
 
-def assembly_display(request, assembly_slug, system_slug, car_slug):
-    context_dict = {}
-    try:
-        assembly = Assembly.objects.get(assemblySlug=assembly_slug)
-        system = System.objects.get(systemSlug=system_slug)
-        car = Car.objects.get(carSlug=car_slug)
-
-        parts = Part.objects.filter(assemblyID=assembly)
-
-        context_dict['system'] = system
-        context_dict['car'] = car
-        context_dict['assembly'] = assembly
-        context_dict['parts'] = parts
-
-    except System.DoesNotExist:
-        context_dict['System'] = None
-
-    return render(request, 'tool/assembly_display.html', context=context_dict)
-
-
-def part_display(request, part_slug, assembly_slug, system_slug, car_slug):
-    context_dict = {}
-    try:
-        part = Part.objects.get(partSlug=part_slug)
-        assembly = Assembly.objects.get(assemblySlug=assembly_slug)
-        system = System.objects.get(systemSlug=system_slug)
-        car = Car.objects.get(carSlug=car_slug)
-
-        pmfts = PMFT.objects.filter(partID=part)
-
-        context_dict['system'] = system
-        context_dict['car'] = car
-        context_dict['assembly'] = assembly
-        context_dict['part'] = part
-
-        context_dict['pmfts'] = pmfts
-
-    except System.DoesNotExist:
-        context_dict['System'] = None
-
-    return render(request, 'tool/part_display.html', context=context_dict)
-
-
-def pmft_display(request, pmft_slug, part_slug, assembly_slug, system_slug, car_slug):
-    context_dict = {}
-    try:
-        pmft = PMFT.objects.get(pmftSlug=pmft_slug)
-        part = Part.objects.get(partSlug=part_slug)
-        assembly = Assembly.objects.get(assemblySlug=assembly_slug)
-        system = System.objects.get(systemSlug=system_slug)
-        car = Car.objects.get(carSlug=car_slug)
-
-        pmfts = PMFT.objects.filter(partID=part)
-
-        context_dict['pmft'] = pmft
-        context_dict['part'] = part
-        context_dict['system'] = system
-        context_dict['car'] = car
-        context_dict['assembly'] = assembly
-
-    except System.DoesNotExist:
-        context_dict['System'] = None
-
-    return render(request, 'tool/pmft_display.html', context=context_dict)
-
     ########################################## Forms ###############################################
 
-@login_required
+
 def add_car(request):
     # If the request is a HTTP POST, try to pull out the relevant information.
     form = AddCarForm()
@@ -203,7 +202,7 @@ def add_assembly(request, car_slug, system_slug):
 
     return render(request, 'tool/add_assembly.html', context_dict)
   
-  
+ 
 def add_part(request, car_slug, system_slug, assembly_slug):
     context_dict = {}
     
@@ -231,6 +230,7 @@ def add_part(request, car_slug, system_slug, assembly_slug):
 
     return render(request, 'tool/add_part.html', {'form': form, 'context': context_dict})
 
+
 def register(request):
     registered = False
     if request.method == 'POST':
@@ -256,6 +256,7 @@ def register(request):
                                 'account_form': account_form,
                                 'registered': registered})
 
+
 def user_login(request):
     if request.method == 'POST':
         username = request.POST.get('username')
@@ -273,7 +274,18 @@ def user_login(request):
     else:
         return render(request, 'tool/login.html')
 
+
 @login_required
 def user_logout(request):
     logout(request)
     return redirect(reverse('tool:home'))
+
+
+########################################## Helper Functions ###############################################
+
+
+def get_user_details(request):
+    user_account = UserAccount.objects.get(pk=request.user)
+    user_rank = USER_RANKS[user_account.rank]
+
+    return user_account, user_rank

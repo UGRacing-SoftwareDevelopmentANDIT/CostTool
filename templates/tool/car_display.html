@@ -29,7 +29,7 @@
                       <div class="card bg-ugr-primary car-card" id="{{system.systemName}}">
                         <div class="d-flex car-card-title">
                           <div class="m-auto">
-                            <a class="text-black fw-bold" href="{% url 'tool:system_display' car.carSlug system.systemSlug %}">{{system.systemName}} ACCESSIBLE TH</a>
+                            <a class="text-black fw-bold" href="{% url 'tool:system_display' car.carSlug system.systemSlug %}">{{system.systemName}} TH</a>
                           </div>
                         </div>
                       </div>
@@ -39,7 +39,7 @@
                       <div class="card bg-ugr-primary car-card" id="{{system.systemName}}">
                         <div class="d-flex car-card-title">
                           <div class="m-auto">
-                            <a class="text-black fw-bold" href="{% url 'tool:system_display' car.carSlug system.systemSlug %}">{{system.systemName}} ACCESSIBLE NOT TH</a>
+                            <a class="text-black fw-bold" href="{% url 'tool:system_display' car.carSlug system.systemSlug %}">{{system.systemName}} NOT TH</a>
                           </div>
                         </div>
                       </div>
@@ -47,10 +47,10 @@
                     {% endif %}
                 {% else %}
                   <div class="col-3">
-                    <div class="card bg-ugr-primary car-card" id="{{system.systemName}}">
+                    <div class="card bg-grey car-card" id="{{system.systemName}}">
                       <div class="d-flex car-card-title">
                         <div class="m-auto">
-                          <a class="text-black fw-bold" href="{% url 'tool:system_display' car.carSlug system.systemSlug %}">{{system.systemName}} INACCESSIBLE</a>
+                          <a class="text-black fw-bold" href="{% url 'tool:system_display' car.carSlug system.systemSlug %}">{{system.systemName}}</a>
                         </div>
                       </div>
                     </div>
@@ -69,7 +69,7 @@
                     <div class="card bg-ugr-primary car-card" id="{{system.systemName}}">
                       <div class="d-flex car-card-title">
                         <div class="m-auto">
-                          <a class="text-black fw-bold" href="{% url 'tool:system_display' car.carSlug system.systemSlug %}">{{system.systemName}} ACCESSIBLE TH</a>
+                          <a class="text-black fw-bold" href="{% url 'tool:system_display' car.carSlug system.systemSlug %}">{{system.systemName}} TH</a>
                         </div>
                       </div>
                     </div>
@@ -79,7 +79,7 @@
                     <div class="card bg-ugr-primary car-card" id="{{system.systemName}}">
                       <div class="d-flex car-card-title">
                         <div class="m-auto">
-                          <a class="text-black fw-bold" href="{% url 'tool:system_display' car.carSlug system.systemSlug %}">{{system.systemName}} ACCESSIBLE NOT TH</a>
+                          <a class="text-black fw-bold" href="{% url 'tool:system_display' car.carSlug system.systemSlug %}">{{system.systemName}} NOT TH</a>
                         </div>
                       </div>
                     </div>
@@ -87,10 +87,10 @@
                   {% endif %}
               {% else %}
                 <div class="col-3">
-                  <div class="card bg-ugr-primary car-card" id="{{system.systemName}}">
+                  <div class="card bg-grey car-card" id="{{system.systemName}}">
                     <div class="d-flex car-card-title">
                       <div class="m-auto">
-                        <a class="text-black fw-bold" href="{% url 'tool:system_display' car.carSlug system.systemSlug %}">{{system.systemName}} INACCESSIBLE</a>
+                        <a class="text-black fw-bold" href="{% url 'tool:system_display' car.carSlug system.systemSlug %}">{{system.systemName}}</a>
                       </div>
                     </div>
                   </div>

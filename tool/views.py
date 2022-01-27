@@ -15,7 +15,7 @@ from tool.consts import USER_RANKS
 
 ########################################## Base ###############################################
 
-
+# TODO: Stop logging out, breaking the web app
 def home(request):
     context_dict = {}
 

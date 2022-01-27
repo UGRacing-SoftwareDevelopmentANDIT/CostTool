@@ -14,32 +14,94 @@
     </h1>
   </div>
 
-<ul>
-{% for assembly_key, parts in output.items %}
-  <li>{{ assembly_key.assemblyID }} {{assembly_key.assemblyName}}</li>
-  <ul>
-  {% for part_key, pmfts in parts.items %}
-    <li>{{ part_key.partID }} {{part_key.partName }}</li>
-    <ul>
-    {% for pmft in pmfts %}
-      <li>{{ pmft.pmftID }}{{ pmft.pmftName }}</li>
-    {% endfor %}
-    </ul>
-  {% endfor %}
-  </ul>
-{% endfor %}
-</ul>
+<div class="container-fluid">
+  <div class="accordion accordion-flush">
+  {% for assembly_key, parts in output.items %}
+    {# Assembly row #}
+    <div class="accordion-item">
+      <h2 class="accordion-header" id="a{{assembly_key.assemblyID}}-heading">
+        <button class="accordion-button" style="background-color:#ffcc00;color:#1f1f1f;font-size: 24px;font-weight:600" type="button" data-bs-toggle="collapse" data-bs-target="#a{{assembly_key.assemblyID}}-collapse" aria-controls="a{{assembly_key.assemblyID}}-collapse">
+          {{ assembly_key.assemblyID }} {{assembly_key.assemblyName}}
+        </button>
+      </h2>
+      <div id="a{{assembly_key.assemblyID}}-collapse" class="accordion-collapse collapse" aria-labelledby="a{{assembly_key.assemblyID}}-heading">
+        <div class="accordion-body border-end" style="padding:0">
+          <div class="container-fluid" style="background-color:#1f1f1f;color:#ffcc00">
+            <div class="row">
+              <div class="col-1">
+              </div>
+              <div class="col-1" style="font-weight: 600;">
+                M/B
+              </div>
+              <div class="col-8" style="font-weight: 600;">
+                Part
+              </div>
+            </div>
+          </div>
+          <div class="accordion accordion-flush">
+            {% for part_key, pmfts in parts.items %}
+              {# Part row #}
+              <div class="accordion-item">
+                <h2 class="accordion-header" id="p{{part_key.partID}}-heading">
+                  <button class="accordion-button" style="background-color:#f3f3f3;color:#1f1f1f;font-size: 24px" type="button" data-bs-toggle="collapse" data-bs-target="#p{{part_key.partID}}-collapse" aria-controls="p{{part_key.partID}}-collapse">
+                    <span class="mx-2">{{ part_key.partID }} {{part_key.partName }}</span>
+                  </button>  
+                </h2>
+                <div id="p{{part_key.partID}}-collapse" class="accordion-collapse collapse" aria-labelledby="p{{part_key.partID}}-heading">
+                  <div class="accordion-body border-end" style="padding:0">
+                    <div class="container-fluid" style="background-color:#1f1f1f;color:#ffcc00">
+                      <div class="row">
+                        <div class="col-1">
+                        </div>
+                        <div class="col-1" style="font-weight: 600;">
+                          M/B
+                        </div>
+                        <div class="col-1" style="font-weight: 600;">
+                          Part
+                        </div>
+                        <div class="col-1" style="font-weight: 600;">
+                          P/M/F/T
+                        </div>
+                        <div class="col-1" style="font-weight: 600;">
 
-<div>
-  <li>
-    <a href="{% url 'tool:add_assembly' car.carSlug system.systemSlug %}"> CLICK HERE TO ADD ASSEMBLY</a>
-  </li>
+                        </div>
+                        <div class="col-3" style="font-weight: 600;">
+                          Comments
+                        </div>
+                        <div class="col-1 text-center" style="font-weight: 600;">
+                          Qt
+                        </div>
+                        <div class="col-1 text-center" style="font-weight: 600;">
+                          Cost
+                        </div>
+                        <div class="col-2 text-center" style="font-weight: 600;">
+                          ID
+                        </div>
+                      </div>
+                    </div>
+                    <div style="padding:0.75rem 1.25rem;background-color:#e8e8e8;font-size: 16px;">
+                      {% for pmft in pmfts %}
+                        {# PMFT row #}
+                        <div class="mx-3">
+                          {{ pmft.pmftID }} {{ pmft.pmftName }}
+                        </div>
+                      {% endfor %}
+                    </div>
+                  </div>
+                </div>
+              </div>
+            {% endfor %}
+          </div>
+        </div>
+      </div>
+    </div>
+  {% endfor %}
+  </div>
 </div>
 
-
-  <ul>
-    <li><a href = "{% url 'tool:home' %}"> Home Page </a> </li>
-  </ul>
+<div class="mt-4">
+  <a href="{% url 'tool:add_assembly' car.carSlug system.systemSlug %}"> CLICK HERE TO ADD ASSEMBLY</a>
+</div>
 
   <!--</div>-->
   <div id="clear"></div>

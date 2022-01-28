@@ -239,5 +239,22 @@ def car_delete(request, car_slug):
     #This should hopefully retun the user to the current page refreshed
     return redirect(request.META.get('HTTP_REFERER', 'redirect_if_referer_not_found'))
 
+def system_delete(request, system_slug):
+    system = System.objects.filter(systemSlug = system_slug)
+    system.delete()
+    return redirect(request.META.get('HTTP_REFERER', 'redirect_if_referer_not_found'))
 
+def assembly_delete(request, assembly_slug):
+    assembly = Assembly.objects.filter(assemblySlug = assembly_slug)
+    assembly.delete()
+    return redirect(request.META.get('HTTP_REFERER', 'redirect_if_referer_not_found'))
 
+def part_delete(request, part_slug):
+    part = Part.objects.filter(partSlug = part_slug)
+    part.delete()
+    return redirect(request.META.get('HTTP_REFERER', 'redirect_if_referer_not_found'))
+
+def pmft_delete(request, pmft_slug):
+    pmft = PMFT.objects.filter(pmftSlug = pmft_slug)
+    pmft.delete()
+    return redirect(request.META.get('HTTP_REFERER', 'redirect_if_referer_not_found'))

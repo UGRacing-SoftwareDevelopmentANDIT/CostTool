@@ -230,3 +230,14 @@ def add_part(request, car_slug, system_slug, assembly_slug):
             print(form.errors)
 
     return render(request, 'tool/add_part.html', {'form': form, 'context': context_dict})
+
+
+########################################## Delete Model Instance ###############################################
+def car_delete(request, car_slug):
+    car = Car.objects.filter(carSlug = car_slug)
+    car.delete()
+    #This should hopefully retun the user to the current page refreshed
+    return redirect(request.META.get('HTTP_REFERER', 'redirect_if_referer_not_found'))
+
+
+

@@ -18,7 +18,9 @@
         {% for car in cars %}
           <li>
             <a href="{% url 'tool:car_display' car.carSlug %}">{{ car.carName }}{{car.carYear}}</a>
+            <a href= "{% url 'tool:car_delete' car.carSlug %}">DELETE</a>
           </li>
+
         {% endfor %}
       </ul>
     {% else %}

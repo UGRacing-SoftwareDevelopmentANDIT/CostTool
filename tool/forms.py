@@ -14,10 +14,10 @@ class UserForm(forms.ModelForm):
 
 #the user field is initialised in the views.py file, verified filed is just set to false
 class UserAccountForm(forms.ModelForm):
-    verified = forms.BooleanField(initial=False, widget=forms.HiddenInput(), required=False)
+    rank = forms.IntegerField(widget=forms.HiddenInput(), required=True)
     class Meta:
         model = UserAccount
-        fields = ('verified',)
+        fields = ('rank',)
 
         
 class AddCarForm(forms.ModelForm):

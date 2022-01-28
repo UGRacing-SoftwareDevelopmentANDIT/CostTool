@@ -18,6 +18,9 @@
         {% for car in cars %}
           <li>
             <a href="{% url 'tool:car_display' car.carSlug %}">{{ car.carName }}{{car.carYear}}</a>
+            {% if display_edit_car %}
+            <a href="{% url 'tool:add_car' %}">EDIT CAR</a>
+            {% endif %}
           </li>
         {% endfor %}
       </ul>
@@ -43,19 +46,21 @@
     {% endif %}
   </div>
 
+  {% if display_add_car %}
   <div>
     <li>
       <a href="{% url 'tool:add_car' %}"> CLICK HERE TO ADD CAR</a>
     </li>
   </div>
+  {% endif %}
 
 
   <div class="container-fluid">
     <h3>Archive Cars</h3>
     <hr>
-    {% if cars %}
+    {% if archived_cars %}
       <ul>
-        {% for car in cars %}
+        {% for car in archived_cars %}
           <li>
             <a href="{% url 'tool:car_display' car.carSlug %}">{{ car.carName }}{{car.carYear}}</a>
           </li>
@@ -65,6 +70,5 @@
       <strong>There are no cars yet, or its broken?</strong>
     {% endif %}
   </div>
-
   <div id="clear"></div>
 {% endblock %}

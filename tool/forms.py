@@ -58,3 +58,18 @@ class AddPartForm(forms.ModelForm):
     class Meta:
         model = Part
         fields = ('partName', 'makeBuy', 'partCost', 'partQuantity', 'partCurrency', 'partComment', 'partSlug')
+
+
+class AddPMFTForm(forms.ModelForm):
+    pmftName = forms.CharField(max_length=15)
+    pmftComment = forms.CharField(max_length=50,  required=False)
+    pmftCost = forms.FloatField()
+    pmftCurrency = forms.CharField(max_length=3, required = False)
+    pmftCostComment =  forms.CharField(max_length=50,  required=False)
+    pmftQuantity = forms.IntegerField()
+    pmftType = forms.CharField(max_length=1)
+    pmftSlug = forms.SlugField(widget=forms.HiddenInput(), required=False)
+    class Meta:
+        model = PMFT
+        fields = ('pmftName', 'pmftComment', 'pmftCost', 'pmftCurrency', 'pmftCostComment', 'pmftQuantity', 'pmftType', 'pmftSlug')
+

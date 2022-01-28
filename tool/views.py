@@ -230,3 +230,31 @@ def add_part(request, car_slug, system_slug, assembly_slug):
             print(form.errors)
 
     return render(request, 'tool/add_part.html', {'form': form, 'context': context_dict})
+
+
+def add_pmft(request, car_slug, system_slug, assembly_slug, part_slug):
+    context_dict = {}
+    
+    part = Part.objects.get(partSlug=part_slug)
+    context_dict['assemblySlug'] = assembly_slug
+    context_dict['carSlug'] = car_slug
+    context_dict['systemSlug'] = system_slug
+    context_dict['part'] = part
+
+
+    form = AddPMFTForm()
+    if request.method == 'POST':
+        form = AddPMFTForm(request.POST)
+        if form.is_valid():
+            newPMFT = form.save(commit=False)
+
+            newPMFT = form.save(commit=False)
+            newPMFT.partID = Part.objects.get(partSlug=part_slug)
+
+            # save details
+            newPMFT.save()
+            return redirect(reverse('tool:home'))
+        else:
+            print(form.errors)
+
+    return render(request, 'tool/add_pmft.html', {'form': form, 'context': context_dict})

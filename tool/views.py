@@ -103,16 +103,52 @@ def car_display(request, car_slug):
 
     return render(request, 'tool/car_display.html', context=context_dict)
 
-
+@login_required
 def system_display(request, system_slug, car_slug):
     context_dict = {}
     try:
+        user_account, user_rank = get_user_details(request)
         system = System.objects.get(systemSlug=system_slug)
         car = Car.objects.get(carSlug=car_slug)
         assemblys = Assembly.objects.filter(systemID=system)
-
+        access_bool = {}
         output = {}
+        subteams = Subteam.objects.filter(systems=system)
+        found = False
+        th = False
+        
+        if car.archived:
+            context_dict['display_edit_assembly'] = False
+            context_dict['display_add_assembly'] = False
+            context_dict['display_edit_assignees'] = False
+        elif user_account.rank > 4:
+            context_dict['display_edit_assembly'] = True
+            context_dict['display_add_assembly'] = True
+            context_dict['display_edit_assignees'] = True
+        else:
+            for subteam in subteams:
+                if TeamLinking.objects.filter(user=user_account, subteam=subteam).exists():
+                    found = True
+                if user_account.rank >= 4 or TeamLinking.objects.filter(user=user_account, subteam=subteam, teamHead=True).exists():
+                    th = True
+            
+            if found:
+                if th:
+                    context_dict['display_edit_assembly'] = True
+                    context_dict['display_add_assembly'] = True
+                    context_dict['display_edit_assignees'] = True
+                else:
+                    context_dict['display_add_assembly'] = False
+                    context_dict['display_edit_assignees'] = False
+            else:
+                return redirect('tool:car_display', car_slug=car_slug)
+
         for assembly in assemblys:
+            if not th:
+                if user_account == assembly.user:
+                    access_bool[assembly.assemblyID] = True
+                else:
+                    access_bool[assembly.assemblyID] = False
             parts = Part.objects.filter(assemblyID=assembly.assemblyID)
             output[assembly] = {}
             for part in parts:

@@ -20,97 +20,40 @@
     {% if systems %}
       <div class="row">
         {% for system in systems %}
-          {% if forloop.counter|divisibleby:4 %}
             {% for key, value in access_bool.items %}
               {% if key == system.systemID %}
-                {% if value.0 %}
-                  {% if value.1 %}
-                    <div class="col-3">
-                      <div class="card bg-ugr-primary car-card" id="{{system.systemName}}">
-                        <div class="d-flex car-card-title">
-                          <div class="m-auto">
-                            <a class="text-black fw-bold" href="{% url 'tool:system_display' car.carSlug system.systemSlug %}">{{system.systemName}} TH</a>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  {% else %}
-                    <div class="col-3">
-                      <div class="card bg-ugr-primary car-card" id="{{system.systemName}}">
-                        <div class="d-flex car-card-title">
-                          <div class="m-auto">
-                            <a class="text-black fw-bold" href="{% url 'tool:system_display' car.carSlug system.systemSlug %}">{{system.systemName}} NOT TH</a>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                    {% endif %}
-                {% else %}
-                  <div class="col-3">
-                    <div class="card bg-grey car-card" id="{{system.systemName}}">
-                      <div class="d-flex car-card-title">
-                        <div class="m-auto">
-                          <a class="text-black fw-bold" href="{% url 'tool:system_display' car.carSlug system.systemSlug %}">{{system.systemName}}</a>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                {% endif %}
-              {% endif %}
-            {% endfor %}
-        </div>
-        <div class="row pt-4">
-          {% else %}
-            {% for key, value in access_bool.items %}
-            {% if key == system.systemID %}
-              {% if value.0 %}
-                {% if value.1 %}
-                  <div class="col-3">
-                    <div class="card bg-ugr-primary car-card" id="{{system.systemName}}">
-                      <div class="d-flex car-card-title">
-                        <div class="m-auto">
-                          <a class="text-black fw-bold" href="{% url 'tool:system_display' car.carSlug system.systemSlug %}">{{system.systemName}} TH</a>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                {% else %}
-                  <div class="col-3">
-                    <div class="card bg-ugr-primary car-card" id="{{system.systemName}}">
-                      <div class="d-flex car-card-title">
-                        <div class="m-auto">
-                          <a class="text-black fw-bold" href="{% url 'tool:system_display' car.carSlug system.systemSlug %}">{{system.systemName}} NOT TH</a>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                  {% endif %}
-              {% else %}
-                <div class="col-3">
-                  <div class="card bg-grey car-card" id="{{system.systemName}}">
+                <div class= "col-3">
+                  <div class="card bg-ugr-primary car-card" id="{{system.systemName}}">
                     <div class="d-flex car-card-title">
                       <div class="m-auto">
-                        <a class="text-black fw-bold" href="{% url 'tool:system_display' car.carSlug system.systemSlug %}">{{system.systemName}}</a>
+                        {% if value.0 %}
+                          {% if value.1 %}
+                            <a class="text-black fw-bold" href="{% url 'tool:system_display' car.carSlug system.systemSlug %}">{{system.systemName}} editable</a>
+                          {% else %}
+                            <a class="text-black fw-bold" href="{% url 'tool:system_display' car.carSlug system.systemSlug %}">{{system.systemName}} accessable</a>
+                          {% endif %}
+                        {% else %}
+                          <a class="text-black fw-bold" href="{% url 'tool:system_display' car.carSlug system.systemSlug %}">{{system.systemName}} not accessable</a>
+                        {% endif %}
                       </div>
                     </div>
                   </div>
-                </div>
-                {% endif %}
-                {% endif %}
-              {% endfor %}
-            {% endif %}
-          {% endfor %}
-      </div>
+              {% endif %}
+            {% endfor %}
+           {% endfor %} 
+        </div>
     {% else %}
       <strong>There are no systems yet</strong>
     {% endif %}
   </div>
 
+  {%if display_add_system %}
   <div>
     <li>
       <a href="{% url 'tool:add_system' car.carSlug %}"> CLICK HERE TO ADD SYSTEM</a>
     </li>
   </div>
+  {% endif %}
 
   <ul>
     <li><a href = "{% url 'tool:home' %}"> Home Page </a> </li>

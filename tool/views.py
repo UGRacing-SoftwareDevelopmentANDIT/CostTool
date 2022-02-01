@@ -45,7 +45,6 @@ def about(request):
 
 ########################################## Displays ###############################################
 
-
 def car_display(request, car_slug):
     context_dict = {}
     try:
@@ -55,46 +54,54 @@ def car_display(request, car_slug):
 
         context_dict['car'] = car
         context_dict['systems'] = systems
-
         context_dict['archived'] = car.archived
         context_dict['user_rank'] = user_rank
-        context_dict['access_bool'] = {}
-        context_dict['th_bool'] = {}
-        access_bool = {}
-        th_bool = {}
 
-        if car.archived == True:
-            context_dict['display_edit_system'] = False
+        #accesss_bool : systemID -> (access the system , eddit the system)
+        context_dict['access_bool'] = {}
+        access_bool = {}
+
+        #display_add_system is defined here as it only shows once on page
+        #display_edit_subteam is defined here because its value only depends on user and is the same for all systems
+        if car.archived:
             context_dict['display_add_system'] = False
             context_dict['display_edit_subteam'] = False
         elif user_account.rank >= 4:
-            context_dict['display_edit_system'] = True
             context_dict['display_add_system'] = True
             context_dict['display_edit_subteam'] = True
-        elif user_account.rank >= 2:
-            # If assigned to system check
-            for system in systems:
-                subteams = Subteam.objects.filter(systems=system)
-                found = False
-                th = False
-                for subteam in subteams:
-                    if TeamLinking.objects.filter(user=user_account, subteam=subteam).exists():
-                        found = True
-                    if TeamLinking.objects.filter(user=user_account, subteam=subteam, teamHead=True).exists():
-                        th = True
-                    else:
-                        context_dict['display_edit_system'] = False
-                    
-                    context_dict['display_add_system'] = False
-                    context_dict['display_edit_subteam'] = False
-                if found:
-                    if th:
-                        access_bool[system.systemID] = (True, True)
-                    else:
-                        access_bool[system.systemID] = (True, False)
-                else:
-                    access_bool[system.systemID] = (False, False)
+        else:
+            context_dict['display_add_system'] = False
+            context_dict['display_edit_subteam'] = False
 
+        for system in systems:
+            #if a car is archived no edditing regardless of user/system
+            if car.archived:
+                    access_bool[system.systemID] = (False, False)
+            #is a user is CH they have full priviledges for all systems        
+            elif user_account.rank >= 4:
+                    access_bool[system.systemID] = (True, True)
+            else:
+                subteams = Subteam.objects.filter(systems=system)        
+                assignedTH = False
+                assignedEng = False 
+                for subteam in subteams:
+                    #if a user is linked to a subteam that is assigned to the system
+                    if TeamLinking.objects.filter(user=user_account, subteam=subteam).exists():
+                        #if the above linking is that of a team head
+                        if TeamLinking.objects.filter(user=user_account, subteam=subteam, teamHead=True).exists():
+                           assignedTH = True
+                        else:
+                            assignedEng = True
+                if assignedEng:
+                    if assignedTH:
+                        #if a TH
+                        access_bool[system.systemID] = (True, True)  
+                    else:
+                         #if assigned and not a TH       
+                       access_bool[system.systemID] = (True, False)
+                else:
+                    #if they are never in a assigned subteam
+                    access_bool[system.systemID] = (False, False)                                
 
         context_dict['access_bool'] = access_bool
 

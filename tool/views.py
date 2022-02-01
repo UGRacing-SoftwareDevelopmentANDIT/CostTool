@@ -37,7 +37,6 @@ def home(request):
     response = render(request, 'tool/home.html', context=context_dict)
     return response
 
-
 def about(request):
     # information page
     context_dict = {}
@@ -96,6 +95,7 @@ def car_display(request, car_slug):
                     #if assigned and not a TH     
                     access_bool[system.systemID] = (True, False)
                 elif assignedTH:
+                    #if assigned and a TH
                     access_bool[system.systemID] = (True, True)  
                 else:
                     #if they are never in a assigned subteam
@@ -116,49 +116,60 @@ def system_display(request, system_slug, car_slug):
         system = System.objects.get(systemSlug=system_slug)
         car = Car.objects.get(carSlug=car_slug)
         assemblys = Assembly.objects.filter(systemID=system)
+
+
+        sysAssignedTH = False
+        sysAssigned = False
+
+        #access_bool: assemblyID -> = can edit assembly
         access_bool = {}
         output = {}
         subteams = Subteam.objects.filter(systems=system)
-        found = False
-        th = False
         
+        #makes sure a user can only see the page if in assigned subteam
+        for subteam in subteams:
+            if TeamLinking.objects.filter(user=user_account, subteam=subteam).exists():
+                sysAssigned= True
+            if user_account.rank >= 4 or TeamLinking.objects.filter(user=user_account, subteam=subteam, teamHead=True).exists():
+                sysAssignedTH = True
+        if not sysAssigned:
+            return redirect('tool:car_display', car_slug=car_slug)
+
+        #display_eddit_assignees is the same regardless of assembly
+        #display_add_assembly is the same regardless of assembly
         if car.archived:
-            context_dict['display_edit_assembly'] = False
             context_dict['display_add_assembly'] = False
             context_dict['display_edit_assignees'] = False
         elif user_account.rank > 4:
-            context_dict['display_edit_assembly'] = True
+            context_dict['display_add_assembly'] = True
+            context_dict['display_edit_assignees'] = True
+        elif sysAssignedTH:
             context_dict['display_add_assembly'] = True
             context_dict['display_edit_assignees'] = True
         else:
-            for subteam in subteams:
-                if TeamLinking.objects.filter(user=user_account, subteam=subteam).exists():
-                    found = True
-                if user_account.rank >= 4 or TeamLinking.objects.filter(user=user_account, subteam=subteam, teamHead=True).exists():
-                    th = True
-            
-            if found:
-                if th:
-                    context_dict['display_edit_assembly'] = True
-                    context_dict['display_add_assembly'] = True
-                    context_dict['display_edit_assignees'] = True
-                else:
-                    context_dict['display_add_assembly'] = False
-                    context_dict['display_edit_assignees'] = False
-            else:
-                return redirect('tool:car_display', car_slug=car_slug)
+            context_dict['display_add_assembly'] = False
+            context_dict['display_edit_assignees'] = False   
 
         for assembly in assemblys:
-            if not th:
+            if car.archived:
+                access_bool[assembly.assemblyID] = False
+            elif user_account.rank > 4:
+                access_bool[assembly.assemblyID] = True
+            elif sysAssignedTH:
+                access_bool[assembly.assemblyID] = True
+            else :
                 if user_account == assembly.user:
+                    #eingineer has been assigned
                     access_bool[assembly.assemblyID] = True
                 else:
+                    #eingineer has not been assigned
                     access_bool[assembly.assemblyID] = False
             parts = Part.objects.filter(assemblyID=assembly.assemblyID)
             output[assembly] = {}
             for part in parts:
                 pmfts = PMFT.objects.filter(partID=part.partID)
                 output[assembly][part] = list(pmfts)
+
 
         context_dict['system'] = system
         context_dict['car'] = car

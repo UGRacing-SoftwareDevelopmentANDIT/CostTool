@@ -175,6 +175,7 @@ def system_display(request, system_slug, car_slug):
         context_dict['car'] = car
         context_dict['assemblys'] = assemblys
         context_dict['output'] = output
+        context_dict['user_rank'] = user_rank
 
     except System.DoesNotExist:
         context_dict['System'] = None

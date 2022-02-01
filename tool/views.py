@@ -89,16 +89,14 @@ def car_display(request, car_slug):
                     if TeamLinking.objects.filter(user=user_account, subteam=subteam).exists():
                         #if the above linking is that of a team head
                         if TeamLinking.objects.filter(user=user_account, subteam=subteam, teamHead=True).exists():
-                           assignedTH = True
+                            assignedTH = True
                         else:
                             assignedEng = True
                 if assignedEng:
-                    if assignedTH:
-                        #if a TH
-                        access_bool[system.systemID] = (True, True)  
-                    else:
-                         #if assigned and not a TH       
-                       access_bool[system.systemID] = (True, False)
+                    #if assigned and not a TH     
+                    access_bool[system.systemID] = (True, False)
+                elif assignedTH:
+                    access_bool[system.systemID] = (True, True)  
                 else:
                     #if they are never in a assigned subteam
                     access_bool[system.systemID] = (False, False)                                

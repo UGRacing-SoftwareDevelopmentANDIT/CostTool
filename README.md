@@ -12,7 +12,7 @@ Python 3.10+, Django 3.2.8
 
 Begin by cloning the repository to your local machine:
 
-`git clone https://github.com/UGRacing-IT/recruit-onboarding`
+`git clone https://github.com/UGRacing-IT/costing-web-app`
 
 Create a virtual environment for dependencies:
 
@@ -67,12 +67,25 @@ This should hopefully fix any issues.
 
 ## Features
 
-TBA
+Features four different levels of users:
+
+* Engineer
+* Team Head
+* Cost Head
+* IT - Django superuser
+
+These ranks have significant flexibility for positions above, below and within the current ranks.
+
+Supports archived and active cars.
 
 ## Contributors
 
-* Jolie Bonner
-* Lewis Tse
+* [Jolie Bonner](https://github.com/Jolie-B)
+* [Drew Edgar](https://github.com/drew-edgar)
+* [Rishabh Mathur](https://github.com/2465899m)
+* [Roksana Staszynska](https://github.com/2450370S)
+* [Lewis Tse](https://github.com/lewis-tse)
+* [Ivo Young](https://github.com/Ivo-Y)
 
 ## License
 

@@ -309,6 +309,10 @@ def user_logout(request):
     return redirect(reverse('tool:home'))
 
 
+@login_required
+def change_password(request):
+    return render(request, 'tool/change_password.html')
+
 ########################################## Helper Functions ###############################################
 
 

@@ -20,16 +20,17 @@ class UserAccountForm(forms.ModelForm):
         fields = ('rank',)
 
         
-class AddCarForm(forms.ModelForm):
+class CarForm(forms.ModelForm):
     carName = forms.CharField(max_length=20, help_text="Please enter the car name.")
     carYear = forms.CharField(max_length=55, help_text="Please enter the cars year.")
     carSlug = forms.IntegerField(widget=forms.HiddenInput(), required=False)
+
     class Meta:
         model = Car
         fields = ('carName', 'carYear', 'carSlug')
 
         
-class AddSystemForm(forms.ModelForm):
+class SystemForm(forms.ModelForm):
     systemName = forms.CharField(max_length=20, help_text="Please enter the system name.")
     costed = forms.BooleanField(help_text="Please check if the system is costed.", required=False)
     systemSlug = forms.CharField(widget=forms.HiddenInput(), required=False)
@@ -38,7 +39,7 @@ class AddSystemForm(forms.ModelForm):
         fields = ('systemName', 'costed', 'systemSlug')  
 
 
-class AddAssemblyForm(forms.ModelForm):
+class AssemblyForm(forms.ModelForm):
     assemblyName = forms.CharField(max_length=15)
     assemblyQuantity = forms.IntegerField()
     
@@ -46,7 +47,7 @@ class AddAssemblyForm(forms.ModelForm):
         model = Assembly
         fields = ('assemblyName', 'assemblyQuantity',)
         
-class AddPartForm(forms.ModelForm):
+class PartForm(forms.ModelForm):
     partName = forms.CharField(max_length=15)
     makeBuy = forms.BooleanField()
     partCost = forms.FloatField(required=False)
@@ -60,7 +61,7 @@ class AddPartForm(forms.ModelForm):
         fields = ('partName', 'makeBuy', 'partCost', 'partQuantity', 'partCurrency', 'partComment', 'partSlug')
 
 
-class AddPMFTForm(forms.ModelForm):
+class PMFTForm(forms.ModelForm):
     pmftName = forms.CharField(max_length=15)
     pmftComment = forms.CharField(max_length=50,  required=False)
     pmftCost = forms.FloatField()

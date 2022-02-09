@@ -19,7 +19,7 @@
           <li>
             <a href="{% url 'tool:car_display' car.carSlug %}">{{ car.carName }}{{car.carYear}}</a>
             {% if display_edit_car %}
-            <a href="{% url 'tool:add_car' %}">EDIT CAR</a>
+            <a href="{% url 'tool:add_car' car_slug=car.carSlug %}">EDIT CAR</a>
             {% endif %}
           </li>
         {% endfor %}

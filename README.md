@@ -78,6 +78,29 @@ These ranks have significant flexibility for positions above, below and within t
 
 Supports archived and active cars.
 
+### Population Scripts
+
+There is one included population script with this project.
+
+To use the population script, activate your virtual environment and ensure that your models are fully migrated by running:
+
+```
+python manage.py makemigrations
+python manage.py migrate
+```
+
+Then run: `python populate.py` from the repository's root directory. If successful, this should print `Completed population script, exiting...`
+
+#### Car Population Script
+
+The car population script creates a sample car with a single test assembly, with a system, part, and PMFT.
+
+#### User Population Script
+
+TBC
+
+Users can be also made using the Django admin interface.
+
 ## Contributors
 
 * [Jolie Bonner](https://github.com/Jolie-B)

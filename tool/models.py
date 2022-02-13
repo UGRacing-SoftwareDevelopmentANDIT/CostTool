@@ -3,8 +3,8 @@ from django.db import models
 from django.template.defaultfilters import join, slugify
 from django.contrib.auth.models import User
 
-
 #we should consider how deletions should work, cascade or set to null could make quite a difference
+
 
 
 class Car(models.Model):
@@ -27,7 +27,7 @@ class Car(models.Model):
 
 class System(models.Model):
     systemID = models.AutoField(primary_key=True)
-    systemName = models.CharField(max_length=15)
+    systemName = models.CharField(max_length=30)
     carID = models.ForeignKey(Car, on_delete=models.SET_NULL, null = True)
     costed = models.BooleanField(default=False)
     systemSlug = models.SlugField(unique=True, default="system-")
@@ -42,21 +42,27 @@ class System(models.Model):
 
 class Assembly(models.Model):
     assemblyID = models.AutoField(primary_key=True)
-    assemblyName = models.CharField(max_length=15)
+    assemblyName = models.CharField(max_length=30)
     systemID = models.ForeignKey(System, on_delete=models.SET_NULL, null = True)
     assemblyQuantity = models.IntegerField()
     assemblySlug = models.SlugField(unique=True, default="assembly-")
 
-    def validate_unique(self, exclude = None):
-        if Assembly.objects.exclude(assemblyID=self.assemblyID).filter(assemblyName=self.assemblyName, systemID=self.systemID).exists():
-            raise ValidationError('There already exists some assmbly with that name in this system')
-            super(Assembly,self).validate_unique(exclude=exclude)
+   # def validate_unique(self, exclude = None):
+    #    if Assembly.objects.exclude(assemblyID=self.assemblyID).filter(assemblyName=self.assemblyName, systemID=self.systemID).exists():
+     #       raise ValidationError('There already exists some assembly with that name in this system')
+      #  super(Assembly,self).validate_unique(exclude=exclude)'
+
+
     def save(self, *args, **kwargs):
         self.assemblySlug = '-'.join((slugify(self.assemblyID), slugify(self.assemblyName)))
         super(Assembly, self).save(*args, **kwargs)
-        class Meta:
-            def __str__(self):
-                return self.slug
+    class Meta:
+        constraints = [
+            models.UniqueConstraint(fields=['assemblyName', 'systemID'], name='unique_assemblyName_systemID')
+        ]
+
+        def __str__(self):
+            return self.slug
 
 
 class Part(models.Model):

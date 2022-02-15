@@ -7,6 +7,7 @@
 {% endblock %}
 
 {% block body_block %}
+
   <h3 class="font-weight-bold">
     {% if car.archived %}
       Car <span class="text-uppercase">{{car.carName }} {{ car.carYear }} ARCHIVED</span></br>
@@ -16,6 +17,12 @@
     SYSTEMS
   </h3>
   <hr>
+  <div>
+      <button class="btn btn-light add-btn" type="button"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-plus-lg" viewBox="0 0 16 16">
+  <path fill-rule="evenodd" d="M8 2a.5.5 0 0 1 .5.5v5h5a.5.5 0 0 1 0 1h-5v5a.5.5 0 0 1-1 0v-5h-5a.5.5 0 0 1 0-1h5v-5A.5.5 0 0 1 8 2Z"/>
+</svg><a href="{% url 'tool:add_system' car.carSlug %}">Add System</a></button>
+  </div>
+  <br>
   <div class="system-wrapper">
     {% if systems %}
       <div class="row">
@@ -109,19 +116,19 @@
 <script>
 
   window.onload = function() {
-    // Brakes
-    var brakes = document.createElement("img");
-    brakes.setAttribute("class", "system_image");
-    brakes.setAttribute("src", "{% static 'images/brakes.png' %}");
-    brakes.setAttribute("style", "height: 70px; width: 70px; display: block; margin-left: auto; margin-right: auto;");
-    document.getElementById("Brakes").appendChild(brakes);
-
     // Engine and Drivetrain
     var engine_and_drivetrain = document.createElement("img");
     engine_and_drivetrain.setAttribute("class", "system_image");
     engine_and_drivetrain.setAttribute("src", "{% static 'images/engine_and_drivetrain.png' %}");
     engine_and_drivetrain.setAttribute("style", "height: 70px; width: 70px; display: block; margin-left: auto; margin-right: auto;");
     document.getElementById("E & Drivetrain").appendChild(engine_and_drivetrain);
+
+    // Brakes
+    var brakes = document.createElement("img");
+    brakes.setAttribute("class", "system_image");
+    brakes.setAttribute("src", "{% static 'images/brakes.png' %}");
+    brakes.setAttribute("style", "height: 70px; width: 70px; display: block; margin-left: auto; margin-right: auto;");
+    document.getElementById("Brakes").appendChild(brakes);
 
     // Frame and <body>
     var frame_and_body = document.createElement("img");
@@ -167,15 +174,9 @@
   }
 </script>
 
-  <div>
-    <li>
-      <a href="{% url 'tool:add_system' car.carSlug %}"> CLICK HERE TO ADD SYSTEM</a>
-    </li>
-  </div>
-
-  <ul>
+  <!--<ul>
     <li><a href = "{% url 'tool:home' %}"> Home Page </a> </li>
-  </ul>
+  </ul>-->
 
   <div id="clear"></div>
 

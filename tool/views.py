@@ -317,11 +317,17 @@ def add_pmft(request, car_slug, system_slug, assembly_slug, part_slug):
 def edit_subteam(request, car_slug, system_slug):
     context_dict = {}
 
-    context_dict['carSlug'] = car_slug
-    context_dict['systemSlug'] = system_slug
-
     system = System.objects.get(systemSlug=system_slug)
 
+    subteams = Subteam.objects.filter(systems = system)
+
+
+    
+    context_dict['carSlug'] = car_slug
+    context_dict['systemSlug'] = system_slug
+    context_dict['subteams'] = subteams
+
+    print(subteams)
     form = EditSubteam()
     if request.method == 'POST':
         form = EditSubteam(request.POST)

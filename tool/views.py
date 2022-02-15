@@ -318,11 +318,8 @@ def edit_subteam(request, car_slug, system_slug):
     context_dict = {}
 
     system = System.objects.get(systemSlug=system_slug)
-
     subteams = Subteam.objects.filter(systems = system)
 
-
-    
     context_dict['carSlug'] = car_slug
     context_dict['systemSlug'] = system_slug
     context_dict['subteams'] = subteams
@@ -338,6 +335,19 @@ def edit_subteam(request, car_slug, system_slug):
 
     return render(request, 'tool/edit_subteam.html', {'form': form, 'context': context_dict})
 
+
+def delete_subteam(request, car_slug, system_slug, subteam_slug):
+     system = System.objects.get(systemSlug=system_slug)
+     subteam = Subteam.objects.get(subteamSlug = subteam_slug)
+
+     subteam.systems.remove(system)
+     return redirect(request.META.get('HTTP_REFERER', 'redirect_if_referer_not_found'))
+
+def car_delete(request, car_slug):
+    car = Car.objects.filter(carSlug = car_slug)
+    car.delete()
+    #This should hopefully retun the user to the current page refreshed
+    return redirect(request.META.get('HTTP_REFERER', 'redirect_if_referer_not_found'))
 
 
 

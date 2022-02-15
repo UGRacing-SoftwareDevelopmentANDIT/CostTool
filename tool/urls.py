@@ -11,6 +11,8 @@ path('car/<slug:car_slug>/addSystem', views.add_system, name = 'add_system'),
 path('car/<slug:car_slug>/<slug:system_slug>', views.system_display, name = 'system_display'),
 
 path('car/<slug:car_slug>/<slug:system_slug>/editSubteam', views.edit_subteam, name = 'edit_subteam'),
+path('car/<slug:car_slug>/<slug:system_slug>/<slug:subteam_slug>/delete', views.delete_subteam, name = 'delete_subteam'),
+
 
 path('car/<slug:car_slug>/<slug:system_slug>/add-assembly', views.add_assembly, name="add_assembly"),
 path('car/<slug:car_slug>/<slug:system_slug>/<slug:assembly_slug>/addPart', views.add_part, name = 'add_part'),

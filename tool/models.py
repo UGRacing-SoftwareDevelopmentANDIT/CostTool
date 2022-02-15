@@ -1,3 +1,4 @@
+from ast import Sub
 from django.core.exceptions import ValidationError
 from django.db import models
 from django.template.defaultfilters import join, slugify
@@ -115,9 +116,14 @@ class Subteam(models.Model):
     teamName = models.CharField(max_length=20, unique=True, primary_key=True)
     abbr = models.CharField(max_length=10, unique=True)
     systems = models.ManyToManyField(System)
+    subteamSlug = models.SlugField(unique=True, default='team-')
 
-    def __str__(self):
-        return self.teamName
+    def save(self, *args, **kwargs):
+        self.subteamSlug= self.teamName
+        super(Subteam, self).save(*args, **kwargs)
+    class Meta:
+        def __str__(self):
+            return self.slug 
 
 
 class TeamLinking(models.Model):

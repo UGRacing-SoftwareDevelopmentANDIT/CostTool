@@ -18,7 +18,9 @@
 
                   <p>
                        {{subteam.teamName}}
+                       <a class="text-black fw-bold" href="{% url 'tool:delete_subteam' context.carSlug context.systemSlug subteam.subteamSlug %}">delete</a>
                   </p>
+
 
             {% endfor %}
       {% else %}

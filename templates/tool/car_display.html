@@ -29,8 +29,7 @@
                         {% if value.0 %}
                           {% if value.1 %}
                           {# an assigned TH #}
-                            <a class="text-black fw-bold" href="{% url 'tool:system_display' car.carSlug system.systemSlug %}">{{system.systemName}} editable</a>
-                          {% else %}
+                            <a class="text-black fw-bold" href ="{% url 'tool:system_display' car.carSlug system.systemSlug %}">{{system.systemName}} editable </a>                          {% else %}
                           {# an assigned engineer #}
                             <a class="text-black fw-bold" href="{% url 'tool:system_display' car.carSlug system.systemSlug %}">{{system.systemName}} accessable</a>
                           {% endif %}
@@ -40,7 +39,7 @@
                         {% endif %}
                         <div>
                         {% if display_edit_subteam %}
-                        <a class="text-black fw-bold" href="{% url 'tool:home' %}">edit-subteam</a>
+                        <a class="text-black fw-bold" href="{% url 'tool:edit_subteam' car.carSlug system.systemSlug %}">edit-subteam</a>
                         {% endif %}
                         </div>
                       </div>

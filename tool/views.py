@@ -314,8 +314,11 @@ def add_pmft(request, car_slug, system_slug, assembly_slug, part_slug):
 
 ########################################## User Forms ###############################################
 
-def editSubteam(request, car_slug, system_slug):
+def edit_subteam(request, car_slug, system_slug):
     context_dict = {}
+
+    context_dict['carSlug'] = car_slug
+    context_dict['systemSlug'] = system_slug
 
     system = System.objects.get(systemSlug=system_slug)
 
@@ -327,7 +330,7 @@ def editSubteam(request, car_slug, system_slug):
         else:
             print(form.errors)
 
-    return render(request, 'tool/add_pmft.html', {'form': form, 'context': context_dict})
+    return render(request, 'tool/edit_subteam.html', {'form': form, 'context': context_dict})
 
 
 

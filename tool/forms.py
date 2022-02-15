@@ -78,4 +78,4 @@ class EditSubteam(forms.ModelForm):
     subteam = forms.CharField(max_length=15)
     class Meta:
         model = Subteam
-        fields = ('systems')
+        fields = ('systems',)

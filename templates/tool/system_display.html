@@ -9,8 +9,13 @@
 {% block body_block %}
   <div id="content_h">
     <h1>
-      <a href="{% url 'tool:car_display' car.carSlug %}">{{car.carName }}{{ car.carYear }}</a> / 
-      {{system.systemName}}
+      {% if car.archived %}
+        <a href="{% url 'tool:car_display' car.carSlug %}">{{car.carName }}{{ car.carYear }}</a> / 
+        {{system.systemName}} ARCHIVED
+      {% else %}
+        <a href="{% url 'tool:car_display' car.carSlug %}">{{car.carName }}{{ car.carYear }}</a> / 
+        {{system.systemName}}
+      {% endif %}
     </h1>
   </div>
 
@@ -21,7 +26,7 @@
     <div class="accordion-item">
       <h2 class="accordion-header" id="a{{assembly_key.assemblyID}}-heading">
         <button class="accordion-button" style="background-color:#ffcc00;color:#1f1f1f;font-size: 24px;font-weight:600" type="button" data-bs-toggle="collapse" data-bs-target="#a{{assembly_key.assemblyID}}-collapse" aria-controls="a{{assembly_key.assemblyID}}-collapse">
-          {{ assembly_key.assemblyID }} {{assembly_key.assemblyName}}
+          {{ assembly_key.assemblyID }} {{assembly_key.assemblyName}} {{assembly_key.user.user.username}}
         </button>
       </h2>
       <div id="a{{assembly_key.assemblyID}}-collapse" class="accordion-collapse collapse" aria-labelledby="a{{assembly_key.assemblyID}}-heading">
@@ -99,9 +104,11 @@
   </div>
 </div>
 
-<div class="mt-4">
-  <a href="{% url 'tool:add_assembly' car.carSlug system.systemSlug %}"> CLICK HERE TO ADD ASSEMBLY</a>
-</div>
+{% if display_add_assembly %}
+  <div class="mt-4">
+    <a href="{% url 'tool:add_assembly' car.carSlug system.systemSlug %}"> CLICK HERE TO ADD ASSEMBLY</a>
+  </div>
+{% endif %}
 
   <!--</div>-->
   <div id="clear"></div>

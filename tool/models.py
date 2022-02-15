@@ -7,6 +7,17 @@ from django.contrib.auth.models import User
 #we should consider how deletions should work, cascade or set to null could make quite a difference
 
 
+class UserAccount(models.Model):
+    user = models.OneToOneField(
+        User, on_delete=models.CASCADE, unique=True, primary_key=True)
+    # Consider implementing a rank lookup model (instead of hard-coding levels look it up in a model)
+    # 2 being the "baseline" for a standard engineer, gives space to implement lower levels.
+    rank = models.IntegerField(default=2)
+
+    def __str__(self):
+        return self.user.username
+
+
 class Car(models.Model):
     #this will be auto created by conjoining name and year
     carID = models.CharField(max_length=8, unique=True, primary_key=True)
@@ -43,9 +54,10 @@ class System(models.Model):
 class Assembly(models.Model):
     assemblyID = models.AutoField(primary_key=True)
     assemblyName = models.CharField(max_length=15)
-    systemID = models.ForeignKey(System, on_delete=models.SET_NULL, null = True)
+    systemID = models.ForeignKey(System, on_delete=models.SET_NULL, null=True)
     assemblyQuantity = models.IntegerField()
     assemblySlug = models.SlugField(unique=True, default="assembly-")
+    user = models.ForeignKey(UserAccount, on_delete=models.SET_NULL, null=True)
 
     def validate_unique(self, exclude = None):
         if Assembly.objects.exclude(assemblyID=self.assemblyID).filter(assemblyName=self.assemblyName, systemID=self.systemID).exists():
@@ -97,17 +109,6 @@ class PMFT(models.Model):
         class Meta:
             def __str__(self):
                 return self.slug
-
-
-class UserAccount(models.Model):
-    user = models.OneToOneField(
-        User, on_delete=models.CASCADE, unique=True, primary_key=True)
-    # Consider implementing a rank lookup model (instead of hard-coding levels look it up in a model)
-    # 2 being the "baseline" for a standard engineer, gives space to implement lower levels.
-    rank = models.IntegerField(default=2)
-
-    def __str__(self):
-        return self.user.username
 
 
 class Subteam(models.Model):

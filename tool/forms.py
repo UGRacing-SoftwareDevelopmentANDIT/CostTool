@@ -73,3 +73,9 @@ class AddPMFTForm(forms.ModelForm):
         model = PMFT
         fields = ('pmftName', 'pmftComment', 'pmftCost', 'pmftCurrency', 'pmftCostComment', 'pmftQuantity', 'pmftType', 'pmftSlug')
 
+
+class EditSubteam(forms.ModelForm):
+    subteam = forms.CharField(max_length=15)
+    class Meta:
+        model = Subteam
+        fields = ('systems')

@@ -130,7 +130,7 @@ def system_display(request, system_slug, car_slug):
     return render(request, 'tool/system_display.html', context=context_dict)
 
 
-    ########################################## Forms ###############################################
+    ########################################## Car Forms ###############################################
 
 
 def add_car(request):
@@ -258,7 +258,29 @@ def add_pmft(request, car_slug, system_slug, assembly_slug, part_slug):
 
     return render(request, 'tool/add_pmft.html', {'form': form, 'context': context_dict})
 
-    
+
+########################################## User Forms ###############################################
+
+def editSubteam(request, car_slug, system_slug):
+    context_dict = {}
+
+    system = System.objects.get(systemSlug=system_slug)
+
+    form = EditSubteam()
+    if request.method == 'POST':
+        form = EditSubteam(request.POST)
+        if form.is_valid():
+            return redirect(reverse('tool:home'))
+        else:
+            print(form.errors)
+
+    return render(request, 'tool/add_pmft.html', {'form': form, 'context': context_dict})
+
+
+
+
+########################################## User Logins ###############################################
+
 def register(request):
     registered = False
     if request.method == 'POST':
@@ -307,6 +329,8 @@ def user_login(request):
 def user_logout(request):
     logout(request)
     return redirect(reverse('tool:home'))
+
+
 
 
 ########################################## Helper Functions ###############################################

@@ -70,7 +70,7 @@ a{
 
 .car-card {
   height: 15rem;
-  border-width: 1px;
+  border-width: 0.9px;
   border-color: black;
     border-radius: 10px;
 }

@@ -324,7 +324,6 @@ def edit_subteam(request, car_slug, system_slug):
     context_dict['systemSlug'] = system_slug
     context_dict['subteams'] = subteams
 
-    print(subteams)
     form = EditSubteam()
     if request.method == 'POST':
         form = EditSubteam(request.POST)
@@ -345,6 +344,28 @@ def delete_subteam(request, car_slug, system_slug, subteam_slug):
 
      subteam.systems.remove(system)
      return redirect(request.META.get('HTTP_REFERER', 'redirect_if_referer_not_found'))
+
+
+def edit_assign_eng(request, car_slug, system_slug, assembly_slug):
+    context_dict = {}
+
+    system = System.objects.get(systemSlug=system_slug)
+
+    context_dict['carSlug'] = car_slug
+    context_dict['systemSlug'] = system_slug
+    context_dict['assemblySlug'] = assembly_slug
+
+    form = EditSubteam()
+    if request.method == 'POST':
+        form = EditSubteam(request.POST)
+        if form.is_valid():
+           
+            return redirect(reverse('tool:system_display', args=[car_slug, system_slug]))
+        else:
+            print(form.errors)
+
+    return render(request, 'tool/edit_assign_eng.html', {'form': form, 'context': context_dict})
+
 
 ########################################## User Logins ###############################################
 

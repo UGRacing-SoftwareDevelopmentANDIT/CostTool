@@ -13,8 +13,9 @@ path('car/<slug:car_slug>/<slug:system_slug>', views.system_display, name = 'sys
 path('car/<slug:car_slug>/<slug:system_slug>/editSubteam', views.edit_subteam, name = 'edit_subteam'),
 path('car/<slug:car_slug>/<slug:system_slug>/<slug:subteam_slug>/delete', views.delete_subteam, name = 'delete_subteam'),
 
-
 path('car/<slug:car_slug>/<slug:system_slug>/add-assembly', views.add_assembly, name="add_assembly"),
+path('car/<slug:car_slug>/<slug:system_slug>/<slug:assembly_slug>/editAssignEng', views.edit_assign_eng, name = 'edit_assign_eng'),
+
 path('car/<slug:car_slug>/<slug:system_slug>/<slug:assembly_slug>/addPart', views.add_part, name = 'add_part'),
 path('car/<slug:car_slug>/<slug:system_slug>/<slug:assembly_slug>/<slug:part_slug>/addPMFT', views.add_pmft, name = 'add_pmft'),
 path('register/', views.register, name='register'),

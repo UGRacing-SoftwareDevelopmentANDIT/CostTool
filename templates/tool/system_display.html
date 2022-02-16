@@ -43,6 +43,11 @@
               </div>
             </div>
           </div>
+
+          {% if display_edit_assignees %}
+          <a class="text-black fw-bold" href="{% url 'tool:edit_assign_eng' car.carSlug system.systemSlug assembly_key.assemblySlug %}"> edit engineer</a>
+          {% endif %}
+
           <div class="accordion accordion-flush">
             {% for part_key, pmfts in parts.items %}
               {# Part row #}

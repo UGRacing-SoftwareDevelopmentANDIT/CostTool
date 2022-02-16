@@ -80,3 +80,11 @@ class EditSubteam(forms.ModelForm):
     class Meta:
         model = Subteam
         fields = ('subteamQ',)
+
+
+class EditAssignEnd(forms.ModelForm):
+    engineer = forms.CharField(max_length=100, required=True)
+
+    class Meta:
+        model = Assembly
+        fields = ('engineer',)

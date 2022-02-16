@@ -12,8 +12,6 @@
       <div id=sign_in_box>
       <h1>Assign Subteam</h1>
 
-      {{context.allTeams}}
-
       {% if context.subteams %}
             <h3>Subteams</h3>
             {% for subteam in context.subteams %}
@@ -30,9 +28,6 @@
                   No Subteams assigned
             </p>
       {% endif %}
-
-
-
 
 	{% if form.errors %}
 			{% for field in form %}

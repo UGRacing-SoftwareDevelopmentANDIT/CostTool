@@ -125,14 +125,17 @@ def system_display(request, system_slug, car_slug):
         access_bool = {}
         output = {}
         subteams = Subteam.objects.filter(systems=system)
-        
+        print("sdfghjkl;'kjiyfdfghjop[]poiukdhjkl[];[plkhjg,kjlk;")
+        print(user_account.rank)
+
         #makes sure a user can only see the page if in assigned subteam
         for subteam in subteams:
             if TeamLinking.objects.filter(user=user_account, subteam=subteam).exists():
                 sysAssigned= True
             if user_account.rank >= 4 or TeamLinking.objects.filter(user=user_account, subteam=subteam, teamHead=True).exists():
                 sysAssignedTH = True
-        if not sysAssigned:
+                print("wrazsexdrfctgvuhjnikml,;.'/#,lazsxdrcftvgyijnmokl,p.;['/")
+        if not (sysAssigned or sysAssignedTH):
             return redirect('tool:car_display', car_slug=car_slug)
 
         #display_eddit_assignees is the same regardless of assembly

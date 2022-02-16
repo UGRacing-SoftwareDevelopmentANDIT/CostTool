@@ -4,7 +4,6 @@ from django.db import models
 from django.template.defaultfilters import join, slugify
 from django.contrib.auth.models import User
 
-
 #we should consider how deletions should work, cascade or set to null could make quite a difference
 
 
@@ -18,7 +17,7 @@ class UserAccount(models.Model):
     def __str__(self):
         return self.user.username
 
-
+      
 class Car(models.Model):
     #this will be auto created by conjoining name and year
     carID = models.CharField(max_length=8, unique=True, primary_key=True)
@@ -31,15 +30,19 @@ class Car(models.Model):
 
     def save(self, *args, **kwargs):
         self.carSlug = '-'.join((slugify(self.carName), slugify(self.carYear)))
+        self.carID = '-'.join((slugify(self.carName), slugify(self.carYear)))
         super(Car, self).save(*args, **kwargs)
-        class Meta:
-            def __str__(self):
-                return self.slug
+    class Meta:
+        constraints = [
+        models.UniqueConstraint(fields=['carYear', 'carName'], name='unique_carName_carYear')
+    ]
+        def __str__(self):
+            return self.slug
 
 
 class System(models.Model):
     systemID = models.AutoField(primary_key=True)
-    systemName = models.CharField(max_length=15)
+    systemName = models.CharField(max_length=30)
     carID = models.ForeignKey(Car, on_delete=models.SET_NULL, null = True)
     costed = models.BooleanField(default=False)
     systemSlug = models.SlugField(unique=True, default="system-")
@@ -47,29 +50,34 @@ class System(models.Model):
     def save(self, *args, **kwargs):
         self.systemSlug = (slugify(self.systemName))
         super(System, self).save(*args, **kwargs)
-        class Meta:
-            def __str__(self):
-                return self.slug
+    class Meta:
+        
+        constraints = [
+        models.UniqueConstraint(fields=['carID', 'systemName'], name='unique_carID_systemName')
+        ]
+
+        def __str__(self):
+            return self.slug
 
 
 class Assembly(models.Model):
     assemblyID = models.AutoField(primary_key=True)
-    assemblyName = models.CharField(max_length=15)
-    systemID = models.ForeignKey(System, on_delete=models.SET_NULL, null=True)
+    assemblyName = models.CharField(max_length=30)
+    systemID = models.ForeignKey(System, on_delete=models.SET_NULL, null = True)
     assemblyQuantity = models.IntegerField()
     assemblySlug = models.SlugField(unique=True, default="assembly-")
     user = models.ForeignKey(UserAccount, on_delete=models.SET_NULL, null=True)
 
-    def validate_unique(self, exclude = None):
-        if Assembly.objects.exclude(assemblyID=self.assemblyID).filter(assemblyName=self.assemblyName, systemID=self.systemID).exists():
-            raise ValidationError('There already exists some assmbly with that name in this system')
-            super(Assembly,self).validate_unique(exclude=exclude)
     def save(self, *args, **kwargs):
         self.assemblySlug = '-'.join((slugify(self.assemblyID), slugify(self.assemblyName)))
         super(Assembly, self).save(*args, **kwargs)
-        class Meta:
-            def __str__(self):
-                return self.slug
+    class Meta:
+        constraints = [
+            models.UniqueConstraint(fields=['assemblyName', 'systemID'], name='unique_assemblyName_systemID')
+        ]
+
+        def __str__(self):
+            return self.slug
 
 
 class Part(models.Model):
@@ -87,9 +95,13 @@ class Part(models.Model):
     def save(self, *args, **kwargs):
         self.partSlug = '-'.join((slugify(self.partID),slugify(self.partName)))
         super(Part, self).save(*args, **kwargs)
-        class Meta:
-            def __str__(self):
-                return self.slug
+    class Meta:
+        #additional requirement of parts being unique within systems is also needed
+        constraints = [
+            models.UniqueConstraint(fields=['partName', 'assemblyID'], name='unique_partName_assemblyID')
+        ]
+        def __str__(self):
+            return self.slug
 
 
 class PMFT(models.Model):
@@ -107,9 +119,9 @@ class PMFT(models.Model):
     def save(self, *args, **kwargs):
         self.pmftSlug = '-'.join((slugify(self.pmftID),slugify(self.pmftName)))
         super(PMFT, self).save(*args, **kwargs)
-        class Meta:
-            def __str__(self):
-                return self.slug
+    class Meta:
+        def __str__(self):
+            return self.slug
 
 
 class Subteam(models.Model):

@@ -37,14 +37,12 @@ def home(request):
     response = render(request, 'tool/home.html', context=context_dict)
     return response
 
-
 def about(request):
     # information page
     context_dict = {}
     return render(request, 'tool/about.html', context=context_dict)
 
 ########################################## Displays ###############################################
-
 
 def car_display(request, car_slug):
     context_dict = {}
@@ -55,46 +53,53 @@ def car_display(request, car_slug):
 
         context_dict['car'] = car
         context_dict['systems'] = systems
-
         context_dict['archived'] = car.archived
         context_dict['user_rank'] = user_rank
-        context_dict['access_bool'] = {}
-        context_dict['th_bool'] = {}
-        access_bool = {}
-        th_bool = {}
 
-        if car.archived == True:
-            context_dict['display_edit_system'] = False
+        #accesss_bool : systemID -> (access the system , eddit the system)
+        context_dict['access_bool'] = {}
+        access_bool = {}
+
+        #display_add_system is defined here as it only shows once on page
+        #display_edit_subteam is defined here because its value only depends on user and is the same for all systems
+        if car.archived:
             context_dict['display_add_system'] = False
             context_dict['display_edit_subteam'] = False
         elif user_account.rank >= 4:
-            context_dict['display_edit_system'] = True
             context_dict['display_add_system'] = True
             context_dict['display_edit_subteam'] = True
-        elif user_account.rank >= 2:
-            # If assigned to system check
-            for system in systems:
-                subteams = Subteam.objects.filter(systems=system)
-                found = False
-                th = False
-                for subteam in subteams:
-                    if TeamLinking.objects.filter(user=user_account, subteam=subteam).exists():
-                        found = True
-                    if TeamLinking.objects.filter(user=user_account, subteam=subteam, teamHead=True).exists():
-                        th = True
-                    else:
-                        context_dict['display_edit_system'] = False
-                    
-                    context_dict['display_add_system'] = False
-                    context_dict['display_edit_subteam'] = False
-                if found:
-                    if th:
-                        access_bool[system.systemID] = (True, True)
-                    else:
-                        access_bool[system.systemID] = (True, False)
-                else:
-                    access_bool[system.systemID] = (False, False)
+        else:
+            context_dict['display_add_system'] = False
+            context_dict['display_edit_subteam'] = False
 
+        for system in systems:
+            #if a car is archived no edditing regardless of user/system
+            if car.archived:
+                    access_bool[system.systemID] = (False, False)
+            #is a user is CH they have full priviledges for all systems        
+            elif user_account.rank >= 4:
+                    access_bool[system.systemID] = (True, True)
+            else:
+                subteams = Subteam.objects.filter(systems=system)        
+                assignedTH = False
+                assignedEng = False 
+                for subteam in subteams:
+                    #if a user is linked to a subteam that is assigned to the system
+                    if TeamLinking.objects.filter(user=user_account, subteam=subteam).exists():
+                        #if the above linking is that of a team head
+                        if TeamLinking.objects.filter(user=user_account, subteam=subteam, teamHead=True).exists():
+                            assignedTH = True
+                        else:
+                            assignedEng = True
+                if assignedEng:
+                    #if assigned and not a TH     
+                    access_bool[system.systemID] = (True, False)
+                elif assignedTH:
+                    #if assigned and a TH
+                    access_bool[system.systemID] = (True, True)  
+                else:
+                    #if they are never in a assigned subteam
+                    access_bool[system.systemID] = (False, False)                                
 
         context_dict['access_bool'] = access_bool
 
@@ -103,26 +108,74 @@ def car_display(request, car_slug):
 
     return render(request, 'tool/car_display.html', context=context_dict)
 
-
+@login_required
 def system_display(request, system_slug, car_slug):
     context_dict = {}
     try:
+        user_account, user_rank = get_user_details(request)
         system = System.objects.get(systemSlug=system_slug)
         car = Car.objects.get(carSlug=car_slug)
         assemblys = Assembly.objects.filter(systemID=system)
 
+
+        sysAssignedTH = False
+        sysAssigned = False
+
+        #access_bool: assemblyID -> = can edit assembly
+        access_bool = {}
         output = {}
+        subteams = Subteam.objects.filter(systems=system)
+        
+        #makes sure a user can only see the page if in assigned subteam
+        for subteam in subteams:
+            if TeamLinking.objects.filter(user=user_account, subteam=subteam).exists():
+                sysAssigned= True
+            if user_account.rank >= 4 or TeamLinking.objects.filter(user=user_account, subteam=subteam, teamHead=True).exists():
+                sysAssignedTH = True
+        if not sysAssigned:
+            return redirect('tool:car_display', car_slug=car_slug)
+
+        #display_eddit_assignees is the same regardless of assembly
+        #display_add_assembly is the same regardless of assembly
+        if car.archived:
+            context_dict['display_add_assembly'] = False
+            context_dict['display_edit_assignees'] = False
+        elif user_account.rank > 4:
+            context_dict['display_add_assembly'] = True
+            context_dict['display_edit_assignees'] = True
+        elif sysAssignedTH:
+            context_dict['display_add_assembly'] = True
+            context_dict['display_edit_assignees'] = True
+        else:
+            context_dict['display_add_assembly'] = False
+            context_dict['display_edit_assignees'] = False   
+
         for assembly in assemblys:
+            if car.archived:
+                access_bool[assembly.assemblyID] = False
+            elif user_account.rank > 4:
+                access_bool[assembly.assemblyID] = True
+            elif sysAssignedTH:
+                access_bool[assembly.assemblyID] = True
+            else :
+                if user_account == assembly.user:
+                    #eingineer has been assigned
+                    access_bool[assembly.assemblyID] = True
+                else:
+                    #eingineer has not been assigned
+                    access_bool[assembly.assemblyID] = False
             parts = Part.objects.filter(assemblyID=assembly.assemblyID)
             output[assembly] = {}
             for part in parts:
                 pmfts = PMFT.objects.filter(partID=part.partID)
                 output[assembly][part] = list(pmfts)
 
+
         context_dict['system'] = system
         context_dict['car'] = car
         context_dict['assemblys'] = assemblys
         context_dict['output'] = output
+        context_dict['user_rank'] = user_rank
 
     except System.DoesNotExist:
         context_dict['System'] = None

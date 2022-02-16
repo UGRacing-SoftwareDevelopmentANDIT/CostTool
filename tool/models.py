@@ -6,7 +6,17 @@ from django.contrib.auth.models import User
 #we should consider how deletions should work, cascade or set to null could make quite a difference
 
 
+class UserAccount(models.Model):
+    user = models.OneToOneField(
+        User, on_delete=models.CASCADE, unique=True, primary_key=True)
+    # Consider implementing a rank lookup model (instead of hard-coding levels look it up in a model)
+    # 2 being the "baseline" for a standard engineer, gives space to implement lower levels.
+    rank = models.IntegerField(default=2)
 
+    def __str__(self):
+        return self.user.username
+
+      
 class Car(models.Model):
     #this will be auto created by conjoining name and year
     carID = models.CharField(max_length=8, unique=True, primary_key=True)
@@ -55,6 +65,7 @@ class Assembly(models.Model):
     systemID = models.ForeignKey(System, on_delete=models.SET_NULL, null = True)
     assemblyQuantity = models.IntegerField()
     assemblySlug = models.SlugField(unique=True, default="assembly-")
+    user = models.ForeignKey(UserAccount, on_delete=models.SET_NULL, null=True)
 
     def save(self, *args, **kwargs):
         self.assemblySlug = '-'.join((slugify(self.assemblyID), slugify(self.assemblyName)))
@@ -110,17 +121,6 @@ class PMFT(models.Model):
     class Meta:
         def __str__(self):
             return self.slug
-
-
-class UserAccount(models.Model):
-    user = models.OneToOneField(
-        User, on_delete=models.CASCADE, unique=True, primary_key=True)
-    # Consider implementing a rank lookup model (instead of hard-coding levels look it up in a model)
-    # 2 being the "baseline" for a standard engineer, gives space to implement lower levels.
-    rank = models.IntegerField(default=2)
-
-    def __str__(self):
-        return self.user.username
 
 
 class Subteam(models.Model):

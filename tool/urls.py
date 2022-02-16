@@ -7,6 +7,7 @@ urlpatterns = [
 path('', views.home, name='home'), 
 path('car/addCar', views.add_car, name = 'add_car'),
 path('car/<slug:car_slug>', views.car_display, name = 'car_display'),
+path('car/<slug:car_slug>/delete', views.car_delete, name = 'car_delete'),
 path('car/<slug:car_slug>/addSystem', views.add_system, name = 'add_system'),
 path('car/<slug:car_slug>/<slug:system_slug>', views.system_display, name = 'system_display'),
 path('car/<slug:car_slug>/<slug:system_slug>/add-assembly', views.add_assembly, name="add_assembly"),

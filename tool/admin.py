@@ -1,5 +1,5 @@
 from django.contrib import admin
-from tool.models import PMFT, Car, UserAccount, System, Part, Assembly
+from tool.models import *
 '''
 class CategoryAdmin(admin.ModelAdmin):
     prepopulated_fields={'slug':('categoryName',)}
@@ -14,4 +14,5 @@ admin.site.register(Assembly)
 admin.site.register(System)
 admin.site.register(Part)
 admin.site.register(PMFT)
-
+admin.site.register(Subteam)
+admin.site.register(TeamLinking)

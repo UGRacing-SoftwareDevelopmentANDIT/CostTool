@@ -12,7 +12,7 @@ Python 3.10+, Django 3.2.8
 
 Begin by cloning the repository to your local machine:
 
-`git clone https://github.com/UGRacing-IT/recruit-onboarding`
+`git clone https://github.com/UGRacing-IT/costing-web-app`
 
 Create a virtual environment for dependencies:
 
@@ -67,12 +67,48 @@ This should hopefully fix any issues.
 
 ## Features
 
-TBA
+Features four different levels of users:
+
+* Engineer
+* Team Head
+* Cost Head
+* IT - Django superuser
+
+These ranks have significant flexibility for positions above, below and within the current ranks.
+
+Supports archived and active cars.
+
+### Population Scripts
+
+There is one included population script with this project.
+
+To use the population script, activate your virtual environment and ensure that your models are fully migrated by running:
+
+```
+python manage.py makemigrations
+python manage.py migrate
+```
+
+Then run: `python populate.py` from the repository's root directory. If successful, this should print `Completed population script, exiting...`
+
+#### Car Population Script
+
+The car population script creates a sample car with a single test assembly, with a system, part, and PMFT.
+
+#### User Population Script
+
+TBC
+
+Users can be also made using the Django admin interface.
 
 ## Contributors
 
-* Jolie Bonner
-* Lewis Tse
+* [Jolie Bonner](https://github.com/Jolie-B)
+* [Drew Edgar](https://github.com/drew-edgar)
+* [Rishabh Mathur](https://github.com/2465899m)
+* [Roksana Staszynska](https://github.com/2450370S)
+* [Lewis Tse](https://github.com/lewis-tse)
+* [Ivo Young](https://github.com/Ivo-Y)
 
 ## License
 

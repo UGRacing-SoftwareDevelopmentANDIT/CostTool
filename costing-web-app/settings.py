@@ -129,7 +129,7 @@ STATIC_URL = '/static/'
 
 STATICFILES_DIRS = [STATIC_DIR, ]
 
-LOGIN_URL = 'tool:sign_in'
+LOGIN_URL = 'tool:login'
 
 
 

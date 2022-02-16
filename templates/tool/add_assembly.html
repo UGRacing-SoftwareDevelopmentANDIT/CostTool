@@ -8,37 +8,47 @@
 {% endblock %}
 
 {% block body_block %}
-    <h1>Add Assembly</h1>
+    {% if edit %}
+        <h1>Edit Assembly: '{{ assembly.assemblyName }}'</h1>
 
-    {% if form.errors %}
-        {% for field in form %}
-            {% for error in field.errors %}
-                <div class="ERROR">
-                    <strong>{{ error|escape }}</strong>
-                </div>
-            {% endfor %}
-        {% endfor %}
-        {% for error in form.non_field_errors %}
-            <div class="ERROR">
-                <strong>{{ error|escape }}</strong>
+        <form method="POST" enctype="multipart/form-data" 
+        action="{% url 'tool:add_assembly' car.carSlug system.systemSlug assembly.assemblySlug %}">
+            {% csrf_token %}
+            <input type="hidden" name="systemID" value="{{ system.systemID }}"/>
+            <div class="form-group">
+                <label for="assemblyName">Assembly Name:</label>
+                <input type="text" class="form-control" name="assemblyName" size="15" value="{{assembly.assemblyName}}"/>
+
             </div>
-        {% endfor %}
-    {% endif %}
-    <form method="POST" enctype="multipart/form-data" action="{% url 'tool:add_assembly' car_slug system_slug %}">
-        {% csrf_token %}
-        <input type="hidden" name="systemID" value="{{ system }}"/>
-        <div class="form-group">
-            <label for="assemblyName">Assembly Name:</label>
-            <input type="text" class="form-control" name="assemblyName" size="15"/>
+            <div class="form-group">
+                <label for="assemblyQuantity">Quantity:</label>
+                <input type="text" class="form-control" name="assemblyQuantity" value="{{assembly.assemblyQuantity}}"/>
+            </div>
+            <br />
+            <div class="form-group">
+                <button type="submit" class="btn btn-primary">Edit Assembly</button>
+            </div>
+        </form>
+    {% else %}
+        <h1>Add Assembly</h1>
 
-        </div>
-        <div class="form-group">
-            <label for="assemblyQuantity">Quantity:</label>
-            <input type="text" class="form-control" name="assemblyQuantity"/>
-        </div>
-        <br />
-        <div class="form-group">
-            <button type="submit" class="btn btn-primary">Add Assembly</button>
-        </div>
-    </form>
+        <form method="POST" enctype="multipart/form-data" 
+        action="{% url 'tool:add_assembly' car.carSlug system.systemSlug %}">
+            {% csrf_token %}
+            <input type="hidden" name="systemID" value="{{ system.systemID }}"/>
+            <div class="form-group">
+                <label for="assemblyName">Assembly Name:</label>
+                <input type="text" class="form-control" name="assemblyName" size="15" value="{{assembly.assemblyName}}"/>
+
+            </div>
+            <div class="form-group">
+                <label for="assemblyQuantity">Quantity:</label>
+                <input type="text" class="form-control" name="assemblyQuantity" value="{{assembly.assemblyQuantity}}"/>
+            </div>
+            <br />
+            <div class="form-group">
+                <button type="submit" class="btn btn-primary">Add Assembly</button>
+            </div>
+        </form>
+    {% endif %}
 {% endblock %}

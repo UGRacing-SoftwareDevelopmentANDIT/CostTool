@@ -71,7 +71,7 @@ def car_display(request, car_slug):
             context_dict['display_edit_system'] = True
             context_dict['display_add_system'] = True
             context_dict['display_edit_subteam'] = True
-        elif user_account.rank >= 2:
+        elif user_account.rank >= 4:
             # If assigned to system check
             for system in systems:
                 subteams = Subteam.objects.filter(systems=system)
@@ -200,29 +200,33 @@ def add_system(request, car_slug, system_slug=None):
     return render(request, 'tool/add_system.html', context_dict)
 
 
-def add_assembly(request, car_slug, system_slug):
+def add_assembly(request, car_slug, system_slug, assembly_slug=None):
     context_dict = {}
-    try:
-        system = System.objects.get(systemSlug=system_slug)
+    context_dict['car'] = Car.objects.get(carSlug=car_slug)
+    context_dict['system'] = System.objects.get(systemSlug=system_slug)
+    assembly = None
+    context_dict['assembly'] = assembly
 
-        context_dict['system'] = system
-        context_dict['car_slug'] = car_slug
-        context_dict['system_slug'] = system_slug
-
-    except System.DoesNotExist:
-        context_dict['system'] = None
-
-    form = AssemblyForm()
-    if request.method == 'POST':
+    if assembly_slug:
+        assembly = get_object_or_404(Assembly, assemblySlug=assembly_slug)
+        form = AssemblyForm(request.POST, instance=assembly)
+    else:
         form = AssemblyForm(request.POST)
-        if form.is_valid():
-            newAssembly = form.save(commit=False)
+
+    if request.method == 'POST' and form.is_valid():
+        newAssembly = form.save(commit=False)
+        if not assembly_slug:
             newAssembly.systemID = System.objects.get(systemSlug=system_slug)
-            newAssembly.save()
-            return redirect(reverse('tool:system_display', args=[car_slug, system_slug]))
+        newAssembly.save()
+        return redirect(reverse('tool:system_display', args=[car_slug, system_slug]))
 
-    context_dict["form"] = form
-
+    context_dict['form'] = form
+    if assembly_slug:
+        context_dict['edit'] = True
+        context_dict['assembly'] = assembly
+    else:
+        context_dict['edit'] = False
+        
     return render(request, 'tool/add_assembly.html', context_dict)
   
  

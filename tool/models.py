@@ -49,10 +49,13 @@ class Assembly(models.Model):
 
     def validate_unique(self, exclude = None):
         if Assembly.objects.exclude(assemblyID=self.assemblyID).filter(assemblyName=self.assemblyName, systemID=self.systemID).exists():
-            raise ValidationError('There already exists some assmbly with that name in this system')
+            raise ValidationError('There already exists an assembly with that name in this system')
             super(Assembly,self).validate_unique(exclude=exclude)
+    
     def save(self, *args, **kwargs):
-        self.assemblySlug = '-'.join((slugify(self.assemblyID), slugify(self.assemblyName)))
+        # TODO: Need a solution for slugging here
+        # slugify(self.assemblyName) will return None, making each slug: none-<self.assemblyName>
+        self.assemblySlug = ('-'.join((slugify(self.systemID), slugify(self.assemblyName))))
         super(Assembly, self).save(*args, **kwargs)
         class Meta:
             def __str__(self):

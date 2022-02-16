@@ -42,11 +42,13 @@ class SystemForm(forms.ModelForm):
 class AssemblyForm(forms.ModelForm):
     assemblyName = forms.CharField(max_length=15)
     assemblyQuantity = forms.IntegerField()
+    assemblySlug = forms.CharField(widget=forms.HiddenInput(), required=False)
     
     class Meta:
         model = Assembly
         fields = ('assemblyName', 'assemblyQuantity',)
-        
+
+
 class PartForm(forms.ModelForm):
     partName = forms.CharField(max_length=15)
     makeBuy = forms.BooleanField()
@@ -73,4 +75,3 @@ class PMFTForm(forms.ModelForm):
     class Meta:
         model = PMFT
         fields = ('pmftName', 'pmftComment', 'pmftCost', 'pmftCurrency', 'pmftCostComment', 'pmftQuantity', 'pmftType', 'pmftSlug')
-

@@ -195,6 +195,7 @@ def add_assembly(request, car_slug, system_slug):
             newAssembly = form.save(commit=False)
             newAssembly.systemID = System.objects.get(systemSlug=system_slug)
             newAssembly.save()
+            newAssembly.save()
             return redirect(reverse('tool:system_display', args=[car_slug, system_slug]))
         else:
             print(form.errors)

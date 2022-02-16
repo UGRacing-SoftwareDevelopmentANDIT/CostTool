@@ -121,10 +121,9 @@ class Subteam(models.Model):
     def save(self, *args, **kwargs):
         self.subteamSlug= self.teamName
         super(Subteam, self).save(*args, **kwargs)
-    class Meta:
-        def __str__(self):
-            return self.slug 
 
+    def __str__(self):
+            return self.teamName     
 
 class TeamLinking(models.Model):
     id = models.AutoField(primary_key=True)

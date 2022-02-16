@@ -332,7 +332,7 @@ def edit_subteam(request, car_slug, system_slug):
             print(form['subteamQ'].value())
             subteam = Subteam.objects.get(teamName = form['subteamQ'].value())
             subteam.systems.add(system)
-            return redirect(reverse('tool:home'))
+            return redirect(reverse('tool:edit_subteam', args=[car_slug, system_slug]))
         else:
             print(form.errors)
 

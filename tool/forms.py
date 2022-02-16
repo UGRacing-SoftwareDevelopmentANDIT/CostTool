@@ -75,8 +75,7 @@ class AddPMFTForm(forms.ModelForm):
 
 
 class EditSubteam(forms.ModelForm):
-    subteamQ = forms.ModelChoiceField(queryset=Subteam.objects.all().order_by('teamName'))
-    #widget=Select(),required=True,
+    subteamQ = forms.ModelChoiceField(queryset=Subteam.objects.all().order_by('teamName'),required=True)
 
     class Meta:
         model = Subteam

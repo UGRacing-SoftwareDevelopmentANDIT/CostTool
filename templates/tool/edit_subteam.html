@@ -54,7 +54,7 @@
                   {% csrf_token %}
 
                   Add subteam
-                  {{ form.subteamQ}}
+                  {{form.subteamQ}}
 
                   {% if form.subteam.errors %}
                         {% for error in form.subteam.errors %}<p>{{ error }}</p>{% endfor %}

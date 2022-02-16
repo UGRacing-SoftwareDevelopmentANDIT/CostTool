@@ -329,6 +329,9 @@ def edit_subteam(request, car_slug, system_slug):
     if request.method == 'POST':
         form = EditSubteam(request.POST)
         if form.is_valid():
+            print(form['subteamQ'].value())
+            subteam = Subteam.objects.get(teamName = form['subteamQ'].value())
+            subteam.systems.add(system)
             return redirect(reverse('tool:home'))
         else:
             print(form.errors)
@@ -342,14 +345,6 @@ def delete_subteam(request, car_slug, system_slug, subteam_slug):
 
      subteam.systems.remove(system)
      return redirect(request.META.get('HTTP_REFERER', 'redirect_if_referer_not_found'))
-
-def car_delete(request, car_slug):
-    car = Car.objects.filter(carSlug = car_slug)
-    car.delete()
-    #This should hopefully retun the user to the current page refreshed
-    return redirect(request.META.get('HTTP_REFERER', 'redirect_if_referer_not_found'))
-
-
 
 ########################################## User Logins ###############################################
 

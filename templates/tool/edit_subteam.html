@@ -12,6 +12,8 @@
       <div id=sign_in_box>
       <h1>Assign Subteam</h1>
 
+      {{context.allTeams}}
+
       {% if context.subteams %}
             <h3>Subteams</h3>
             {% for subteam in context.subteams %}
@@ -29,6 +31,9 @@
             </p>
       {% endif %}
 
+
+
+
 	{% if form.errors %}
 			{% for field in form %}
 				{% for error in field.errors %}
@@ -44,12 +49,17 @@
 			{% endfor %}
 		{% endif %}
 
+
             <form id="create_hack_form" method="post" enctype="multipart/form-data"action="{% url 'tool:edit_subteam' context.carSlug context.systemSlug %}">
                   {% csrf_token %}
-        
-                  <label for="subteam"><b>subteam: </b></label>
-                  <input type="text" name="subteam" value="" size="50"/>
-        
+
+                  Add subteam
+                  {{ form.subteamQ}}
+
+                  {% if form.subteam.errors %}
+                        {% for error in form.subteam.errors %}<p>{{ error }}</p>{% endfor %}
+                  {% endif %}
+      
                   <input type="submit" value="Submit" />
         
               </form>

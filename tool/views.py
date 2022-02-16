@@ -428,6 +428,10 @@ def user_logout(request):
     return redirect(reverse('tool:home'))
 
   
+@login_required
+def change_password(request):
+    return render(request, 'tool/change_password.html')
+  
 ########################################## Delete Model Instance ###############################################
 
 def car_delete(request, car_slug):
@@ -435,8 +439,8 @@ def car_delete(request, car_slug):
     car.delete()
     #This should hopefully retun the user to the current page refreshed
     return redirect(request.META.get('HTTP_REFERER', 'redirect_if_referer_not_found'))
+ 
 
-  
 def system_delete(request, system_slug):
     system = System.objects.filter(systemSlug = system_slug)
     system.delete()

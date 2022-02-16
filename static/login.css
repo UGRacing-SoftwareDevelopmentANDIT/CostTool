@@ -1,0 +1,36 @@
+#bg {
+  background-size: 1920px 1090px;
+  background-repeat: no-repeat;
+  background-position: top;
+  background-attachment: fixed;
+}
+
+.login_section{
+  background-color: #212529;
+  color: white;
+  text-align: center;
+  padding: 35px;
+  width: 50%;
+  min-width: 300px;
+  margin-left: 25%;
+  margin-right: 25%;
+  margin-top: 10%;
+  border-color: black;
+  border-radius: 10px;
+}
+
+.login_section img {
+  margin-bottom: 15px;
+}
+
+.box {
+  width: 80%;
+  margin-left: 10%;
+  margin-right: 10%;
+}
+
+.login_btn {
+  background-color: #FFCC00;
+  width: 50%;
+  font-weight: bold;
+}

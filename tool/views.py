@@ -328,7 +328,6 @@ def edit_subteam(request, car_slug, system_slug):
     if request.method == 'POST':
         form = EditSubteam(request.POST)
         if form.is_valid():
-            print(form['subteamQ'].value())
             subteam = Subteam.objects.get(teamName = form['subteamQ'].value())
             subteam.systems.add(system)
             return redirect(reverse('tool:edit_subteam', args=[car_slug, system_slug]))
@@ -349,17 +348,23 @@ def delete_subteam(request, car_slug, system_slug, subteam_slug):
 def edit_assign_eng(request, car_slug, system_slug, assembly_slug):
     context_dict = {}
 
-    system = System.objects.get(systemSlug=system_slug)
+
+    assembly = Assembly.objects.get(assemblySlug = assembly_slug)
+
+    currentEng = assembly.user
 
     context_dict['carSlug'] = car_slug
     context_dict['systemSlug'] = system_slug
     context_dict['assemblySlug'] = assembly_slug
+    context_dict['currentEng'] = currentEng
 
-    form = EditSubteam()
+    form = EditAssignEng()
     if request.method == 'POST':
-        form = EditSubteam(request.POST)
+        form = EditAssignEng(request.POST)
         if form.is_valid():
-           
+            user = UserAccount.objects.get(pk = form['engineer'].value())
+            assembly.user = user
+            assembly.save()
             return redirect(reverse('tool:system_display', args=[car_slug, system_slug]))
         else:
             print(form.errors)

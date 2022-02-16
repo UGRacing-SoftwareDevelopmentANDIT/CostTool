@@ -82,8 +82,8 @@ class EditSubteam(forms.ModelForm):
         fields = ('subteamQ',)
 
 
-class EditAssignEnd(forms.ModelForm):
-    engineer = forms.CharField(max_length=100, required=True)
+class EditAssignEng(forms.ModelForm):
+    engineer = forms.ModelChoiceField(queryset=UserAccount.objects.all(), required=True)
 
     class Meta:
         model = Assembly

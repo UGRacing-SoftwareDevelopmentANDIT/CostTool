@@ -1,0 +1,54 @@
+{% extends 'tool/base.html' %}
+{% load static %}
+
+{% block css_block %}
+
+<link rel="stylesheet" type="text/css" href="{% static 'home.css' %}">
+
+{% endblock %}
+
+
+{% block body_block %}
+      <div id=sign_in_box>
+      <h1>Assign Engineer</h1>
+
+      {% if context.currentEng %}
+      <p>
+           current engineer: {{context.currentEng}}
+      </p>
+      {% else %}
+      <p>No engineer currently assigned </p>
+      {% endif %}
+
+
+	{% if form.errors %}
+			{% for field in form %}
+				{% for error in field.errors %}
+					<div class="ERROR"
+						<strong>{{ error|escape }}</strong>
+					</div>
+				{% endfor %}
+			{% endfor %}
+			{% for error in form.non_field_errors %}
+				<div class="ERROR">
+					<strong>{{ error|escape }}</strong>
+				</div>
+			{% endfor %}
+		{% endif %}
+
+
+            <form id="create_hack_form" method="post" enctype="multipart/form-data"action="{% url 'tool:edit_assign_eng' context.carSlug context.systemSlug context.assemblySlug%}">
+                  {% csrf_token %}
+
+                  Add subteam
+                  {{form.engineer}}
+
+                  {% if form.subteam.errors %}
+                        {% for error in form.subteam.errors %}<p>{{ error }}</p>{% endfor %}
+                  {% endif %}
+
+                  <input type="submit" value="Submit" />
+        
+              </form>
+      </div>
+{% endblock %}

@@ -183,7 +183,7 @@ def system_display(request, system_slug, car_slug):
     return render(request, 'tool/system_display.html', context=context_dict)
 
 
-    ########################################## Forms ###############################################
+    ########################################## Car Forms ###############################################
 
 
 def add_car(request):
@@ -312,7 +312,69 @@ def add_pmft(request, car_slug, system_slug, assembly_slug, part_slug):
 
     return render(request, 'tool/add_pmft.html', {'form': form, 'context': context_dict})
 
-    
+
+########################################## User Forms ###############################################
+
+def edit_subteam(request, car_slug, system_slug):
+    context_dict = {}
+
+    system = System.objects.get(systemSlug=system_slug)
+    subteams = Subteam.objects.filter(systems = system)
+
+    context_dict['carSlug'] = car_slug
+    context_dict['systemSlug'] = system_slug
+    context_dict['subteams'] = subteams
+
+    form = EditSubteam()
+    if request.method == 'POST':
+        form = EditSubteam(request.POST)
+        if form.is_valid():
+            subteam = Subteam.objects.get(teamName = form['subteamQ'].value())
+            subteam.systems.add(system)
+            return redirect(reverse('tool:edit_subteam', args=[car_slug, system_slug]))
+        else:
+            print(form.errors)
+
+    return render(request, 'tool/edit_subteam.html', {'form': form, 'context': context_dict})
+
+
+def delete_subteam(request, car_slug, system_slug, subteam_slug):
+     system = System.objects.get(systemSlug=system_slug)
+     subteam = Subteam.objects.get(subteamSlug = subteam_slug)
+
+     subteam.systems.remove(system)
+     return redirect(request.META.get('HTTP_REFERER', 'redirect_if_referer_not_found'))
+
+
+def edit_assign_eng(request, car_slug, system_slug, assembly_slug):
+    context_dict = {}
+
+
+    assembly = Assembly.objects.get(assemblySlug = assembly_slug)
+
+    currentEng = assembly.user
+
+    context_dict['carSlug'] = car_slug
+    context_dict['systemSlug'] = system_slug
+    context_dict['assemblySlug'] = assembly_slug
+    context_dict['currentEng'] = currentEng
+
+    form = EditAssignEng()
+    if request.method == 'POST':
+        form = EditAssignEng(request.POST)
+        if form.is_valid():
+            user = UserAccount.objects.get(pk = form['engineer'].value())
+            assembly.user = user
+            assembly.save()
+            return redirect(reverse('tool:system_display', args=[car_slug, system_slug]))
+        else:
+            print(form.errors)
+
+    return render(request, 'tool/edit_assign_eng.html', {'form': form, 'context': context_dict})
+
+
+########################################## User Logins ###############################################
+
 def register(request):
     registered = False
     if request.method == 'POST':
@@ -395,6 +457,7 @@ def pmft_delete(request, pmft_slug):
     pmft.delete()
     return redirect(request.META.get('HTTP_REFERER', 'redirect_if_referer_not_found'))
 
+  
 ########################################## Helper Functions ###############################################
 
 def get_user_details(request):

@@ -32,12 +32,14 @@ class Car(models.Model):
         self.carSlug = '-'.join((slugify(self.carName), slugify(self.carYear)))
         self.carID = '-'.join((slugify(self.carName), slugify(self.carYear)))
         super(Car, self).save(*args, **kwargs)
+    
+    def __str__(self):
+        return self.carSlug    
     class Meta:
         constraints = [
         models.UniqueConstraint(fields=['carYear', 'carName'], name='unique_carName_carYear')
     ]
-        def __str__(self):
-            return self.slug
+       
 
 
 class System(models.Model):
@@ -50,15 +52,17 @@ class System(models.Model):
     def save(self, *args, **kwargs):
         self.systemSlug = (slugify(self.systemName))
         super(System, self).save(*args, **kwargs)
+
+    def __str__(self):
+        return self.systemSlug
+   
     class Meta:
         
         constraints = [
         models.UniqueConstraint(fields=['carID', 'systemName'], name='unique_carID_systemName')
         ]
 
-        def __str__(self):
-            return self.slug
-
+        
 
 class Assembly(models.Model):
     assemblyID = models.AutoField(primary_key=True)
@@ -71,14 +75,16 @@ class Assembly(models.Model):
     def save(self, *args, **kwargs):
         self.assemblySlug = '-'.join((slugify(self.assemblyID), slugify(self.assemblyName)))
         super(Assembly, self).save(*args, **kwargs)
+
+    def __str__(self):
+        return self.assemblySlug
+
     class Meta:
         constraints = [
             models.UniqueConstraint(fields=['assemblyName', 'systemID'], name='unique_assemblyName_systemID')
         ]
 
-        def __str__(self):
-            return self.slug
-
+        
 
 class Part(models.Model):
     partID = models.AutoField(primary_key=True)
@@ -95,13 +101,15 @@ class Part(models.Model):
     def save(self, *args, **kwargs):
         self.partSlug = '-'.join((slugify(self.partID),slugify(self.partName)))
         super(Part, self).save(*args, **kwargs)
+    
+    def __str__(self):
+        return self.partSlug
     class Meta:
         #additional requirement of parts being unique within systems is also needed
         constraints = [
             models.UniqueConstraint(fields=['partName', 'assemblyID'], name='unique_partName_assemblyID')
         ]
-        def __str__(self):
-            return self.slug
+      
 
 
 class PMFT(models.Model):
@@ -119,15 +127,15 @@ class PMFT(models.Model):
     def save(self, *args, **kwargs):
         self.pmftSlug = '-'.join((slugify(self.pmftID),slugify(self.pmftName)))
         super(PMFT, self).save(*args, **kwargs)
-    class Meta:
-        def __str__(self):
-            return self.slug
+
+    def __str__(self):
+        return self.pmftSlug
 
 
 class Subteam(models.Model):
     teamName = models.CharField(max_length=20, unique=True, primary_key=True)
     abbr = models.CharField(max_length=10, unique=True)
-    systems = models.ManyToManyField(System)
+    systems = models.ManyToManyField(System, blank=True)
     subteamSlug = models.SlugField(unique=True, default='team-')
 
     def save(self, *args, **kwargs):

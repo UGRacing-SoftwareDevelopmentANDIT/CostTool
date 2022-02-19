@@ -117,7 +117,7 @@ def system_display(request, system_slug, car_slug):
         car = Car.objects.get(carSlug=car_slug)
         assemblys = Assembly.objects.filter(systemID=system)
 
-
+        costHead = False
         sysAssignedTH = False
         sysAssigned = False
 
@@ -127,13 +127,17 @@ def system_display(request, system_slug, car_slug):
         subteams = Subteam.objects.filter(systems=system)
 
         #makes sure a user can only see the page if in assigned subteam
+        if user_account.rank >= 4:
+            costHead = True
         for subteam in subteams:
             if TeamLinking.objects.filter(user=user_account, subteam=subteam).exists():
                 sysAssigned= True  
-            if user_account.rank >= 4 or TeamLinking.objects.filter(user=user_account, subteam=subteam, teamHead=True).exists():
+            if  TeamLinking.objects.filter(user=user_account, subteam=subteam, teamHead=True).exists():
                 sysAssignedTH = True
-        if not (sysAssigned or sysAssignedTH):
+        if not (sysAssigned or sysAssignedTH or costHead):
            return redirect('tool:car_display', car_slug=car_slug)
+
+
 
         #display_eddit_assignees is the same regardless of assembly
         #display_add_assembly is the same regardless of assembly

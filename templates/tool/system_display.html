@@ -69,37 +69,51 @@
                       <div class="row">
                         <div class="col-1">
                         </div>
-                        <div class="col-1" style="font-weight: 600;">
-                          M/B
-                        </div>
-                        <div class="col-1" style="font-weight: 600;">
-                          Part
-                        </div>
-                        <div class="col-1" style="font-weight: 600;">
-                          P/M/F/T
-                        </div>
-                        <div class="col-1" style="font-weight: 600;">
-
-                        </div>
-                        <div class="col-3" style="font-weight: 600;">
-                          Comments
-                        </div>
-                        <div class="col-1 text-center" style="font-weight: 600;">
-                          Qt
-                        </div>
-                        <div class="col-1 text-center" style="font-weight: 600;">
-                          Cost
-                        </div>
-                        <div class="col-2 text-center" style="font-weight: 600;">
-                          ID
-                        </div>
+                            <div class="col-1" style="font-weight: 600;">
+                              P/M/F/T
+                            </div>
+                            <div class="col-3" style="font-weight: 600;">
+                              Comment
+                            </div>
+                            <div class="col-1 text-center" style="font-weight: 600;">
+                              Qt
+                            </div>
+                            <div class="col-1 text-center" style="font-weight: 600;">
+                              Cost
+                            </div>
+                            <div class="col-1 text-center" style="font-weight: 600;">
+                              Currency
+                            </div>
+                            <div class="col-3" style="font-weight: 600;">
+                              Cost Comment
+                            </div>
                       </div>
                     </div>
                     <div style="padding:0.75rem 1.25rem;background-color:#e8e8e8;font-size: 16px;">
                       {% for pmft in pmfts %}
                         {# PMFT row #}
-                        <div class="mx-3">
-                          {{ pmft.pmftID }} {{ pmft.pmftName }}
+                        <div class="row">
+                          <div class="col-1" style="font-weight: 600;">
+                            {{pmft.pmftName}}
+                          </div>
+                          <div class="col-1" style="font-weight: 600;">
+                            {{pmft.pmftType}}
+                          </div>
+                          <div class="col-3" style="font-weight: 600;">
+                            {{pmft.pmftComment}}
+                          </div>
+                          <div class="col-1 text-center" style="font-weight: 600;">
+                            {{pmft.pmftQuantity}}
+                          </div>
+                          <div class="col-1 text-center" style="font-weight: 600;">
+                            {{pmft.pmftCost}}
+                          </div>
+                          <div class="col-1 text-center" style="font-weight: 600;">
+                            {{pmft.pmftCurrency}}
+                          </div>
+                          <div class="col-3" style="font-weight: 600;">
+                            {{pmft.pmftCostComment}}
+                          </div>
                         </div>
                       {% endfor %}
                     </div>

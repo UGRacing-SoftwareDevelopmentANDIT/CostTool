@@ -42,6 +42,30 @@ def populate():
 
 
 def populate():
+    userInfoAdmins = [
+        {'user': 'Jolie',
+          'email': 'Jolie@gmail.com',
+          'password': 'Jolie1234'},
+    ]
+    userAccounts = []
+    for user in userInfoAdmins:
+        userAccounts.append(AddUserAccountAdmins(user['user'], user['email'], user['password']))
+
+
+    userInfoCostHeads = [
+         {'user': 'Fraser',
+          'email': 'Fraser@gmail.com',
+          'password': 'Fraser1234'},
+           {'user': 'Riccardo',
+          'email': 'Riccardo@gmail.com',
+          'password': 'Riccardo1234'},
+    ]
+    userAccounts = []
+    for user in userInfoCostHeads:
+        userAccounts.append(AddUserAccountCostHeads(user['user'], user['email'], user['password']))
+
+
+
     carinfo = [
          {
           'carID': 'Test2021',   
@@ -109,16 +133,25 @@ def populate():
         PMFT.append(pm)
 
 
-def AddUserAccount(userName, email, pword, verified):
+def AddUserAccountAdmins(userName, email, pword):
     user=User.objects.create_user(userName, email=email, password=pword)
     user.is_superuser=True
     user.is_staff=True
     user.save()
-    u = UserAccount.objects.get_or_create(user=user, verified=verified)[0]
+    u = UserAccount.objects.get_or_create(user=user, rank = 4)[0]
     u.user = user
-    u.verified = verified
     u.save()
     return u
+
+def AddUserAccountCostHeads(userName, email, pword):
+    user=User.objects.create_user(userName, email=email, password=pword)
+    user.is_superuser=False
+    user.is_staff=False
+    user.save()
+    u = UserAccount.objects.get_or_create(user=user, rank = 4)[0]
+    u.user = user
+    u.save()
+    return u    
 
 def add_car(carID,carName,carYear):
 

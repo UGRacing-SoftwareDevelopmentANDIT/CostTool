@@ -125,8 +125,6 @@ def system_display(request, system_slug, car_slug):
         access_bool = {}
         output = {}
         subteams = Subteam.objects.filter(systems=system)
-        print("sdfghjkl;'kjiyfdfghjop[]poiukdhjkl[];[plkhjg,kjlk;")
-        print(user_account.rank)
 
         #makes sure a user can only see the page if in assigned subteam
         for subteam in subteams:
@@ -134,7 +132,6 @@ def system_display(request, system_slug, car_slug):
                 sysAssigned= True
             if user_account.rank >= 4 or TeamLinking.objects.filter(user=user_account, subteam=subteam, teamHead=True).exists():
                 sysAssignedTH = True
-                print("wrazsexdrfctgvuhjnikml,;.'/#,lazsxdrcftvgyijnmokl,p.;['/")
         if not (sysAssigned or sysAssignedTH):
             return redirect('tool:car_display', car_slug=car_slug)
 

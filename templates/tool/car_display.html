@@ -10,11 +10,11 @@
 
   <h3 class="font-weight-bold">
     {% if car.archived %}
-      Car <span class="text-uppercase">{{car.carName }} {{ car.carYear }} ARCHIVED</span></br>
+      Car: <span class="text-uppercase">{{car.carName }} {{ car.carYear }} ARCHIVED</span></br>
     {% else %}
-      Car <span class="text-uppercase">{{car.carName }} {{ car.carYear }}</span></br>
+      Car: <span class="text-uppercase">{{car.carName }} {{ car.carYear }}</span></br>
     {% endif %}
-    SYSTEMS
+    Systems:
   </h3>
   <hr>
   {%if display_add_system %}

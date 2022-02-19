@@ -7,16 +7,22 @@
 
 
 {% block body_block %}
-  <div id="content_h">
-    <h1>
+  <div id = "font-weight-bold">
+    <h3>
       {% if car.archived %}
-        <a href="{% url 'tool:car_display' car.carSlug %}">{{car.carName }}{{ car.carYear }}</a> / 
-        {{system.systemName}} ARCHIVED
+      <a href="{% url 'tool:car_display' car.carSlug %}"> Car: <span class="text-uppercase"></span>{{car.carName }}{{ car.carYear }} Archived </span></a> </br>
       {% else %}
-        <a href="{% url 'tool:car_display' car.carSlug %}">{{car.carName }}{{ car.carYear }}</a> / 
-        {{system.systemName}}
+          <a href="{% url 'tool:car_display' car.carSlug %}"> Car: <span class="text-uppercase"></span>{{car.carName }}{{ car.carYear }} </span></a> </br>
       {% endif %}
-    </h1>
+
+      {% if system %}
+       System:  {{system.systemName}} </br>
+        Assemblies:
+      {% else %}
+        <p> Invlid System</p>
+      {% endif %}
+    </h3>
+
   </div>
 
 <div class="container-fluid">

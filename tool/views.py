@@ -230,32 +230,37 @@ def add_assembly(request, car_slug, system_slug, assembly_slug=None):
     return render(request, 'tool/add_assembly.html', context_dict)
   
  
-def add_part(request, car_slug, system_slug, assembly_slug):
+def add_part(request, car_slug, system_slug, assembly_slug, part_slug=None):
     context_dict = {}
-    
-    assembly = Assembly.objects.get(assemblySlug= assembly_slug)
+    car = Car.objects.get(carSlug=car_slug)
+    system = System.objects.get(systemSlug=system_slug)
+    assembly = Assembly.objects.get(assemblySlug=assembly_slug)
+
+    context_dict['car'] = car
+    context_dict['system'] = system
     context_dict['assembly'] = assembly
 
-    context_dict['carSlug'] = car_slug
-    context_dict['systemSlug'] = system_slug
-
-
-    form = PartForm()
-    if request.method == 'POST':
+    if part_slug:
+        part = get_object_or_404(Part, partSlug=part_slug)
+        form = PartForm(request.POST, instance=part)
+    else:
         form = PartForm(request.POST)
-        if form.is_valid():
-            newPart = form.save(commit=False)
 
-            newPart = form.save(commit=False)
+    if request.method == 'POST' and form.is_valid():
+        newPart = form.save(commit=False)
+        if not part_slug:
             newPart.assemblyID = Assembly.objects.get(assemblySlug=assembly_slug)
+        newPart.save()
+        return redirect(reverse('tool:system_display', args=[car_slug, system_slug]))
 
-            # save details
-            newPart.save()
-            return redirect(reverse('tool:home'))
-        else:
-            print(form.errors)
+    context_dict['form'] = form
+    if part_slug:
+        context_dict['edit'] = True
+        context_dict['part'] = part
+    else:
+        context_dict['edit'] = False
 
-    return render(request, 'tool/add_part.html', {'form': form, 'context': context_dict})
+    return render(request, 'tool/add_part.html', context_dict)
 
 
 def add_pmft(request, car_slug, system_slug, assembly_slug, part_slug):

@@ -55,7 +55,7 @@ class Assembly(models.Model):
     def save(self, *args, **kwargs):
         # TODO: Need a solution for slugging here
         # slugify(self.assemblyName) will return None, making each slug: none-<self.assemblyName>
-        self.assemblySlug = ('-'.join((slugify(self.systemID), slugify(self.assemblyName))))
+        self.assemblySlug = ('-'.join((slugify(self.assemblyID), slugify(self.assemblyName))))
         super(Assembly, self).save(*args, **kwargs)
         class Meta:
             def __str__(self):

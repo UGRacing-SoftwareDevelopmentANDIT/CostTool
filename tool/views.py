@@ -117,7 +117,7 @@ def system_display(request, system_slug, car_slug):
         car = Car.objects.get(carSlug=car_slug)
         assemblys = Assembly.objects.filter(systemID=system)
 
-
+        costHead = False
         sysAssignedTH = False
         sysAssigned = False
 
@@ -125,15 +125,19 @@ def system_display(request, system_slug, car_slug):
         access_bool = {}
         output = {}
         subteams = Subteam.objects.filter(systems=system)
-        
+
         #makes sure a user can only see the page if in assigned subteam
+        if user_account.rank >= 4:
+            costHead = True
         for subteam in subteams:
             if TeamLinking.objects.filter(user=user_account, subteam=subteam).exists():
-                sysAssigned= True
-            if user_account.rank >= 4 or TeamLinking.objects.filter(user=user_account, subteam=subteam, teamHead=True).exists():
+                sysAssigned= True  
+            if  TeamLinking.objects.filter(user=user_account, subteam=subteam, teamHead=True).exists():
                 sysAssignedTH = True
-        if not sysAssigned:
-            return redirect('tool:car_display', car_slug=car_slug)
+        if not (sysAssigned or sysAssignedTH or costHead):
+           return redirect('tool:car_display', car_slug=car_slug)
+
+
 
         #display_eddit_assignees is the same regardless of assembly
         #display_add_assembly is the same regardless of assembly
@@ -438,25 +442,25 @@ def car_delete(request, car_slug):
     return redirect(request.META.get('HTTP_REFERER', 'redirect_if_referer_not_found'))
  
 
-def system_delete(request, system_slug):
+def system_delete(request, car_slug, system_slug):
     system = System.objects.filter(systemSlug = system_slug)
     system.delete()
     return redirect(request.META.get('HTTP_REFERER', 'redirect_if_referer_not_found'))
 
   
-def assembly_delete(request, assembly_slug):
+def assembly_delete(request, car_slug, system_slug, assembly_slug):
     assembly = Assembly.objects.filter(assemblySlug = assembly_slug)
     assembly.delete()
     return redirect(request.META.get('HTTP_REFERER', 'redirect_if_referer_not_found'))
 
   
-def part_delete(request, part_slug):
+def part_delete(request, car_slug, system_slug, assembly_slug, part_slug):
     part = Part.objects.filter(partSlug = part_slug)
     part.delete()
     return redirect(request.META.get('HTTP_REFERER', 'redirect_if_referer_not_found'))
 
   
-def pmft_delete(request, pmft_slug):
+def pmft_delete(request, car_slug, system_slug, assembly_slug, part_slug, pmft_slug):
     pmft = PMFT.objects.filter(pmftSlug = pmft_slug)
     pmft.delete()
     return redirect(request.META.get('HTTP_REFERER', 'redirect_if_referer_not_found'))

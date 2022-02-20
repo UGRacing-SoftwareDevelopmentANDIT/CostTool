@@ -12,18 +12,64 @@
 {% block body_block %}
   <div class="container-fluid">
     <h3>Cars</h3>
+
     <hr>
+
+    {% if display_add_car %}
+    <div>
+        <button class="btn btn-light add-btn" type="button"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-plus-lg" viewBox="0 0 16 16">
+        <path fill-rule="evenodd" d="M8 2a.5.5 0 0 1 .5.5v5h5a.5.5 0 0 1 0 1h-5v5a.5.5 0 0 1-1 0v-5h-5a.5.5 0 0 1 0-1h5v-5A.5.5 0 0 1 8 2Z"/>
+        </svg><a href="{% url 'tool:add_car' %}"> Add Car</a></button>
+    </div>
+    {% endif %}
+
     {% if cars %}
-      <ul>
         {% for car in cars %}
+
           <li>
             <a href="{% url 'tool:car_display' car.carSlug %}">{{ car.carName }}{{car.carYear}}</a>
             {% if display_edit_car %}
             <a href="{% url 'tool:add_car' car_slug=car.carSlug %}">EDIT CAR</a>
             {% endif %}
           </li>
+
+            <br>
+            <div class="car_display_card bg-ugr-primary">
+
+                {% if display_edit_car %}
+                <button class="btn btn-light edit-btn" type="button"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-pencil-square" viewBox="0 0 16 16">
+                <path d="M15.502 1.94a.5.5 0 0 1 0 .706L14.459 3.69l-2-2L13.502.646a.5.5 0 0 1 .707 0l1.293 1.293zm-1.75 2.456-2-2L4.939 9.21a.5.5 0 0 0-.121.196l-.805 2.414a.25.25 0 0 0 .316.316l2.414-.805a.5.5 0 0 0 .196-.12l6.813-6.814z"/>
+                <path fill-rule="evenodd" d="M1 13.5A1.5 1.5 0 0 0 2.5 15h11a1.5 1.5 0 0 0 1.5-1.5v-6a.5.5 0 0 0-1 0v6a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5v-11a.5.5 0 0 1 .5-.5H9a.5.5 0 0 0 0-1H2.5A1.5 1.5 0 0 0 1 2.5v11z"/>
+                </svg><a href="{% url 'tool:add_car' %}"> Edit Car</a></button>
+                {% endif %}
+
+                <a class="car_image" href="#">
+                  <img src="{% static "images/IC-Car.png" %}" alt="IC Car" height="300px">
+                </a>
+
+                <h5 class="car_card_title"><a href="{% url 'tool:car_display' car.carSlug %}">{{ car.carName }} {{car.carYear}}</a></h5>
+
+                <div class="car_card_description">
+                    <p class="">Put a description about the car here.
+                    Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut
+                    labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris
+                    nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit
+                    esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in
+                    culpa qui officia deserunt mollit anim id est laborum.
+                    Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris
+                    nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit
+                    esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in
+                    culpa qui officia deserunt mollit anim id est laborum.
+
+                    </p>
+                </div>
+            </div>
+            <br>
+
+
         {% endfor %}
-      </ul>
+
+
     {% else %}
       <div class="card car-card bg-ugr-primary mb-3">
         <div class="card-body">
@@ -45,14 +91,8 @@
       </div>
     {% endif %}
   </div>
+  <br><br><br>
 
-  {% if display_add_car %}
-  <div>
-    <li>
-      <a href="{% url 'tool:add_car' %}"> CLICK HERE TO ADD CAR</a>
-    </li>
-  </div>
-  {% endif %}
 
 
   <div class="container-fluid">

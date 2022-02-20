@@ -75,3 +75,18 @@ class PMFTForm(forms.ModelForm):
     class Meta:
         model = PMFT
         fields = ('pmftName', 'pmftComment', 'pmftCost', 'pmftCurrency', 'pmftCostComment', 'pmftQuantity', 'pmftType', 'pmftSlug')
+
+class EditSubteam(forms.ModelForm):
+    subteamQ = forms.ModelChoiceField(queryset=Subteam.objects.all().order_by('teamName'),required=True)
+
+    class Meta:
+        model = Subteam
+        fields = ('subteamQ',)
+
+
+class EditAssignEng(forms.ModelForm):
+    engineer = forms.ModelChoiceField(queryset=UserAccount.objects.all(), required=True)
+
+    class Meta:
+        model = Assembly
+        fields = ('engineer',)

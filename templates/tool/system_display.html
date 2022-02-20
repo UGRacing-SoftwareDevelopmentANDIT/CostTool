@@ -7,11 +7,22 @@
 
 
 {% block body_block %}
-  <div id="content_h">
-    <h1>
-      <a href="{% url 'tool:car_display' car.carSlug %}">{{car.carName }}{{ car.carYear }}</a> / 
-      {{system.systemName}}
-    </h1>
+  <div id = "font-weight-bold">
+    <h3>
+      {% if car.archived %}
+      <a href="{% url 'tool:car_display' car.carSlug %}"> Car: <span class="text-uppercase"></span>{{car.carName }}{{ car.carYear }} Archived </span></a> </br>
+      {% else %}
+          <a href="{% url 'tool:car_display' car.carSlug %}"> Car: <span class="text-uppercase"></span>{{car.carName }}{{ car.carYear }} </span></a> </br>
+      {% endif %}
+
+      {% if system %}
+       System:  {{system.systemName}} </br>
+        Assemblies:
+      {% else %}
+        <p> Invlid System</p>
+      {% endif %}
+    </h3>
+
   </div>
 
 <div class="container-fluid">
@@ -21,21 +32,33 @@
     <div class="accordion-item">
       <h2 class="accordion-header" id="a{{assembly_key.assemblyID}}-heading">
         <button class="accordion-button" style="background-color:#ffcc00;color:#1f1f1f;font-size: 24px;font-weight:600" type="button" data-bs-toggle="collapse" data-bs-target="#a{{assembly_key.assemblyID}}-collapse" aria-controls="a{{assembly_key.assemblyID}}-collapse">
-          {{ assembly_key.assemblyID }} {{assembly_key.assemblyName}}
+          {{assembly_key.assemblyName}} eng:{{assembly_key.user.user.username}}
         </button>
       </h2>
+      {% if display_edit_assignees %}
+      <a href="{% url 'tool:edit_assign_eng' car.carSlug system.systemSlug assembly_key.assemblySlug %}"> edit engineer</a>
+      {% endif %}
       <div id="a{{assembly_key.assemblyID}}-collapse" class="accordion-collapse collapse" aria-labelledby="a{{assembly_key.assemblyID}}-heading">
         <div class="accordion-body border-end" style="padding:0">
           <div class="container-fluid" style="background-color:#1f1f1f;color:#ffcc00">
             <div class="row">
               <div class="col-1">
               </div>
-              <div class="col-1" style="font-weight: 600;">
-                M/B
-              </div>
-              <div class="col-8" style="font-weight: 600;">
-                Part
-              </div>
+                  <div class="col-1" style="font-weight: 600;">
+                    M/B
+                  </div>
+                  <div class="col-1" style="font-weight: 600;">
+                    Cost
+                  </div>
+                  <div class="col-1" style="font-weight: 600;">
+                    Qt
+                  </div>
+                  <div class="col-1" style="font-weight: 600;">
+                    Currecy
+                  </div>
+                  <div class="col-3" style="font-weight: 600;">
+                    Comment
+                  </div>
             </div>
           </div>
           <div class="accordion accordion-flush">
@@ -44,7 +67,23 @@
               <div class="accordion-item">
                 <h2 class="accordion-header" id="p{{part_key.partID}}-heading">
                   <button class="accordion-button" style="background-color:#f3f3f3;color:#1f1f1f;font-size: 24px" type="button" data-bs-toggle="collapse" data-bs-target="#p{{part_key.partID}}-collapse" aria-controls="p{{part_key.partID}}-collapse">
-                    <span class="mx-2">{{ part_key.partID }} {{part_key.partName }}</span>
+                    <div class="row">
+                      <div class="col-1" style="font-weight: 600;">
+                        {{part_key.partName}}
+                      </div>
+                      <div class="col-1" style="font-weight: 600;">
+                        {{part_key.makeBuy}}                      
+                      </div>
+                      <div class="col-1" style="font-weight: 600;">
+                        {{part_key.partCost}}                      
+                      </div>
+                      <div class="col-1" style="font-weight: 600;">
+                        {{part_key.partCurrency}}                      
+                      </div>
+                      <div class="col-3" style="font-weight: 600;">
+                        {{part_key.partComment}}                      
+                      </div>                
+                    </div>
                   </button>  
                 </h2>
                 <div id="p{{part_key.partID}}-collapse" class="accordion-collapse collapse" aria-labelledby="p{{part_key.partID}}-heading">
@@ -53,37 +92,51 @@
                       <div class="row">
                         <div class="col-1">
                         </div>
-                        <div class="col-1" style="font-weight: 600;">
-                          M/B
-                        </div>
-                        <div class="col-1" style="font-weight: 600;">
-                          Part
-                        </div>
-                        <div class="col-1" style="font-weight: 600;">
-                          P/M/F/T
-                        </div>
-                        <div class="col-1" style="font-weight: 600;">
-
-                        </div>
-                        <div class="col-3" style="font-weight: 600;">
-                          Comments
-                        </div>
-                        <div class="col-1 text-center" style="font-weight: 600;">
-                          Qt
-                        </div>
-                        <div class="col-1 text-center" style="font-weight: 600;">
-                          Cost
-                        </div>
-                        <div class="col-2 text-center" style="font-weight: 600;">
-                          ID
-                        </div>
+                            <div class="col-1" style="font-weight: 600;">
+                              P/M/F/T
+                            </div>
+                            <div class="col-3" style="font-weight: 600;">
+                              Comment
+                            </div>
+                            <div class="col-1 text-center" style="font-weight: 600;">
+                              Qt
+                            </div>
+                            <div class="col-1 text-center" style="font-weight: 600;">
+                              Cost
+                            </div>
+                            <div class="col-1 text-center" style="font-weight: 600;">
+                              Currency
+                            </div>
+                            <div class="col-3" style="font-weight: 600;">
+                              Cost Comment
+                            </div>
                       </div>
                     </div>
                     <div style="padding:0.75rem 1.25rem;background-color:#e8e8e8;font-size: 16px;">
                       {% for pmft in pmfts %}
                         {# PMFT row #}
-                        <div class="mx-3">
-                          {{ pmft.pmftID }} {{ pmft.pmftName }}
+                        <div class="row">
+                          <div class="col-1" style="font-weight: 600;">
+                            {{pmft.pmftName}}
+                          </div>
+                          <div class="col-1" style="font-weight: 600;">
+                            {{pmft.pmftType}}
+                          </div>
+                          <div class="col-3" style="font-weight: 600;">
+                            {{pmft.pmftComment}}
+                          </div>
+                          <div class="col-1 text-center" style="font-weight: 600;">
+                            {{pmft.pmftQuantity}}
+                          </div>
+                          <div class="col-1 text-center" style="font-weight: 600;">
+                            {{pmft.pmftCost}}
+                          </div>
+                          <div class="col-1 text-center" style="font-weight: 600;">
+                            {{pmft.pmftCurrency}}
+                          </div>
+                          <div class="col-3" style="font-weight: 600;">
+                            {{pmft.pmftCostComment}}
+                          </div>                     
                         </div>
                       {% endfor %}
                     </div>
@@ -99,9 +152,11 @@
   </div>
 </div>
 
-<div class="mt-4">
-  <a href="{% url 'tool:add_assembly' car.carSlug system.systemSlug %}"> CLICK HERE TO ADD ASSEMBLY</a>
-</div>
+{% if display_add_assembly %}
+  <div class="mt-4">
+    <a href="{% url 'tool:add_assembly' car.carSlug system.systemSlug %}"> CLICK HERE TO ADD ASSEMBLY</a>
+  </div>
+{% endif %}
 
   <!--</div>-->
   <div id="clear"></div>

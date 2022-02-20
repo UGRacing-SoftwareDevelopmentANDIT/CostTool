@@ -10,7 +10,7 @@
 }
 
 .car-card {
-  height: 25vh;
+  height: 20vh;
 }
 
 .hack_carousel {
@@ -28,4 +28,49 @@
   position: absolute;
   top: 50%;
   transform: translate(-50%, -50%);
+}
+
+.car_display_card {
+  position: relative;
+  border: solid black;
+  border-width: 0.9px 0.9px;
+  border-radius: 10px;
+  height: 300px;
+  margin-left: 100px;
+  margin-right: 100px;
+  min-width: 600px;
+}
+
+.car_card_description {
+  width: 59%;
+  margin-left: 40px;
+  margin-top: 20px;
+  /*border: solid black; */
+  border-width: 1px 1px;
+  border-radius: 10px;
+  height: 180px;
+  font-size: 14px;
+}
+
+@media all and (max-width: 1300px) {
+    .car_card_description {font-size:12px;}
+}
+
+@media all and (max-width: 1000px) {
+    .car_card_description {font-size:10px;}
+}
+
+@media all and (max-width: 400px) {
+    .car_card_description {font-size:9px;}
+}
+
+.car_card_title {
+    font-size: 20px;
+    margin-left: 40px;
+    margin-top: 35px;
+}
+
+.car_image {
+    position: absolute;
+    right: 60px;
 }

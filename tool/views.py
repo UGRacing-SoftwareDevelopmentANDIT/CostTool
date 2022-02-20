@@ -263,32 +263,39 @@ def add_part(request, car_slug, system_slug, assembly_slug, part_slug=None):
     return render(request, 'tool/add_part.html', context_dict)
 
 
-def add_pmft(request, car_slug, system_slug, assembly_slug, part_slug):
+def add_pmft(request, car_slug, system_slug, assembly_slug, part_slug, pmft_slug=None):
     context_dict = {}
-    
+    car = Car.objects.get(carSlug=car_slug)
+    system = System.objects.get(systemSlug=system_slug)
+    assembly = Assembly.objects.get(assemblySlug=assembly_slug)
     part = Part.objects.get(partSlug=part_slug)
-    context_dict['assemblySlug'] = assembly_slug
-    context_dict['carSlug'] = car_slug
-    context_dict['systemSlug'] = system_slug
+
+    context_dict['car'] = car
+    context_dict['system'] = system
+    context_dict['assembly'] = assembly
     context_dict['part'] = part
 
-
-    form = PMFTForm()
-    if request.method == 'POST':
+    if pmft_slug:
+        pmft = get_object_or_404(PMFT, pmftSlug=pmft_slug)
+        form = PMFTForm(request.POST, instance=pmft)
+    else:
         form = PMFTForm(request.POST)
-        if form.is_valid():
-            newPMFT = form.save(commit=False)
 
-            newPMFT = form.save(commit=False)
+    if request.method == 'POST' and form.is_valid():
+        newPMFT = form.save(commit=False)
+        if not pmft_slug:
             newPMFT.partID = Part.objects.get(partSlug=part_slug)
+        newPMFT.save()
+        return redirect(reverse('tool:system_display', args=[car_slug, system_slug]))
 
-            # save details
-            newPMFT.save()
-            return redirect(reverse('tool:home'))
-        else:
-            print(form.errors)
+    context_dict['form'] = form
+    if pmft_slug:
+        context_dict['edit'] = True
+        context_dict['pmft'] = pmft
+    else:
+        context_dict['edit'] = False
 
-    return render(request, 'tool/add_pmft.html', {'form': form, 'context': context_dict})
+    return render(request, 'tool/add_pmft.html', context_dict)
 
     
 def register(request):

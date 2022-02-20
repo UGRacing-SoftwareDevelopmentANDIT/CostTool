@@ -9,60 +9,85 @@
 
 
 {% block body_block %}
-      <div id=sign_in_box>
-      <h1>Create a new part</h1>
+      {% if edit %}
+            <h1>Edit "{{pmft.pmftName}}" PMFT</h1>
 
-	{% if form.errors %}
-			{% for field in form %}
-				{% for error in field.errors %}
-					<div class="ERROR"
-						<strong>{{ error|escape }}</strong>
-					</div>
-				{% endfor %}
-			{% endfor %}
-			{% for error in form.non_field_errors %}
-				<div class="ERROR">
-					<strong>{{ error|escape }}</strong>
-				</div>
-			{% endfor %}
-		{% endif %}
+            <form id="create_pmft_form" method="post" enctype="multipart/form-data"action="{% url 'tool:add_pmft' car.carSlug system.systemSlug assembly.assemblySlug part.partSlug pmft.pmftSlug %}">
+            {% csrf_token %}
 
-      <form id="create_pmft_form" method="post" enctype="multipart/form-data"action="{% url 'tool:add_pmft' context.carSlug context.systemSlug context.assemblySlug context.part.partSlug%}">
-          {% csrf_token %}
+            <label for="pmftName"><b>Pmft Name: </b></label>
+            <input type="text" name="pmftName" value="{{ pmft.pmftName }}" size="15"/>
 
-          <label for="pmftName"><b>Pmft Name: </b></label>
-          <input type="text" name="pmftName" value="" size="15"/>
+            <br />
+            <br />
 
-          <br />
-          <br />
+            <label for="pmftComment"><b>Comment: </b></label>
+            <input type="text" name="pmftComment" value="{{ pmft.pmftComment }}" size="50"/>
 
-          <label for="pmftComment"><b>Comment: </b></label>
-          <input type="text" name="pmftComment" value="" size="50"/>
+            <br />
+            <br />
+            <label for="pmftCost"><b>Pmft Cost: </b></label>
+            <input type="float" name="pmftCost" value="{{ pmft.pmftCost }}" size="50"/>
+            <br />
+            <br />
+            <label for="pmftCurrency"><b> Currency: </b></label>
+            <input type="text" name="pmftCurrency" value="{{ pmft.pmftCurrency }}" size="3"/>
+            <br />
+            <br />
+            <label for="pmftCostComment"><b>Cost Comment: </b></label>
+            <input type="text" name="pmftCostComment" value="{{ pmft.pmftCostComment }}" size="50"/>
+            <br />
+            <br />
+            <label for="pmftQuantity"><b>Quantity: </b></label>
+            <input type="int" name="pmftQuantity" value="{{ pmft.pmftQuantity }}" size="50"/>
+            <br />
+            <br />
+            <label for="pmftType"><b>Type: </b></label>
+            <input type="text" name="pmftType" value="{{ pmft.pmftType }}" size="50"/>
+            <br />
+            <br />       
+            <input type="submit" value="Submit" />
 
-          <br />
-          <br />
-          <label for="pmftCost"><b>Pmft Cost: </b></label>
-          <input type="float" name="pmftCost" value="" size="50"/>
-          <br />
-          <br />
-          <label for="pmftCurrency"><b> Currency: </b></label>
-          <input type="text" name="pmftCurrency" value="" size="3"/>
-          <br />
-          <br />
-          <label for="pmftCostComment"><b>Cost Comment: </b></label>
-          <input type="text" name="pmftCostComment" value="" size="50"/>
-          <br />
-          <br />
-          <label for="pmftQuantity"><b>Quantity: </b></label>
-          <input type="int" name="pmftQuantity" value="" size="50"/>
-          <br />
-          <br />
-          <label for="pmftType"><b>Type: </b></label>
-          <input type="text" name="pmftType" value="" size="50"/>
-          <br />
-          <br />       
-          <input type="submit" value="Submit" />
+            </form>
+      {% else %}
+            <h1>Create a new PMFT</h1>
 
-      </form>
-      </div>
+            <form id="create_pmft_form" method="post" enctype="multipart/form-data"action="{% url 'tool:add_pmft' car.carSlug system.systemSlug assembly.assemblySlug part.partSlug %}">
+            {% csrf_token %}
+
+            <label for="pmftName"><b>Pmft Name: </b></label>
+            <input type="text" name="pmftName" value="" size="15"/>
+
+            <br />
+            <br />
+
+            <label for="pmftComment"><b>Comment: </b></label>
+            <input type="text" name="pmftComment" value="" size="50"/>
+
+            <br />
+            <br />
+            <label for="pmftCost"><b>Pmft Cost: </b></label>
+            <input type="float" name="pmftCost" value="" size="50"/>
+            <br />
+            <br />
+            <label for="pmftCurrency"><b> Currency: </b></label>
+            <input type="text" name="pmftCurrency" value="" size="3"/>
+            <br />
+            <br />
+            <label for="pmftCostComment"><b>Cost Comment: </b></label>
+            <input type="text" name="pmftCostComment" value="" size="50"/>
+            <br />
+            <br />
+            <label for="pmftQuantity"><b>Quantity: </b></label>
+            <input type="int" name="pmftQuantity" value="" size="50"/>
+            <br />
+            <br />
+            <label for="pmftType"><b>Type: </b></label>
+            <input type="text" name="pmftType" value="" size="50"/>
+            <br />
+            <br />       
+            <input type="submit" value="Submit" />
+
+            </form>
+      {% endif %}
 {% endblock %}

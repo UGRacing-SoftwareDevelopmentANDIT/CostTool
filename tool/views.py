@@ -1,4 +1,4 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from django.http import HttpResponse
 from django.http import HttpResponseRedirect
 from django.urls import reverse
@@ -15,7 +15,7 @@ from tool.consts import USER_RANKS
 
 ########################################## Base ###############################################
 
-# TODO: Stop logging out, breaking the web app
+# TODO: Stop logging out breaking the web app
 def home(request):
     context_dict = {}
 
@@ -83,6 +83,7 @@ def car_display(request, car_slug):
                 subteams = Subteam.objects.filter(systems=system)        
                 assignedTH = False
                 assignedEng = False 
+
                 for subteam in subteams:
                     #if a user is linked to a subteam that is assigned to the system
                     if TeamLinking.objects.filter(user=user_account, subteam=subteam).exists():
@@ -190,131 +191,168 @@ def system_display(request, system_slug, car_slug):
     ########################################## Car Forms ###############################################
 
 
-def add_car(request):
-    # If the request is a HTTP POST, try to pull out the relevant information.
-    form = AddCarForm()
-    # user verification stuff for later (not an outer if(verifed)) else print (form.errors) and  return HttpResponse("This page is exclusively for cost heads")
-    '''
-        # get user ID
-    userID = request.user.get_username()
-        # get user object
-    users = User.objects.filter(username=userID)
-        # get if user is verified
-    verified = UserAccount.objects.filter(user__in=users, verified=True)
-        '''
-
-    if request.method == 'POST':
-        form = AddCarForm(request.POST)
-        if form.is_valid():
-            newCar = form.save(commit=False)
-            # save details
-            newCar.save()
-            return redirect(reverse('tool:home'))
-        else:
-            print(form.errors)
-
-    return render(request, 'tool/add_car.html', {'form': form})
-  
-  
-def add_system(request, car_slug):
+def add_car(request, car_slug=None):
     context_dict = {}
-    form = AddSystemForm()
-    car = Car.objects.get(carSlug=car_slug)
+    car = None
     context_dict['car'] = car
-    if request.method == 'POST':
-        form = AddSystemForm(request.POST)
-        if form.is_valid():
-            newSystem = form.save(commit=False)
-            newSystem.carID = Car.objects.get(carSlug=car_slug)
-            newSystem.save()
-            return redirect(reverse('tool:home'))
-        else:
-            print(form.errors)
-    return render(request, 'tool/add_system.html', {'form': form, 'context': context_dict})
+    
+    '''
+    # user verification stuff for later (not an outer if(verifed)) else print (form.errors) and  return HttpResponse("This page is exclusively for cost heads")
+    # get user ID
+    userID = request.user.get_username()
+    # get user object
+    users = User.objects.filter(username=userID)
+    # get if user is verified
+    verified = UserAccount.objects.filter(user__in=users, verified=True)
+    '''
 
+    if car_slug:
+        car = get_object_or_404(Car, carSlug=car_slug)
+        form = CarForm(request.POST, instance=car)
+    else:
+        form = CarForm(request.POST)
+    
+    if request.method == 'POST' and form.is_valid():
+        newCar = form.save(commit=False)
+        if not car_slug:
+            newCar.carID = newCar.carName + str(newCar.carYear)
+        newCar.save()
+        return redirect(reverse('tool:home'))
 
-def add_assembly(request, car_slug, system_slug):
+    context_dict['form'] = form
+    if car_slug:
+        context_dict['edit'] = True
+        context_dict['car'] = car
+    else:
+        context_dict['edit'] = False
+
+    return render(request, 'tool/add_car.html', context_dict)
+  
+  
+def add_system(request, car_slug, system_slug=None):
     context_dict = {}
-    try:
-        system = System.objects.get(systemSlug=system_slug)
+    context_dict['car'] = Car.objects.get(carSlug=car_slug)
+    system = None
+    context_dict['system'] = system
 
+    if system_slug:
+        system = get_object_or_404(System, systemSlug=system_slug)
+        form = SystemForm(request.POST, instance=system)
+    else:
+        form = SystemForm(request.POST)
+
+    if request.method == 'POST' and form.is_valid():
+        newSystem = form.save(commit=False)
+        if not system_slug:
+            newSystem.carID = Car.objects.get(carSlug=car_slug)
+        newSystem.save()
+        return redirect(reverse('tool:car_display', args=[car_slug]))
+
+    context_dict['form'] = form
+    if system_slug:
+        context_dict['edit'] = True
         context_dict['system'] = system
-        context_dict['car_slug'] = car_slug
-        context_dict['system_slug'] = system_slug
+    else:
+        context_dict['edit'] = False
 
-    except System.DoesNotExist:
-        context_dict['system'] = None
+    return render(request, 'tool/add_system.html', context_dict)
 
-    form = AddAssemblyForm()
-    if request.method == 'POST':
-        form = AddAssemblyForm(request.POST)
-        if form.is_valid():
-            newAssembly = form.save(commit=False)
+
+def add_assembly(request, car_slug, system_slug, assembly_slug=None):
+    context_dict = {}
+    context_dict['car'] = Car.objects.get(carSlug=car_slug)
+    context_dict['system'] = System.objects.get(systemSlug=system_slug)
+    assembly = None
+    context_dict['assembly'] = assembly
+
+    if assembly_slug:
+        assembly = get_object_or_404(Assembly, assemblySlug=assembly_slug)
+        form = AssemblyForm(request.POST, instance=assembly)
+    else:
+        form = AssemblyForm(request.POST)
+
+    if request.method == 'POST' and form.is_valid():
+        newAssembly = form.save(commit=False)
+        if not assembly_slug:
             newAssembly.systemID = System.objects.get(systemSlug=system_slug)
-            newAssembly.save()
-            newAssembly.save()
-            return redirect(reverse('tool:system_display', args=[car_slug, system_slug]))
-        else:
-            print(form.errors)
-    context_dict["form"] = form
-
+        newAssembly.save()
+        return redirect(reverse('tool:system_display', args=[car_slug, system_slug]))
+    context_dict['form'] = form
+    if assembly_slug:
+        context_dict['edit'] = True
+        context_dict['assembly'] = assembly
+    else:
+        context_dict['edit'] = False
+        
     return render(request, 'tool/add_assembly.html', context_dict)
   
  
-def add_part(request, car_slug, system_slug, assembly_slug):
+def add_part(request, car_slug, system_slug, assembly_slug, part_slug=None):
     context_dict = {}
-    
-    assembly = Assembly.objects.get(assemblySlug= assembly_slug)
+    car = Car.objects.get(carSlug=car_slug)
+    system = System.objects.get(systemSlug=system_slug)
+    assembly = Assembly.objects.get(assemblySlug=assembly_slug)
+
+    context_dict['car'] = car
+    context_dict['system'] = system
     context_dict['assembly'] = assembly
 
-    context_dict['carSlug'] = car_slug
-    context_dict['systemSlug'] = system_slug
+    if part_slug:
+        part = get_object_or_404(Part, partSlug=part_slug)
+        form = PartForm(request.POST, instance=part)
+    else:
+        form = PartForm(request.POST)
 
-
-    form = AddPartForm()
-    if request.method == 'POST':
-        form = AddPartForm(request.POST)
-        if form.is_valid():
-            newPart = form.save(commit=False)
-
-            newPart = form.save(commit=False)
+    if request.method == 'POST' and form.is_valid():
+        newPart = form.save(commit=False)
+        if not part_slug:
             newPart.assemblyID = Assembly.objects.get(assemblySlug=assembly_slug)
+        newPart.save()
+        return redirect(reverse('tool:system_display', args=[car_slug, system_slug]))
 
-            # save details
-            newPart.save()
-            return redirect(reverse('tool:home'))
-        else:
-            print(form.errors)
+    context_dict['form'] = form
+    if part_slug:
+        context_dict['edit'] = True
+        context_dict['part'] = part
+    else:
+        context_dict['edit'] = False
 
-    return render(request, 'tool/add_part.html', {'form': form, 'context': context_dict})
+    return render(request, 'tool/add_part.html', context_dict)
 
 
-def add_pmft(request, car_slug, system_slug, assembly_slug, part_slug):
+def add_pmft(request, car_slug, system_slug, assembly_slug, part_slug, pmft_slug=None):
     context_dict = {}
-    
+    car = Car.objects.get(carSlug=car_slug)
+    system = System.objects.get(systemSlug=system_slug)
+    assembly = Assembly.objects.get(assemblySlug=assembly_slug)
     part = Part.objects.get(partSlug=part_slug)
-    context_dict['assemblySlug'] = assembly_slug
-    context_dict['carSlug'] = car_slug
-    context_dict['systemSlug'] = system_slug
+
+    context_dict['car'] = car
+    context_dict['system'] = system
+    context_dict['assembly'] = assembly
     context_dict['part'] = part
 
+    if pmft_slug:
+        pmft = get_object_or_404(PMFT, pmftSlug=pmft_slug)
+        form = PMFTForm(request.POST, instance=pmft)
+    else:
+        form = PMFTForm(request.POST)
 
-    form = AddPMFTForm()
-    if request.method == 'POST':
-        form = AddPMFTForm(request.POST)
-        if form.is_valid():
-            newPMFT = form.save(commit=False)
-
-            newPMFT = form.save(commit=False)
+    if request.method == 'POST' and form.is_valid():
+        newPMFT = form.save(commit=False)
+        if not pmft_slug:
             newPMFT.partID = Part.objects.get(partSlug=part_slug)
+        newPMFT.save()
+        return redirect(reverse('tool:system_display', args=[car_slug, system_slug]))
 
-            # save details
-            newPMFT.save()
-            return redirect(reverse('tool:home'))
-        else:
-            print(form.errors)
+    context_dict['form'] = form
+    if pmft_slug:
+        context_dict['edit'] = True
+        context_dict['pmft'] = pmft
+    else:
+        context_dict['edit'] = False
 
-    return render(request, 'tool/add_pmft.html', {'form': form, 'context': context_dict})
+    return render(request, 'tool/add_pmft.html', context_dict)
 
 
 ########################################## User Forms ###############################################

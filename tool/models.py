@@ -73,7 +73,9 @@ class Assembly(models.Model):
     user = models.ForeignKey(UserAccount, on_delete=models.SET_NULL, null=True)
 
     def save(self, *args, **kwargs):
-        self.assemblySlug = '-'.join((slugify(self.assemblyID), slugify(self.assemblyName)))
+        # TODO: Need a solution for slugging here
+        # slugify(self.assemblyName) will return None, making each slug: none-<self.assemblyName>
+        self.assemblySlug = ('-'.join((slugify(self.assemblyID), slugify(self.assemblyName))))
         super(Assembly, self).save(*args, **kwargs)
 
     def __str__(self):

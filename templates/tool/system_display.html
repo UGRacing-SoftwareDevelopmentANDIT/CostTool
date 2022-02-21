@@ -39,8 +39,11 @@
       <a href="{% url 'tool:edit_assign_eng' car.carSlug system.systemSlug assembly_key.assemblySlug %}"> edit engineer </a>
       {% endif %}
         {% if access_bool|get_edit_assembly:assembly_key.pk %}
+        <a href="{% url 'tool:add_part' car.carSlug system.systemSlug assembly_key.assemblySlug %}"><button class="btn"></button> Add </a>
+        <a href="{% url 'tool:add_assembly' car.carSlug system.systemSlug assembly_key.assemblySlug %}"><button class="btn"></button> Edit</a>
           <p>
             Edit Assembly
+            Add Part
           </p>
         {% endif %}
       <div id="a{{assembly_key.assemblyID}}-collapse" class="accordion-collapse collapse" aria-labelledby="a{{assembly_key.assemblyID}}-heading">
@@ -96,10 +99,10 @@
                       </div>   
                       <div class="col-3" style="font-weight: 600;">
                         {% if access_bool|get_edit_assembly:assembly_key.pk %}
-                        <p>
-                          Edit Part Add Pmft Delete Part
-                        </p>
-                      {% endif %}               
+                        <a href="{% url 'tool:add_pmft' car.carSlug system.systemSlug assembly_key.assemblySlug part_key.partSlug %}"><button class="btn"></button> Add </a>
+                        <a href="{% url 'tool:add_part' car.carSlug system.systemSlug assembly_key.assemblySlug part_key.partSlug %}"><button class="btn"></button> Edit</a>
+                        <a href="{% url 'tool:part_delete' car.carSlug system.systemSlug assembly_key.assemblySlug part_key.partSlug %}"><button class="btn"></button> Del </a>
+                        {% endif %}               
                       </div>   
                     </div>
                   </button>  
@@ -159,10 +162,8 @@
                           </div>
                             <div class="col-1" style="font-weight: 600;">
                               {% if access_bool|get_edit_assembly:assembly_key.pk %}
-                              <p>
-                                Edit Pmft
-                                Delete Pmft
-                              </p>
+                              <a href="{% url 'tool:add_pmft' car.carSlug system.systemSlug assembly_key.assemblySlug part_key.partSlug pmft.pmftSlug %}"><button class="btn"></button> Edit</a>
+                              <a href="{% url 'tool:pmft_delete' car.carSlug system.systemSlug assembly_key.assemblySlug part_key.partSlug pmft.pmftSlug %}"><button class="btn"></button> Del </a>
                               {% endif %}
                             </div>
                         </div>

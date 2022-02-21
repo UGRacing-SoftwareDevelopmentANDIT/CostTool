@@ -10,6 +10,8 @@ from django.contrib.auth.models import User
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 
+from django.template.defaulttags import register
+
 from tool.forms import *
 from tool.consts import USER_RANKS
 
@@ -180,12 +182,17 @@ def system_display(request, system_slug, car_slug):
         context_dict['assemblys'] = assemblys
         context_dict['output'] = output
         context_dict['user_rank'] = user_rank
+        context_dict['access_bool'] = access_bool 
+
 
     except System.DoesNotExist:
         context_dict['System'] = None
 
     return render(request, 'tool/system_display.html', context=context_dict)
 
+@register.filter
+def get_edit_assembly(dictionary, key):
+    return dictionary.get(key)
 
     ########################################## Car Forms ###############################################
 

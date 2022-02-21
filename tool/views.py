@@ -1,3 +1,4 @@
+import sys
 from django.shortcuts import render, redirect, get_object_or_404
 from django.http import HttpResponse
 from django.http import HttpResponseRedirect
@@ -61,6 +62,7 @@ def car_display(request, car_slug):
         #accesss_bool : systemID -> (access the system , eddit the system)
         context_dict['access_bool'] = {}
         access_bool = {}
+        systemSubteams = {}
 
         #display_add_system is defined here as it only shows once on page
         #display_edit_subteam is defined here because its value only depends on user and is the same for all systems
@@ -73,8 +75,9 @@ def car_display(request, car_slug):
         else:
             context_dict['display_add_system'] = False
             context_dict['display_edit_subteam'] = False
-
         for system in systems:
+            subteams = Subteam.objects.filter(systems=system)
+            systemSubteams[system.systemID] = subteams        
             #if a car is archived no edditing regardless of user/system
             if car.archived:
                     access_bool[system.systemID] = (False, False)
@@ -82,7 +85,6 @@ def car_display(request, car_slug):
             elif user_account.rank >= 4:
                     access_bool[system.systemID] = (True, True)
             else:
-                subteams = Subteam.objects.filter(systems=system)        
                 assignedTH = False
                 assignedEng = False 
 
@@ -105,6 +107,7 @@ def car_display(request, car_slug):
                     access_bool[system.systemID] = (False, False)                                
 
         context_dict['access_bool'] = access_bool
+        context_dict['systemSubteams'] = systemSubteams
 
     except Car.DoesNotExist:
         context_dict['car'] = None

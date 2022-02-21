@@ -38,7 +38,9 @@
                         {% if value.0 %}
                           {% if value.1 %}
                           {# an assigned TH #}
-                            <a class="text-black fw-bold" href ="{% url 'tool:system_display' car.carSlug system.systemSlug %}">{{system.systemName}} editable </a>                          {% else %}
+                            <a class="text-black fw-bold" href ="{% url 'tool:system_display' car.carSlug system.systemSlug %}">{{system.systemName}}</a>
+                            <a class="text-black fw-bold" href ="{% url 'tool:add_system' car.carSlug system.systemSlug %}">edit </a>
+                            {% else %}
                           {# an assigned engineer #}
                             <a class="text-black fw-bold" href="{% url 'tool:system_display' car.carSlug system.systemSlug %}">{{system.systemName}} accessable</a>
                           {% endif %}
@@ -47,6 +49,13 @@
                           <a class="text-black fw-bold" href="{% url 'tool:system_display' car.carSlug system.systemSlug %}">{{system.systemName}} not accessable</a>
                         {% endif %}
                         <div>
+                          {% for key, value in systemSubteams.items %}
+                          {% if key == system.systemID %}
+                            {% for subteam in value %}
+                              {{subteam.teamName}}
+                            {% endfor %}
+                          {% endif %}
+                          {% endfor %}
                         {% if display_edit_subteam %}
                         <a class="text-black fw-bold" href="{% url 'tool:edit_subteam' car.carSlug system.systemSlug %}">edit-subteam</a>
                         {% endif %}

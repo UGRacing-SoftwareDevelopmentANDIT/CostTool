@@ -41,10 +41,6 @@
         {% if access_bool|get_edit_assembly:assembly_key.pk %}
         <a href="{% url 'tool:add_part' car.carSlug system.systemSlug assembly_key.assemblySlug %}"><button class="btn"></button> Add </a>
         <a href="{% url 'tool:add_assembly' car.carSlug system.systemSlug assembly_key.assemblySlug %}"><button class="btn"></button> Edit</a>
-          <p>
-            Edit Assembly
-            Add Part
-          </p>
         {% endif %}
       <div id="a{{assembly_key.assemblyID}}-collapse" class="accordion-collapse collapse" aria-labelledby="a{{assembly_key.assemblyID}}-heading">
         <div class="accordion-body border-end" style="padding:0">

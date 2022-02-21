@@ -138,14 +138,13 @@ def system_display(request, system_slug, car_slug):
         if not (sysAssigned or sysAssignedTH or costHead):
            return redirect('tool:car_display', car_slug=car_slug)
 
-
-
         #display_eddit_assignees is the same regardless of assembly
         #display_add_assembly is the same regardless of assembly
+
         if car.archived:
             context_dict['display_add_assembly'] = False
             context_dict['display_edit_assignees'] = False
-        elif user_account.rank > 4:
+        elif user_account.rank >= 4:
             context_dict['display_add_assembly'] = True
             context_dict['display_edit_assignees'] = True
         elif sysAssignedTH:
@@ -158,7 +157,7 @@ def system_display(request, system_slug, car_slug):
         for assembly in assemblys:
             if car.archived:
                 access_bool[assembly.assemblyID] = False
-            elif user_account.rank > 4:
+            elif user_account.rank >= 4:
                 access_bool[assembly.assemblyID] = True
             elif sysAssignedTH:
                 access_bool[assembly.assemblyID] = True

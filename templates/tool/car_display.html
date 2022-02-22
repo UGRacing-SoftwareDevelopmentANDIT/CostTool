@@ -39,16 +39,19 @@
                         {% if value.0 %}
                         {% if value.1 %}
                         {# an assigned TH #}
-                        <a class="text-black fw-bold" href="{% url 'tool:system_display' car.carSlug system.systemSlug %}">{{system.systemName}} editable </a>
+                        <a class="text-black fw-bold" href="{% url 'tool:system_display' car.carSlug system.systemSlug %}">{{system.systemName}}</a>
+                        <!-- <p>editable </p> -->
 
                         {% else %}
                         {# an assigned engineer #}
-                        <a class="text-black fw-bold" href="{% url 'tool:system_display' car.carSlug system.systemSlug %}">{{system.systemName}} accessable</a>
+                        <a class="text-black fw-bold" href="{% url 'tool:system_display' car.carSlug system.systemSlug %}">{{system.systemName}}</a>
+                        <!-- <p>accessable</p> -->
                         {% endif %}
 
                         {% else %}
                         {# not an assigned user #}
-                        <a class="text-black fw-bold" href="{% url 'tool:system_display' car.carSlug system.systemSlug %}">{{system.systemName}} not accessable</a>
+                        <a class="text-black fw-bold" href="{% url 'tool:system_display' car.carSlug system.systemSlug %}">{{system.systemName}}</a>
+                        <!-- <p>not accessable</p> -->
                         {% endif %}
                         <!-- <div> -->
                         {% if display_edit_subteam %}
@@ -89,7 +92,7 @@
         var frame_and_body = document.createElement("img");
         frame_and_body.setAttribute("class", "system_image");
         frame_and_body.setAttribute("src", "{% static 'images/frame_and_body.png' %}");
-        frame_and_body.setAttribute("style", "height: 46px; width: 140px; display: block; margin-left: auto; margin-right: auto; margin-top: 10px;");
+        frame_and_body.setAttribute("style", "height: 46px; width: 140px; display: block; margin-left: auto; margin-right: auto; margin-top:10px");
         document.getElementById("Frame & Body").appendChild(frame_and_body);
 
         // Electrical

@@ -141,7 +141,7 @@ class Subteam(models.Model):
     subteamSlug = models.SlugField(unique=True, default='team-')
 
     def save(self, *args, **kwargs):
-        self.subteamSlug= self.teamName
+        self.subteamSlug = (slugify(self.teamName))
         super(Subteam, self).save(*args, **kwargs)
 
     def __str__(self):

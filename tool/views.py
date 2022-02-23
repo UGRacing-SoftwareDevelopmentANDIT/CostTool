@@ -1,3 +1,4 @@
+import sys
 from django.shortcuts import render, redirect, get_object_or_404
 from django.http import HttpResponse
 from django.http import HttpResponseRedirect
@@ -9,6 +10,8 @@ from django.contrib.auth.models import User
 
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
+
+from django.template.defaulttags import register
 
 from tool.forms import *
 from tool.consts import USER_RANKS
@@ -59,6 +62,7 @@ def car_display(request, car_slug):
         #accesss_bool : systemID -> (access the system , eddit the system)
         context_dict['access_bool'] = {}
         access_bool = {}
+        systemSubteams = {}
 
         #display_add_system is defined here as it only shows once on page
         #display_edit_subteam is defined here because its value only depends on user and is the same for all systems
@@ -71,8 +75,9 @@ def car_display(request, car_slug):
         else:
             context_dict['display_add_system'] = False
             context_dict['display_edit_subteam'] = False
-
         for system in systems:
+            subteams = Subteam.objects.filter(systems=system)
+            systemSubteams[system.systemID] = subteams        
             #if a car is archived no edditing regardless of user/system
             if car.archived:
                     access_bool[system.systemID] = (False, False)
@@ -80,7 +85,6 @@ def car_display(request, car_slug):
             elif user_account.rank >= 4:
                     access_bool[system.systemID] = (True, True)
             else:
-                subteams = Subteam.objects.filter(systems=system)        
                 assignedTH = False
                 assignedEng = False 
 
@@ -103,6 +107,7 @@ def car_display(request, car_slug):
                     access_bool[system.systemID] = (False, False)                                
 
         context_dict['access_bool'] = access_bool
+        context_dict['systemSubteams'] = systemSubteams
 
     except Car.DoesNotExist:
         context_dict['car'] = None
@@ -138,14 +143,13 @@ def system_display(request, system_slug, car_slug):
         if not (sysAssigned or sysAssignedTH or costHead):
            return redirect('tool:car_display', car_slug=car_slug)
 
-
-
         #display_eddit_assignees is the same regardless of assembly
         #display_add_assembly is the same regardless of assembly
+
         if car.archived:
             context_dict['display_add_assembly'] = False
             context_dict['display_edit_assignees'] = False
-        elif user_account.rank > 4:
+        elif user_account.rank >= 4:
             context_dict['display_add_assembly'] = True
             context_dict['display_edit_assignees'] = True
         elif sysAssignedTH:
@@ -158,7 +162,7 @@ def system_display(request, system_slug, car_slug):
         for assembly in assemblys:
             if car.archived:
                 access_bool[assembly.assemblyID] = False
-            elif user_account.rank > 4:
+            elif user_account.rank >= 4:
                 access_bool[assembly.assemblyID] = True
             elif sysAssignedTH:
                 access_bool[assembly.assemblyID] = True
@@ -181,12 +185,17 @@ def system_display(request, system_slug, car_slug):
         context_dict['assemblys'] = assemblys
         context_dict['output'] = output
         context_dict['user_rank'] = user_rank
+        context_dict['access_bool'] = access_bool 
+
 
     except System.DoesNotExist:
         context_dict['System'] = None
 
     return render(request, 'tool/system_display.html', context=context_dict)
 
+@register.filter
+def get_edit_assembly(dictionary, key):
+    return dictionary.get(key)
 
     ########################################## Car Forms ###############################################
 

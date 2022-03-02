@@ -76,6 +76,7 @@ a{
   border-width: 0.9px;
   border-color: black;
   border-radius: 10px;
+
 }
 
 .car-card-title {
@@ -117,6 +118,7 @@ a{
 .btn:hover a {
     color:black;
 }
+
 .btn:hover {
     border-color: black;
     border-radius: 10px;

@@ -48,7 +48,6 @@
                         {# not an assigned user #}
                           <a class="text-black fw-bold" href="{% url 'tool:system_display' car.carSlug system.systemSlug %}">{{system.systemName}} not accessable</a>
                         {% endif %}
-                        <div>
                           {% for key, value in systemSubteams.items %}
                           {% if key == system.systemID %}
                             {% for subteam in value %}

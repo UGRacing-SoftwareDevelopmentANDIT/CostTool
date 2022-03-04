@@ -54,27 +54,25 @@ class PartForm(forms.ModelForm):
     makeBuy = forms.BooleanField()
     partCost = forms.FloatField(required=False)
     partQuantity = forms.IntegerField()
-    partCurrency = forms.CharField(max_length=3, required=False)
     partComment = forms.CharField(max_length=50, required=False)
     partSlug = forms.SlugField(widget=forms.HiddenInput(), required=False)
 
     class Meta:
         model = Part
-        fields = ('partName', 'makeBuy', 'partCost', 'partQuantity', 'partCurrency', 'partComment', 'partSlug')
+        fields = ('partName', 'makeBuy', 'partCost', 'partQuantity', 'partComment', 'partSlug')
 
 
 class PMFTForm(forms.ModelForm):
     pmftName = forms.CharField(max_length=15)
     pmftComment = forms.CharField(max_length=50,  required=False)
     pmftCost = forms.FloatField()
-    pmftCurrency = forms.CharField(max_length=3, required = False)
     pmftCostComment =  forms.CharField(max_length=50,  required=False)
     pmftQuantity = forms.IntegerField()
     pmftType = forms.CharField(max_length=1)
     pmftSlug = forms.SlugField(widget=forms.HiddenInput(), required=False)
     class Meta:
         model = PMFT
-        fields = ('pmftName', 'pmftComment', 'pmftCost', 'pmftCurrency', 'pmftCostComment', 'pmftQuantity', 'pmftType', 'pmftSlug')
+        fields = ('pmftName', 'pmftComment', 'pmftCost', 'pmftCostComment', 'pmftQuantity', 'pmftType', 'pmftSlug')
 
 class EditSubteam(forms.ModelForm):
     subteamQ = forms.ModelChoiceField(queryset=Subteam.objects.all().order_by('teamName'),required=True)

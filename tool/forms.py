@@ -51,7 +51,7 @@ class AssemblyForm(forms.ModelForm):
 
 class PartForm(forms.ModelForm):
     partName = forms.CharField(max_length=15)
-    makeBuy = forms.BooleanField()
+    makeBuy = forms.BooleanField(required=False)
     partCost = forms.FloatField(required=False)
     partQuantity = forms.IntegerField()
     partComment = forms.CharField(max_length=50, required=False)
@@ -65,7 +65,7 @@ class PartForm(forms.ModelForm):
 class PMFTForm(forms.ModelForm):
     pmftName = forms.CharField(max_length=15)
     pmftComment = forms.CharField(max_length=50,  required=False)
-    pmftCost = forms.FloatField()
+    pmftCost = forms.FloatField(required=False)
     pmftCostComment =  forms.CharField(max_length=50,  required=False)
     pmftQuantity = forms.IntegerField()
     pmftType = forms.CharField(max_length=1)

@@ -26,14 +26,23 @@
 
             <br />
             <br />
+            {% if costed %}
+
             <label for="pmftCost"><b>Pmft Cost in EUR: </b></label>
-            <input type="float" name="pmftCost" value="{{ pmft.pmftCost }}" size="50"/>
+            <input type="float" name="pmftCost" value="" size="50"/>
             <br />
             <br />
             <label for="pmftCostComment"><b>Cost Comment: </b></label>
-            <input type="text" name="pmftCostComment" value="{{ pmft.pmftCostComment }}" size="50"/>
+            <input type="text" name="pmftCostComment" value="" size="50"/>
             <br />
             <br />
+
+            {%else%}
+                  <p>
+                        Note:// pmft isnt costed
+                  </p>
+            {%endif%}
+
             <label for="pmftQuantity"><b>Quantity: </b></label>
             <input type="int" name="pmftQuantity" value="{{ pmft.pmftQuantity }}" size="50"/>
             <br />
@@ -62,6 +71,9 @@
 
             <br />
             <br />
+
+            {% if costed %}
+
             <label for="pmftCost"><b>Pmft Cost in EUR: </b></label>
             <input type="float" name="pmftCost" value="" size="50"/>
             <br />
@@ -70,6 +82,14 @@
             <input type="text" name="pmftCostComment" value="" size="50"/>
             <br />
             <br />
+
+            {%else%}
+                  <p>
+                        Note:// pmft isnt costed
+                  </p>
+            {%endif%}
+
+
             <label for="pmftQuantity"><b>Quantity: </b></label>
             <input type="int" name="pmftQuantity" value="" size="50"/>
             <br />

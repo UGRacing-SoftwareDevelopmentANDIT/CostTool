@@ -305,6 +305,7 @@ def add_part(request, car_slug, system_slug, assembly_slug, part_slug=None):
     context_dict['car'] = car
     context_dict['system'] = system
     context_dict['assembly'] = assembly
+    context_dict['costed'] = system.costed
 
     if part_slug:
         part = get_object_or_404(Part, partSlug=part_slug)
@@ -340,6 +341,8 @@ def add_pmft(request, car_slug, system_slug, assembly_slug, part_slug, pmft_slug
     context_dict['system'] = system
     context_dict['assembly'] = assembly
     context_dict['part'] = part
+    context_dict['costed'] = system.costed
+
 
     if pmft_slug:
         pmft = get_object_or_404(PMFT, pmftSlug=pmft_slug)

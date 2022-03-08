@@ -1,0 +1,65 @@
+{% extends 'tool/base.html' %}
+{% load static %}
+
+{% block css_block %}
+
+<link rel="stylesheet" type="text/css" href="{% static 'home.css' %}">
+
+{% endblock %}
+
+
+{% block body_block %}
+<div id=sign_in_box>
+      {% if edit %}
+            <h1>Edit {{system.systemName}}</h1>
+
+            <form id="create_hack_form" method="post" enctype="multipart/form-data"
+            action="{% url 'tool:add_system' car.carSlug system.systemSlug %}">
+            {% csrf_token %}
+
+            {{ form.systemName }}
+            <input type='submit' value='submit'>
+
+            <label for="systemName"><b>System Name: </b></label>
+            <input type="text" name="systemName" value="{{system.systemName}}" size="50" />
+
+            <br />
+            <br />
+
+            {% if edit %}
+                  {% if system.costed %}
+                  <input type="checkbox" id="costed" name="costed" checked>
+                  {% else %}
+                  <input type="checkbox" id="costed" name="costed">
+                  {% endif %}
+            {% else %}
+                  <input type="checkbox" id="costed" name="costed">
+            {% endif %}
+            <label for="costed">costed</label>
+
+            <br />
+            <br />
+
+            <input type="submit" value="Submit" />
+
+      </form>
+      {% else %}
+            <h1>Create a new system</h1>
+            <form id="create_hack_form" method="post" enctype="multipart/form-data"
+            action="{% url 'tool:add_system' car_slug=car.carSlug %}">
+            {% csrf_token %}
+
+            <label for="systemName"><b>System Name: </b></label>
+            <input type="text" name="systemName" value="{{system.systemName}}" size="50" />
+            <input type="checkbox" id="costed" name="costed">
+            <label for="costed">costed</label>
+
+            <br />
+            <br />
+            <input type="submit" value="Submit" />
+
+            </form>
+      {% endif %}
+
+</div>
+{% endblock %}

@@ -31,9 +31,19 @@ class CarForm(forms.ModelForm):
 
         
 class SystemForm(forms.ModelForm):
-    systemName = forms.CharField(max_length=20, help_text="Please enter the system name.")
+    
+
+    #I think the first str is the value and the 2nd is the text displayed
+    systemNameOptions = (
+        ("Electrical", "Electrical"),
+        ("Wheel and Suspension", "Wheel and Suspension"),
+        ("Miscelaneous", "Miscelaneous"),
+    )
+   # systemName = forms.CharField(max_length=20, help_text="Please enter the system name.")
     costed = forms.BooleanField(help_text="Please check if the system is costed.", required=False)
     systemSlug = forms.CharField(widget=forms.HiddenInput(), required=False)
+    systemName = forms.MultipleChoiceField(choices=systemNameOptions)
+
     class Meta:
         model = System
         fields = ('systemName', 'costed', 'systemSlug')  

@@ -253,7 +253,10 @@ def add_system(request, car_slug, system_slug=None):
     if request.method == 'POST' and form.is_valid():
         newSystem = form.save(commit=False)
         if not system_slug:
+            systemName = form.cleaned_data.get('systemName')
             newSystem.carID = Car.objects.get(carSlug=car_slug)
+            newSystem.systemName = systemName[0]
+        newSystem.save()
         newSystem.save()
         return redirect(reverse('tool:car_display', args=[car_slug]))
 

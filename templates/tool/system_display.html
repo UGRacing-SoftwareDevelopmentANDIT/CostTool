@@ -10,179 +10,157 @@
   <div id = "font-weight-bold">
     <h3>
       {% if car.archived %}
-      <a href="{% url 'tool:car_display' car.carSlug %}"> Car: <span class="text-uppercase"></span>{{car.carName }}{{ car.carYear }} Archived </span></a> </br>
+      <a href="{% url 'tool:car_display' car.carSlug %}"> Car: <span class="text-uppercase"></span>{{car.carName }}{{ car.carYear }} Archived </a> <br>
       {% else %}
-          <a href="{% url 'tool:car_display' car.carSlug %}"> Car: <span class="text-uppercase"></span>{{car.carName }}{{ car.carYear }} </span></a> </br>
+          <a href="{% url 'tool:car_display' car.carSlug %}"> Car: <span class="text-uppercase"></span>{{car.carName }}{{ car.carYear }} </a> <br>
       {% endif %}
 
       {% if system %}
        System:  {{system.systemName}} </br>
-        Assemblies:
+        <!--Assemblies:-->
       {% else %}
         <p> Invlid System</p>
       {% endif %}
     </h3>
-
   </div>
+<hr>
 
-<div class="container-fluid">
-  <div class="accordion accordion-flush">
-  {% for assembly_key, parts in output.items %}
-    {# Assembly row #}
-    <div class="accordion-item">
-      <h2 class="accordion-header" id="a{{assembly_key.assemblyID}}-heading">
-        <button class="accordion-button" style="background-color:#ffcc00;color:#1f1f1f;font-size: 24px;font-weight:600" type="button" data-bs-toggle="collapse" data-bs-target="#a{{assembly_key.assemblyID}}-collapse" aria-controls="a{{assembly_key.assemblyID}}-collapse">
-          {{assembly_key.assemblyName}} eng: {{assembly_key.user.user.username}}
-        </button>
-      </h2>
-      {% if display_edit_assignees %}
-      <a href="{% url 'tool:edit_assign_eng' car.carSlug system.systemSlug assembly_key.assemblySlug %}"> edit engineer </a>
-      {% endif %}
-        {% if access_bool|get_edit_assembly:assembly_key.pk %}
-        <a href="{% url 'tool:add_part' car.carSlug system.systemSlug assembly_key.assemblySlug %}"><button class="btn"></button> Add </a>
-        <a href="{% url 'tool:add_assembly' car.carSlug system.systemSlug assembly_key.assemblySlug %}"><button class="btn"></button> Edit</a>
-        {% endif %}
-      <div id="a{{assembly_key.assemblyID}}-collapse" class="accordion-collapse collapse" aria-labelledby="a{{assembly_key.assemblyID}}-heading">
-        <div class="accordion-body border-end" style="padding:0">
-          <div class="container-fluid" style="background-color:#1f1f1f;color:#ffcc00">
+{% if display_add_assembly %}
+  <div>
+      <button class="btn btn-light add-btn" type="button">
+        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-plus-lg" viewBox="0 0 16 16">
+            <path fill-rule="evenodd" d="M8 2a.5.5 0 0 1 .5.5v5h5a.5.5 0 0 1 0 1h-5v5a.5.5 0 0 1-1 0v-5h-5a.5.5 0 0 1 0-1h5v-5A.5.5 0 0 1 8 2Z"/>
+        </svg>
+        <a href="{% url 'tool:add_system' car.carSlug %}">Add Assembly</a>
+    </button>
+  </div>
+{% endif %}
+<br>
+<!-- ASSEMBLY -->
+<div class="accordion accordion-flush">
+    {% for assembly_key, parts in output.items %}
+      {# Assembly row #}
+  <div class="accordion-item">
+    <h2 class="accordion-header" id="a{{assembly_key.assemblyID}}-heading">
+      <div style="background-color:#ffcc00; color:#1f1f1f;" class="accordion-button collapsed" data-bs-toggle="collapse" data-bs-target="#a{{assembly_key.assemblyID}}-collapse" aria-controls="a{{assembly_key.assemblyID}}-collapse">
+
+         <h5 style="width:550px;"> {{assembly_key.assemblyName}}</h5>
+
+         {% if display_edit_assignees %}
+             <a class="d-inline" href="{% url 'tool:edit_assign_eng' car.carSlug system.systemSlug assembly_key.assemblySlug %}"> <button class="btn"> Edit Engineer </button></a>
+         {% endif %}
+
+          <h5 style="font-size: 17.5px; margin-left: 20px; margin-top:5px; width:250px;">
+              <svg xmlns="http://www.w3.org/2000/svg" width="17.5" height="17.5" fill="currentColor" class="bi bi-person-fill" viewBox="0 0 16 16">
+                  <path d="M3 14s-1 0-1-1 1-4 6-4 6 3 6 4-1 1-1 1H3zm5-6a3 3 0 1 0 0-6 3 3 0 0 0 0 6z"/>
+              </svg>
+              Assigned Engineer: {{assembly_key.user.user.username}}
+          </h5>
+
+          {% if access_bool|get_edit_assembly:assembly_key.pk %}
+            <a href="{% url 'tool:add_part' car.carSlug system.systemSlug assembly_key.assemblySlug %}"><button class="btn" style="margin-left:400px;"> Add </button></a>
+            <a href="{% url 'tool:add_assembly' car.carSlug system.systemSlug assembly_key.assemblySlug %}"><button class="btn"> Edit</button></a>
+          {% endif %}
+      </div>
+    </h2>
+    <div id="a{{assembly_key.assemblyID}}-collapse"  class="accordion-collapse collapse" aria-labelledby="a{{assembly_key.assemblyID}}-heading">
+
+
+        <!-- ASSEMBLY -> PART DESCRIPTION COLUMNS-->
+        <div class="container-fluid" style="background-color:#1f1f1f;color:#ffcc00">
             <div class="row">
-                  <div class="col-2">
-                  </div>
-                  <div class="col-1" style="font-weight: 600;">
-                    M/B
-                  </div>
-                  <div class="col-1" style="font-weight: 600;">
-                    Cost
-                  </div>
-                  <div class="col-1" style="font-weight: 600;">
-                    Qt
-                  </div>
-                  <div class="col-1" style="font-weight: 600;">
-                    Currecy
-                  </div>
-                  <div class="col-3" style="font-weight: 600;">
-                    Comment
-                  </div>
-                  <div class="col-1" style="font-weight: 600;">
-                    edit
-                  </div>
+                <div class="col-2">
+                </div>
+                <div class="col-1" style="font-weight: 600;">
+                  P/M/F/T
+                </div>
+                <div class="col-2" style="font-weight: 600;">
+                  Comment
+                </div>
+                <div class="col-1 text-center" style="font-weight: 600;">
+                  Qt
+                </div>
+                <div class="col-1 text-center" style="font-weight: 600;">
+                  Cost
+                </div>
+                <div class="col-1 text-center" style="font-weight: 600;">
+                  Currency
+                </div>
+                <div class="col-2" style="font-weight: 600;">
+                  Cost Comment
+                </div>
+                <div class="col-1">
+                </div>
             </div>
-          </div>
-          <div class="accordion accordion-flush">
+        </div>
+
+        <!-- ASSEMBLY -> PART -->
+        <div class="accordion accordion-flush" id="accordionFlushExample">
             {% for part_key, pmfts in parts.items %}
               {# Part row #}
-              <div class="accordion-item">
-                <h2 class="accordion-header" id="p{{part_key.partID}}-heading">
-                  <button class="accordion-button" style="background-color:#f3f3f3;color:#1f1f1f;font-size: 24px" type="button" data-bs-toggle="collapse" data-bs-target="#p{{part_key.partID}}-collapse" aria-controls="p{{part_key.partID}}-collapse">
-                    <div class="row">
-                      <div class="col-2 text-center" style="font-weight: 600;">
-                        {{part_key.partName}}
-                      </div>
-                      <div class="col-1" style="font-weight: 600;">
-                        {{part_key.makeBuy}}                      
-                      </div>
-                      <div class="col-1" style="font-weight: 600;">
-                        {{part_key.partCost}}                      
-                      </div>
-                      <div class="col-1" style="font-weight: 600;">
-                        {{part_key.partQuantity}}                      
-                      </div>
-                      <div class="col-1" style="font-weight: 600;">
-                        {{part_key.partCurrency}}                      
-                      </div>
-                      <div class="col-3" style="font-weight: 600;">
-                        {{part_key.partComment}}                      
-                      </div>   
-                      <div class="col-3" style="font-weight: 600;">
+            <div class="accordion-item">
+                <div class="accordion-header" id="p{{part_key.partID}}-heading">
+                    <div class="accordion-button collapsed" style="background-color:#f3f3f3; color:#1f1f1f; font-size:18px"  data-bs-toggle="collapse" data-bs-target="#p{{part_key.partID}}-collapse" aria-controls="p{{part_key.partID}}-collapse">
+                        <p class="d-inline">{{part_key.partName}}</p>
+                        <!-- ADD TO PART / EDIT PART / DELETE PART-->
                         {% if access_bool|get_edit_assembly:assembly_key.pk %}
-                        <a href="{% url 'tool:add_pmft' car.carSlug system.systemSlug assembly_key.assemblySlug part_key.partSlug %}"><button class="btn"></button> Add </a>
-                        <a href="{% url 'tool:add_part' car.carSlug system.systemSlug assembly_key.assemblySlug part_key.partSlug %}"><button class="btn"></button> Edit</a>
-                        <a href="{% url 'tool:part_delete' car.carSlug system.systemSlug assembly_key.assemblySlug part_key.partSlug %}"><button class="btn"></button> Del </a>
-                        {% endif %}               
-                      </div>   
-                    </div>
-                  </button>  
-                </h2>
-                <div id="p{{part_key.partID}}-collapse" class="accordion-collapse collapse" aria-labelledby="p{{part_key.partID}}-heading">
-                  <div class="accordion-body border-end" style="padding:0">
-                    <div class="container-fluid" style="background-color:#1f1f1f;color:#ffcc00">
-                      <div class="row">
-                            <div class="col-1">
-                            </div>
-                            <div class="col-1" style="font-weight: 600;">
-                              P/M/F/T
-                            </div>
-                            <div class="col-3" style="font-weight: 600;">
-                              Comment
-                            </div>
-                            <div class="col-1 text-center" style="font-weight: 600;">
-                              Qt
-                            </div>
-                            <div class="col-1 text-center" style="font-weight: 600;">
-                              Cost
-                            </div>
-                            <div class="col-1 text-center" style="font-weight: 600;">
-                              Currency
-                            </div>
-                            <div class="col-3" style="font-weight: 600;">
-                              Cost Comment
-                            </div>
-                            <div class="col-1">
-                            </div>
-                      </div>
-                    </div>
-                    <div style="padding:0.75rem 1.25rem;background-color:#e8e8e8;font-size: 16px;">
-                      {% for pmft in pmfts %}
-                        {# PMFT row #}
-                        <div class="row">
-                          <div class="col-1" style="font-weight: 600;">
-                            {{pmft.pmftName}}
-                          </div>
-                          <div class="col-1" style="font-weight: 600;">
-                            {{pmft.pmftType}}
-                          </div>
-                          <div class="col-3" style="font-weight: 600;">
-                            {{pmft.pmftComment}}
-                          </div>
-                          <div class="col-1 text-center" style="font-weight: 600;">
-                            {{pmft.pmftQuantity}}
-                          </div>
-                          <div class="col-1 text-center" style="font-weight: 600;">
-                            {{pmft.pmftCost}}
-                          </div>
-                          <div class="col-1 text-center" style="font-weight: 600;">
-                            {{pmft.pmftCurrency}}
-                          </div>
-                          <div class="col-3" style="font-weight: 600;">
-                            {{pmft.pmftCostComment}}
-                          </div>
-                            <div class="col-1" style="font-weight: 600;">
-                              {% if access_bool|get_edit_assembly:assembly_key.pk %}
-                              <a href="{% url 'tool:add_pmft' car.carSlug system.systemSlug assembly_key.assemblySlug part_key.partSlug pmft.pmftSlug %}"><button class="btn"></button> Edit</a>
-                              <a href="{% url 'tool:pmft_delete' car.carSlug system.systemSlug assembly_key.assemblySlug part_key.partSlug pmft.pmftSlug %}"><button class="btn"></button> Del </a>
-                              {% endif %}
-                            </div>
+                        <div style="margin-left:80%;" >
+                            <a class="d-inline" href="{% url 'tool:add_pmft' car.carSlug system.systemSlug assembly_key.assemblySlug part_key.partSlug %}"><button class="btn"> Add </button></a>
+                            <a class="d-inline" href="{% url 'tool:add_part' car.carSlug system.systemSlug assembly_key.assemblySlug part_key.partSlug %}"><button class="btn"> Edit </button></a>
+                            <a class="d-inline" href="{% url 'tool:part_delete' car.carSlug system.systemSlug assembly_key.assemblySlug part_key.partSlug %}"><button class="btn"> Del </button></a>
                         </div>
-                      {% endfor %}
+                        {% endif %}
+
                     </div>
-                  </div>
                 </div>
-              </div>
+                <div id="p{{part_key.partID}}-collapse" class="accordion-collapse collapse" aria-labelledby="p{{part_key.partID}}-heading"">
+                    <div class="accordion-body" style="padding: 0.75rem 1.25rem; background-color:#e8e8e8; font-size:15px;">
+                        <!-- ASSEMBLY -> PART -> PMFT -->
+                          {% for pmft in pmfts %}
+                          {# PMFT row #}
+                            <div class="row">
+                              <div class="col-2" style="font-weight: 600;">
+                                {{pmft.pmftName}}
+                              </div>
+                              <div class="col-1" style="font-weight: 600;">
+                                {{pmft.pmftType}}
+                              </div>
+                              <div class="col-2" style="font-weight: 600;">
+                                {{pmft.pmftComment}}
+                              </div>
+                              <div class="col-1 text-center" style="font-weight: 600;">
+                                {{pmft.pmftQuantity}}
+                              </div>
+                              <div class="col-1 text-center" style="font-weight: 600;">
+                                {{pmft.pmftCost}}
+                              </div>
+                              <div class="col-1 text-center" style="font-weight: 600;">
+                                {{pmft.pmftCurrency}}
+                              </div>
+                              <div class="col-3" style="font-weight: 600;">
+                                {{pmft.pmftCostComment}}
+                              </div>
+                                <div class="col-1" style="font-weight: 600; margin-left:90%;">
+                                  <!-- EDIT / DELETE PMFT -->
+                                  {% if access_bool|get_edit_assembly:assembly_key.pk %}
+                                  <a href="{% url 'tool:add_pmft' car.carSlug system.systemSlug assembly_key.assemblySlug part_key.partSlug pmft.pmftSlug %}"><button class="btn"></button>Edit</a>
+                                  <br>
+                                  <a href="{% url 'tool:pmft_delete' car.carSlug system.systemSlug assembly_key.assemblySlug part_key.partSlug pmft.pmftSlug %}"><button class="btn"></button>Delete</a>
+                                  {% endif %}
+                                </div>
+                            </div>
+                            <hr>
+                          {% endfor %}
+                    </div>
+                </div>
+            </div>
             {% endfor %}
-          </div>
         </div>
       </div>
     </div>
-  {% endfor %}
+    {% endfor %}
   </div>
-</div>
 
-{% if display_add_assembly %}
-  <div class="mt-4">
-    <a href="{% url 'tool:add_assembly' car.carSlug system.systemSlug %}"> CLICK HERE TO ADD ASSEMBLY</a>
-  </div>
-{% endif %}
 
-  <!--</div>-->
   <div id="clear"></div>
 {% endblock %}

@@ -12,7 +12,7 @@
     {% else %}
     Car: <span class="text-uppercase">{{car.carName }} {{ car.carYear }}</span><br>
     {% endif %}
-    Systems:
+    Systems
 </h3>
 
 <hr>
@@ -72,7 +72,7 @@
                         {% for key, value in systemSubteams.items %}
                           {% if key == system.systemID %}
                             {% for subteam in value %}
-                              <p class="d-inline"> {{subteam.teamName}}</p>
+                              <p class="d-inline"> {{subteam.teamName}},</p>
                             {% endfor %}
                           {% endif %}
                         {% endfor %}

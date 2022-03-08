@@ -40,15 +40,12 @@
   margin-left: 100px;
   margin-right: 100px;
   min-width: 600px;
-
-
 }
 
 .car_card_description {
   width: 59%;
   margin-left: 40px;
   margin-top: 20px;
-  /*border: solid black; */
   border-width: 1px 1px;
   border-radius: 10px;
   height: 180px;
@@ -95,7 +92,3 @@
 .m-auto h5 {
     text-align: center;
 }
-
-/*.edit-btn:hover{
-    background-color: #f8de7e;
-}*/

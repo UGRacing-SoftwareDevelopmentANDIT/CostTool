@@ -120,7 +120,8 @@ class PMFT(models.Model):
     pmftCostComment =  models.CharField(max_length=50,  null=True)
     pmftQuantity = models.IntegerField(default=1)
     partID = models.ForeignKey(Part, on_delete=models.SET_NULL, null = True)
-    pmftType = models.CharField(max_length=1)
+    #a char field must have a max length, when set to 1 it creates an error with the multiple select box, this is a work around
+    pmftType = models.CharField(max_length=5)
     pmftSlug = models.SlugField(unique=True, default='pmft-')
 
     def save(self, *args, **kwargs):

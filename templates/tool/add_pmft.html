@@ -47,14 +47,33 @@
             <input type="int" name="pmftQuantity" value="{{ pmft.pmftQuantity }}" size="50"/>
             <br />
             <br />
+            
             <label for="pmftType"><b>Type: </b></label>
-            <input type="text" name="pmftType" value="{{ pmft.pmftType }}" size="50"/>
+            {{ form.pmftType}}
+            
             <br />
             <br />       
             <input type="submit" value="Submit" />
 
             </form>
       {% else %}
+
+
+            {% if form.errors %}
+            {% for field in form %}
+                  {% for error in field.errors %}
+                        <div class="ERROR"
+                              <strong>{{ error|escape }}</strong>
+                        </div>
+                  {% endfor %}
+            {% endfor %}
+            {% for error in form.non_field_errors %}
+                  <div class="ERROR">
+                        <strong>{{ error|escape }}</strong>
+                  </div>
+            {% endfor %}
+            {% endif %}
+
             <h1>Create a new PMFT</h1>
 
             <form id="create_pmft_form" method="post" enctype="multipart/form-data"action="{% url 'tool:add_pmft' car.carSlug system.systemSlug assembly.assemblySlug part.partSlug %}">
@@ -94,8 +113,11 @@
             <input type="int" name="pmftQuantity" value="" size="50"/>
             <br />
             <br />
+
             <label for="pmftType"><b>Type: </b></label>
-            <input type="text" name="pmftType" value="" size="50"/>
+            {{ form.pmftType}}
+
+
             <br />
             <br />       
             <input type="submit" value="Submit" />

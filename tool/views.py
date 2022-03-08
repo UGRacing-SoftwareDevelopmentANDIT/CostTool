@@ -1,3 +1,4 @@
+from hashlib import new
 import sys
 from django.shortcuts import render, redirect, get_object_or_404
 from django.http import HttpResponse
@@ -356,7 +357,11 @@ def add_pmft(request, car_slug, system_slug, assembly_slug, part_slug, pmft_slug
     if request.method == 'POST' and form.is_valid():
         newPMFT = form.save(commit=False)
         if not pmft_slug:
+            pmftType = form.cleaned_data.get('pmftType')
+            print(pmftType)
             newPMFT.partID = Part.objects.get(partSlug=part_slug)
+            newPMFT.pmftType = pmftType[0]
+        newPMFT.save()
         newPMFT.save()
         return redirect(reverse('tool:system_display', args=[car_slug, system_slug]))
 

@@ -73,12 +73,20 @@ class PartForm(forms.ModelForm):
 
 
 class PMFTForm(forms.ModelForm):
+
+    pmftTypeOptions = (
+        ("P", "P"),
+        ("M", "M"),
+        ("F", "F"),
+        ("T", "T"),
+    )
+
     pmftName = forms.CharField(max_length=15)
     pmftComment = forms.CharField(max_length=50,  required=False)
     pmftCost = forms.FloatField(required=False)
     pmftCostComment =  forms.CharField(max_length=50,  required=False)
     pmftQuantity = forms.IntegerField()
-    pmftType = forms.CharField(max_length=1)
+    pmftType = forms.MultipleChoiceField(choices=pmftTypeOptions)
     pmftSlug = forms.SlugField(widget=forms.HiddenInput(), required=False)
     class Meta:
         model = PMFT

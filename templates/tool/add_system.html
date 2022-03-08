@@ -20,12 +20,6 @@
             {{ form.systemName }}
             <input type='submit' value='submit'>
 
-            <label for="systemName"><b>System Name: </b></label>
-            <input type="text" name="systemName" value="{{system.systemName}}" size="50" />
-
-            <br />
-            <br />
-
             {% if edit %}
                   {% if system.costed %}
                   <input type="checkbox" id="costed" name="costed" checked>

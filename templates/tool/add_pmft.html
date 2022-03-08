@@ -9,6 +9,22 @@
 
 
 {% block body_block %}
+
+            {% if form.errors %}
+            {% for field in form %}
+                  {% for error in field.errors %}
+                        <div class="ERROR"
+                              <strong>{{ error|escape }}</strong>
+                        </div>
+                  {% endfor %}
+            {% endfor %}
+            {% for error in form.non_field_errors %}
+                  <div class="ERROR">
+                        <strong>{{ error|escape }}</strong>
+                  </div>
+            {% endfor %}
+            {% endif %}
+
       {% if edit %}
             <h1>Edit "{{pmft.pmftName}}" PMFT</h1>
 
@@ -50,29 +66,13 @@
             
             <label for="pmftType"><b>Type: </b></label>
             {{ form.pmftType}}
-            
+
             <br />
             <br />       
             <input type="submit" value="Submit" />
 
             </form>
       {% else %}
-
-
-            {% if form.errors %}
-            {% for field in form %}
-                  {% for error in field.errors %}
-                        <div class="ERROR"
-                              <strong>{{ error|escape }}</strong>
-                        </div>
-                  {% endfor %}
-            {% endfor %}
-            {% for error in form.non_field_errors %}
-                  <div class="ERROR">
-                        <strong>{{ error|escape }}</strong>
-                  </div>
-            {% endfor %}
-            {% endif %}
 
             <h1>Create a new PMFT</h1>
 

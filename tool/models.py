@@ -37,7 +37,7 @@ class Car(models.Model):
         return self.carSlug    
     class Meta:
         constraints = [
-        models.UniqueConstraint(fields=['carYear', 'carName'], name='unique_carName_carYear')
+            models.UniqueConstraint(fields=['carYear', 'carName'], name='unique_carName_carYear')
     ]
        
 
@@ -50,16 +50,15 @@ class System(models.Model):
     systemSlug = models.SlugField(unique=True, default="system-")
     # subteam = models.ManyToManyField(Subteam)
     def save(self, *args, **kwargs):
-        self.systemSlug = (slugify(self.systemName))
+        self.systemSlug = '-'.join((slugify(self.systemID), slugify(self.systemName)))
         super(System, self).save(*args, **kwargs)
 
     def __str__(self):
         return self.systemSlug
    
     class Meta:
-        
         constraints = [
-        models.UniqueConstraint(fields=['carID', 'systemName'], name='unique_carID_systemName')
+        models.UniqueConstraint(fields=['systemName', 'carID'], name='unique_carID_systemName')
         ]
 
         

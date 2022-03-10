@@ -45,7 +45,7 @@ def about(request):
     # information page
     context_dict = {}
     return render(request, 'tool/about.html', context=context_dict)
-
+    
 ########################################## Displays ###############################################
 
 def car_display(request, car_slug):
@@ -289,6 +289,7 @@ def add_assembly(request, car_slug, system_slug, assembly_slug=None):
         if not assembly_slug:
             newAssembly.systemID = System.objects.get(systemSlug=system_slug)
         newAssembly.save()
+        newAssembly.save()
         return redirect(reverse('tool:system_display', args=[car_slug, system_slug]))
     context_dict['form'] = form
     if assembly_slug:
@@ -321,6 +322,7 @@ def add_part(request, car_slug, system_slug, assembly_slug, part_slug=None):
         newPart = form.save(commit=False)
         if not part_slug:
             newPart.assemblyID = Assembly.objects.get(assemblySlug=assembly_slug)
+        newPart.save()
         newPart.save()
         return redirect(reverse('tool:system_display', args=[car_slug, system_slug]))
 

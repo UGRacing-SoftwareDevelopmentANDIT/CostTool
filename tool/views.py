@@ -1,3 +1,4 @@
+from hashlib import new
 import sys
 from django.shortcuts import render, redirect, get_object_or_404
 from django.http import HttpResponse
@@ -44,7 +45,7 @@ def about(request):
     # information page
     context_dict = {}
     return render(request, 'tool/about.html', context=context_dict)
-
+    
 ########################################## Displays ###############################################
 
 def car_display(request, car_slug):
@@ -253,7 +254,10 @@ def add_system(request, car_slug, system_slug=None):
     if request.method == 'POST' and form.is_valid():
         newSystem = form.save(commit=False)
         if not system_slug:
+            systemName = form.cleaned_data.get('systemName')
             newSystem.carID = Car.objects.get(carSlug=car_slug)
+            newSystem.systemName = systemName[0]
+        newSystem.save()
         newSystem.save()
         return redirect(reverse('tool:car_display', args=[car_slug]))
 
@@ -285,6 +289,7 @@ def add_assembly(request, car_slug, system_slug, assembly_slug=None):
         if not assembly_slug:
             newAssembly.systemID = System.objects.get(systemSlug=system_slug)
         newAssembly.save()
+        newAssembly.save()
         return redirect(reverse('tool:system_display', args=[car_slug, system_slug]))
     context_dict['form'] = form
     if assembly_slug:
@@ -305,6 +310,7 @@ def add_part(request, car_slug, system_slug, assembly_slug, part_slug=None):
     context_dict['car'] = car
     context_dict['system'] = system
     context_dict['assembly'] = assembly
+    context_dict['costed'] = system.costed
 
     if part_slug:
         part = get_object_or_404(Part, partSlug=part_slug)
@@ -316,6 +322,7 @@ def add_part(request, car_slug, system_slug, assembly_slug, part_slug=None):
         newPart = form.save(commit=False)
         if not part_slug:
             newPart.assemblyID = Assembly.objects.get(assemblySlug=assembly_slug)
+        newPart.save()
         newPart.save()
         return redirect(reverse('tool:system_display', args=[car_slug, system_slug]))
 
@@ -340,6 +347,8 @@ def add_pmft(request, car_slug, system_slug, assembly_slug, part_slug, pmft_slug
     context_dict['system'] = system
     context_dict['assembly'] = assembly
     context_dict['part'] = part
+    context_dict['costed'] = system.costed
+
 
     if pmft_slug:
         pmft = get_object_or_404(PMFT, pmftSlug=pmft_slug)
@@ -350,7 +359,11 @@ def add_pmft(request, car_slug, system_slug, assembly_slug, part_slug, pmft_slug
     if request.method == 'POST' and form.is_valid():
         newPMFT = form.save(commit=False)
         if not pmft_slug:
+            pmftType = form.cleaned_data.get('pmftType')
+            print(pmftType)
             newPMFT.partID = Part.objects.get(partSlug=part_slug)
+            newPMFT.pmftType = pmftType[0]
+        newPMFT.save()
         newPMFT.save()
         return redirect(reverse('tool:system_display', args=[car_slug, system_slug]))
 

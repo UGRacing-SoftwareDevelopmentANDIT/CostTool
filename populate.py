@@ -107,13 +107,12 @@ def populate():
           'makeBuy': True ,
           'partCost': 120 ,
           'partQuantity': 6,
-          'partCurrency': 'EUR',
           'partComment': 'This is a comment'
           }
          ]
     Part = []
     for part in partinfo:
-        p=add_part(part['partName'],a, part['makeBuy'], part['partCost'], part['partQuantity'], part['partCurrency'], part['partComment'])
+        p=add_part(part['partName'],a, part['makeBuy'], part['partCost'], part['partQuantity'], part['partComment'])
         Part.append(p)
 
     pmftinfo = [
@@ -121,7 +120,6 @@ def populate():
           'pmftName': 'test',
           'pmftComment': 'this is a comment',
           'pmftCost': 60,
-          'pmftCurrency': 'EUR',
           'pmftCostComment': 'This is a cost commemt',
           'pmftQuantity': 8,
           'pmftType': 'M'
@@ -129,7 +127,7 @@ def populate():
          ]
     PMFT = []
     for pmft in pmftinfo:
-        pm=add_pmft(pmft['pmftName'],pmft['pmftComment'],pmft['pmftCost'],pmft['pmftCurrency'],pmft['pmftCostComment'],pmft['pmftQuantity'],p,pmft['pmftType'])
+        pm=add_pmft(pmft['pmftName'],pmft['pmftComment'],pmft['pmftCost'],pmft['pmftCostComment'],pmft['pmftQuantity'],p,pmft['pmftType'])
         PMFT.append(pm)
 
 
@@ -183,27 +181,26 @@ def add_assembly(assemblyName,systemID,assemblyQuantity):
 
     return a
 
-def add_part(partName,assemblyID,makeBuy,partCost,partQuantity,partCurrency,partComment):
+def add_part(partName,assemblyID,makeBuy,partCost,partQuantity,partComment):
 
-    p = Part.objects.get_or_create(partName=partName,assemblyID=assemblyID, makeBuy=makeBuy,partCost=partCost,partQuantity=partQuantity,partCurrency=partCurrency,partComment=partComment)[0]
+    p = Part.objects.get_or_create(partName=partName,assemblyID=assemblyID, makeBuy=makeBuy,partCost=partCost,partQuantity=partQuantity,partComment=partComment)[0]
     p.partName = partName
     p.assemblyID = assemblyID
     p.makeBuy = makeBuy
     p.partCost =partCost
     p.partQuantity = partQuantity
-    p.partCurrency = partCurrency
     p.partComment = partComment
     p.save()
 
     return p
 
-def add_pmft(pmftName,pmftComment,pmftCost,pmftCurrency,pmftCostComment,pmftQuantity,partID,pmftType):
+def add_pmft(pmftName,pmftComment,pmftCost,pmftCostComment,pmftQuantity,partID,pmftType):
 
-    pm = PMFT.objects.get_or_create(pmftName=pmftName,pmftComment=pmftComment, pmftCost=pmftCost,pmftCurrency=pmftCurrency,pmftCostComment=pmftCostComment,pmftQuantity=pmftQuantity,partID=partID,pmftType=pmftType)[0]
+    pm = PMFT.objects.get_or_create(pmftName=pmftName,pmftComment=pmftComment, pmftCost=pmftCost, pmftCostComment=pmftCostComment,pmftQuantity=pmftQuantity,partID=partID,pmftType=pmftType)[0]
     pm.pmftName = pmftName
     pm.pmftComment = pmftComment
     pm.pmftCost = pmftCost
-    pm.pmftCurrency =pmftCurrency
+
     pm.pmftCostComment = pmftCostComment
     pm.partID = partID
     pm.pmftType = pmftType

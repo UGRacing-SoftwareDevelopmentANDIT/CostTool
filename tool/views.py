@@ -254,9 +254,9 @@ def add_system(request, car_slug, system_slug=None):
 
     if system_slug:
         system = get_object_or_404(System, systemSlug=system_slug)
-        form = SystemForm(request.POST, instance=system)
+        form = SystemForm(dict(request.POST), instance=system)
     else:
-        form = SystemForm(request.POST)
+        form = SystemForm(dict(request.POST))
 
     if request.method == 'POST' and form.is_valid():
         newSystem = form.save(commit=False)
@@ -362,7 +362,7 @@ def add_pmft(request, car_slug, system_slug, assembly_slug, part_slug, pmft_slug
 
     if pmft_slug:
         pmft = get_object_or_404(PMFT, pmftSlug=pmft_slug)
-        form = PMFTForm(request.POST, instance=pmft)
+        form = PMFTForm(dict(request.POST), instance=pmft)
     else:
         form = PMFTForm(request.POST)
 

@@ -31,9 +31,10 @@
             action="{% url 'tool:add_system' car.carSlug system.systemSlug %}">
             {% csrf_token %}
 
+            
+            <label for="systemName"><b>System Name: </b></label>
             {{ form.systemName }}
-            <input type='submit' value='submit'>
-
+ 
             {% if edit %}
                   {% if system.costed %}
                   <input type="checkbox" id="costed" name="costed" checked>

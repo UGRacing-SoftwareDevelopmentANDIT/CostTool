@@ -15,12 +15,20 @@
 
 {% block body_block %}
 
-<body id="bg" style="background-image: url('{% static "images/ugr-20.png" %}');";>
+<body id="bg" style="background-image: url('{% static 'images/ugr-20.png' %}')">
 
 <div class="login_section form-control">
-    <a><img src="{% static "images/ugr-white-transparent.png" %}" alt="UGRacing" height="100px"></a>
+    <a><img src="{% static 'images/ugr-white-transparent.png' %}" alt="UGRacing" height="100px"></a>
     <form id="login_form" method="post" action="{% url 'tool:login' %}">
         {% csrf_token %}
+        {% for hidden in form.hidden_fields %}
+            {{ hidden }}
+        {% endfor %}
+        {% for field in form.visible_fields %}
+            {{ field }}
+            {{ field.help_text }}
+            {{ field.errors }}
+        {% endfor %}
         <input type="text" placeholder = "Username" class="form-control box" name="username" value="" size="50" />
         <br />
         <input type="password" placeholder = "Password" class="form-control box" name="password" value="" size="50" />

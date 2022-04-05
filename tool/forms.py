@@ -3,8 +3,15 @@ from django.db.models.expressions import Value
 from tool.models import *
 from django.contrib.auth.models import User
 
+class LoginForm(forms.ModelForm):
+    username = forms.CharField(widget=forms.TextInput(attrs={'class': 'form-control box'}), help_text="Username not recognised.")
+    password = forms.CharField(widget=forms.PasswordInput(), help_text="Incorrect password.")
 
-#have to specify the password field is a PasswordInput so that the password appears hidden on the template
+    class Meta:
+        model = User
+        fields = ('username', 'password')
+
+# have to specify the password field is a PasswordInput so that the password appears hidden on the template
 class UserForm(forms.ModelForm):
     password = forms.CharField(widget=forms.PasswordInput())
     class Meta:
@@ -12,7 +19,7 @@ class UserForm(forms.ModelForm):
         fields = ('username','email','password',)
  
 
-#the user field is initialised in the views.py file, verified filed is just set to false
+# the user field is initialised in the views.py file, verified filed is just set to false
 class UserAccountForm(forms.ModelForm):
     rank = forms.IntegerField(widget=forms.HiddenInput(), required=True)
     class Meta:

@@ -19,7 +19,7 @@ from tool.consts import USER_RANKS
 
 ########################################## Base ###############################################
 
-# TODO: Stop logging out breaking the web app
+@login_required
 def home(request):
     context_dict = {}
 
@@ -41,13 +41,16 @@ def home(request):
     response = render(request, 'tool/home.html', context=context_dict)
     return response
 
+
 def about(request):
     # information page
     context_dict = {}
     return render(request, 'tool/about.html', context=context_dict)
-    
+
+
 ########################################## Displays ###############################################
 
+@login_required
 def car_display(request, car_slug):
     context_dict = {}
     try:
@@ -114,6 +117,7 @@ def car_display(request, car_slug):
         context_dict['car'] = None
 
     return render(request, 'tool/car_display.html', context=context_dict)
+
 
 @login_required
 def system_display(request, system_slug, car_slug):
@@ -194,6 +198,7 @@ def system_display(request, system_slug, car_slug):
 
     return render(request, 'tool/system_display.html', context=context_dict)
 
+
 @register.filter
 def get_edit_assembly(dictionary, key):
     return dictionary.get(key)
@@ -201,6 +206,7 @@ def get_edit_assembly(dictionary, key):
     ########################################## Car Forms ###############################################
 
 
+@login_required
 def add_car(request, car_slug=None):
     context_dict = {}
     car = None
@@ -238,7 +244,8 @@ def add_car(request, car_slug=None):
 
     return render(request, 'tool/add_car.html', context_dict)
   
-  
+
+@login_required
 def add_system(request, car_slug, system_slug=None):
     context_dict = {}
     context_dict['car'] = Car.objects.get(carSlug=car_slug)
@@ -271,6 +278,7 @@ def add_system(request, car_slug, system_slug=None):
     return render(request, 'tool/add_system.html', context_dict)
 
 
+@login_required
 def add_assembly(request, car_slug, system_slug, assembly_slug=None):
     context_dict = {}
     context_dict['car'] = Car.objects.get(carSlug=car_slug)
@@ -300,7 +308,8 @@ def add_assembly(request, car_slug, system_slug, assembly_slug=None):
         
     return render(request, 'tool/add_assembly.html', context_dict)
   
- 
+
+@login_required
 def add_part(request, car_slug, system_slug, assembly_slug, part_slug=None):
     context_dict = {}
     car = Car.objects.get(carSlug=car_slug)
@@ -336,6 +345,7 @@ def add_part(request, car_slug, system_slug, assembly_slug, part_slug=None):
     return render(request, 'tool/add_part.html', context_dict)
 
 
+@login_required
 def add_pmft(request, car_slug, system_slug, assembly_slug, part_slug, pmft_slug=None):
     context_dict = {}
     car = Car.objects.get(carSlug=car_slug)
@@ -379,6 +389,7 @@ def add_pmft(request, car_slug, system_slug, assembly_slug, part_slug, pmft_slug
 
 ########################################## User Forms ###############################################
 
+@login_required
 def edit_subteam(request, car_slug, system_slug):
     context_dict = {}
 
@@ -402,6 +413,7 @@ def edit_subteam(request, car_slug, system_slug):
     return render(request, 'tool/edit_subteam.html', {'form': form, 'context': context_dict})
 
 
+@login_required
 def delete_subteam(request, car_slug, system_slug, subteam_slug):
      system = System.objects.get(systemSlug=system_slug)
      subteam = Subteam.objects.get(subteamSlug = subteam_slug)
@@ -410,6 +422,7 @@ def delete_subteam(request, car_slug, system_slug, subteam_slug):
      return redirect(request.META.get('HTTP_REFERER', 'redirect_if_referer_not_found'))
 
 
+@login_required
 def edit_assign_eng(request, car_slug, system_slug, assembly_slug):
     context_dict = {}
 
@@ -466,7 +479,10 @@ def register(request):
 
 
 def user_login(request):
+    context_dict = {}
+
     if request.method == 'POST':
+        form = LoginForm(request.POST)
         username = request.POST.get('username')
         password = request.POST.get('password')
         user = authenticate(username=username, password=password)
@@ -475,10 +491,9 @@ def user_login(request):
                 login(request, user)
                 return redirect(reverse('tool:home'))
             else:
-                return HttpResponse("Your account is disabled.")
+                return render(request, 'tool/login.html')
         else:
-            print(f"Invalid login details: {username}, {password}")
-            return HttpResponse("Invalid login details.")
+            return render(request, 'tool/login.html')
     else:
         return render(request, 'tool/login.html')
 
@@ -495,6 +510,7 @@ def change_password(request):
   
 ########################################## Delete Model Instance ###############################################
 
+@login_required
 def car_delete(request, car_slug):
     car = Car.objects.filter(carSlug = car_slug)
     car.delete()
@@ -502,24 +518,28 @@ def car_delete(request, car_slug):
     return redirect(request.META.get('HTTP_REFERER', 'redirect_if_referer_not_found'))
  
 
+@login_required
 def system_delete(request, car_slug, system_slug):
     system = System.objects.filter(systemSlug = system_slug)
     system.delete()
     return redirect(request.META.get('HTTP_REFERER', 'redirect_if_referer_not_found'))
 
-  
+
+@login_required
 def assembly_delete(request, car_slug, system_slug, assembly_slug):
     assembly = Assembly.objects.filter(assemblySlug = assembly_slug)
     assembly.delete()
     return redirect(request.META.get('HTTP_REFERER', 'redirect_if_referer_not_found'))
 
-  
+
+@login_required
 def part_delete(request, car_slug, system_slug, assembly_slug, part_slug):
     part = Part.objects.filter(partSlug = part_slug)
     part.delete()
     return redirect(request.META.get('HTTP_REFERER', 'redirect_if_referer_not_found'))
 
-  
+
+@login_required
 def pmft_delete(request, car_slug, system_slug, assembly_slug, part_slug, pmft_slug):
     pmft = PMFT.objects.filter(pmftSlug = pmft_slug)
     pmft.delete()

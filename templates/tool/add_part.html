@@ -9,6 +9,20 @@
 
 
 {% block body_block %}
+      {% if form.errors %}
+      {% for field in form %}
+            {% for error in field.errors %}
+                  <div class="ERROR"
+                        <strong>{{ error|escape }}</strong>
+                  </div>
+            {% endfor %}
+      {% endfor %}
+      {% for error in form.non_field_errors %}
+            <div class="ERROR">
+                  <strong>{{ error|escape }}</strong>
+            </div>
+      {% endfor %}
+      {% endif %}
       {% if edit %}
       <div id=sign_in_box>
             <h1>Edit part</h1>
@@ -31,20 +45,21 @@
             <br />
             <br />
 
-            <label for="partCost"><b>Part Cost: </b></label>
-            <input type="float" name="partCost" value="{{ part.partCost }}" size="50"/>
+            {% if costed %}
+            <label for="partCost"><b>Part Cost in EUR: </b></label>
+            <input type="float" name="partCost" value="" size="50"/>
 
             <br />
             <br />
 
+            {%else%}
+                  <p>
+                        Note:// part isnt costed
+                  </p>
+            {%endif%}
+            
             <label for="partQuantity"><b>Quantity: </b></label>
             <input type="int" name="partQuantity" value="{{ part.partQuantity }}" size="50"/>
-
-            <br />
-            <br />
-
-            <label for="partCurrency"><b> Currency: </b></label>
-            <input type="text" name="partCurrency" value="{{ part.partCurrency }}" size="3"/>
 
             <br />
             <br />
@@ -79,20 +94,23 @@
             <br />
             <br />
 
-            <label for="partCost"><b>Part Cost: </b></label>
+            {% if costed %}
+            <label for="partCost"><b>Part Cost in EUR: </b></label>
             <input type="float" name="partCost" value="" size="50"/>
 
             <br />
             <br />
 
+            {%else%}
+                  <p>
+                        Note:// part isnt costed
+                  </p>
+            {%endif%}
+
+           
+
             <label for="partQuantity"><b>Quantity: </b></label>
             <input type="int" name="partQuantity" value="" size="50"/>
-
-            <br />
-            <br />
-
-            <label for="partCurrency"><b> Currency: </b></label>
-            <input type="text" name="partCurrency" value="" size="3"/>
 
             <br />
             <br />

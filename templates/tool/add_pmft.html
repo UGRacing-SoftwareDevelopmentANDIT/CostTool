@@ -9,6 +9,22 @@
 
 
 {% block body_block %}
+
+            {% if form.errors %}
+            {% for field in form %}
+                  {% for error in field.errors %}
+                        <div class="ERROR"
+                              <strong>{{ error|escape }}</strong>
+                        </div>
+                  {% endfor %}
+            {% endfor %}
+            {% for error in form.non_field_errors %}
+                  <div class="ERROR">
+                        <strong>{{ error|escape }}</strong>
+                  </div>
+            {% endfor %}
+            {% endif %}
+
       {% if edit %}
             <h1>Edit "{{pmft.pmftName}}" PMFT</h1>
 
@@ -26,30 +42,38 @@
 
             <br />
             <br />
-            <label for="pmftCost"><b>Pmft Cost: </b></label>
-            <input type="float" name="pmftCost" value="{{ pmft.pmftCost }}" size="50"/>
-            <br />
-            <br />
-            <label for="pmftCurrency"><b> Currency: </b></label>
-            <input type="text" name="pmftCurrency" value="{{ pmft.pmftCurrency }}" size="3"/>
+            {% if costed %}
+
+            <label for="pmftCost"><b>Pmft Cost in EUR: </b></label>
+            <input type="float" name="pmftCost" value="" size="50"/>
             <br />
             <br />
             <label for="pmftCostComment"><b>Cost Comment: </b></label>
-            <input type="text" name="pmftCostComment" value="{{ pmft.pmftCostComment }}" size="50"/>
+            <input type="text" name="pmftCostComment" value="" size="50"/>
             <br />
             <br />
+
+            {%else%}
+                  <p>
+                        Note:// pmft isnt costed
+                  </p>
+            {%endif%}
+
             <label for="pmftQuantity"><b>Quantity: </b></label>
             <input type="int" name="pmftQuantity" value="{{ pmft.pmftQuantity }}" size="50"/>
             <br />
             <br />
+            
             <label for="pmftType"><b>Type: </b></label>
-            <input type="text" name="pmftType" value="{{ pmft.pmftType }}" size="50"/>
+            {{ form.pmftType}}
+
             <br />
             <br />       
             <input type="submit" value="Submit" />
 
             </form>
       {% else %}
+
             <h1>Create a new PMFT</h1>
 
             <form id="create_pmft_form" method="post" enctype="multipart/form-data"action="{% url 'tool:add_pmft' car.carSlug system.systemSlug assembly.assemblySlug part.partSlug %}">
@@ -66,24 +90,34 @@
 
             <br />
             <br />
-            <label for="pmftCost"><b>Pmft Cost: </b></label>
+
+            {% if costed %}
+
+            <label for="pmftCost"><b>Pmft Cost in EUR: </b></label>
             <input type="float" name="pmftCost" value="" size="50"/>
-            <br />
-            <br />
-            <label for="pmftCurrency"><b> Currency: </b></label>
-            <input type="text" name="pmftCurrency" value="" size="3"/>
             <br />
             <br />
             <label for="pmftCostComment"><b>Cost Comment: </b></label>
             <input type="text" name="pmftCostComment" value="" size="50"/>
             <br />
             <br />
+
+            {%else%}
+                  <p>
+                        Note:// pmft isnt costed
+                  </p>
+            {%endif%}
+
+
             <label for="pmftQuantity"><b>Quantity: </b></label>
             <input type="int" name="pmftQuantity" value="" size="50"/>
             <br />
             <br />
+
             <label for="pmftType"><b>Type: </b></label>
-            <input type="text" name="pmftType" value="" size="50"/>
+            {{ form.pmftType}}
+
+
             <br />
             <br />       
             <input type="submit" value="Submit" />

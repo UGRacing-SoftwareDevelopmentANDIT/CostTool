@@ -95,7 +95,6 @@ class Part(models.Model):
     #choose validation location for things like 2dp etc
     partCost = models.FloatField(null = True)
     partQuantity = models.IntegerField(default=1)
-    partCurrency = models.CharField(max_length=3, null = True)
     partComment = models.CharField(max_length=50, null = True)
     partSlug = models.SlugField(unique=True, default='part-')
 
@@ -118,11 +117,11 @@ class PMFT(models.Model):
     pmftName = models.CharField(max_length=15)
     pmftComment = models.CharField(max_length=50,  null=True)
     pmftCost = models.FloatField(default=0)
-    pmftCurrency = models.CharField(max_length=3, null = True)
     pmftCostComment =  models.CharField(max_length=50,  null=True)
     pmftQuantity = models.IntegerField(default=1)
     partID = models.ForeignKey(Part, on_delete=models.SET_NULL, null = True)
-    pmftType = models.CharField(max_length=1)
+    #a char field must have a max length, when set to 1 it creates an error with the multiple select box, this is a work around
+    pmftType = models.CharField(max_length=5)
     pmftSlug = models.SlugField(unique=True, default='pmft-')
 
     def save(self, *args, **kwargs):

@@ -31,9 +31,19 @@ class CarForm(forms.ModelForm):
 
         
 class SystemForm(forms.ModelForm):
-    systemName = forms.CharField(max_length=20, help_text="Please enter the system name.")
+    
+
+    #I think the first str is the value and the 2nd is the text displayed
+    systemNameOptions = (
+        ("Electrical", "Electrical"),
+        ("Wheel and Suspension", "Wheel and Suspension"),
+        ("Miscelaneous", "Miscelaneous"),
+    )
+   # systemName = forms.CharField(max_length=20, help_text="Please enter the system name.")
     costed = forms.BooleanField(help_text="Please check if the system is costed.", required=False)
     systemSlug = forms.CharField(widget=forms.HiddenInput(), required=False)
+    systemName = forms.MultipleChoiceField(choices=systemNameOptions)
+
     class Meta:
         model = System
         fields = ('systemName', 'costed', 'systemSlug')  
@@ -51,30 +61,36 @@ class AssemblyForm(forms.ModelForm):
 
 class PartForm(forms.ModelForm):
     partName = forms.CharField(max_length=15)
-    makeBuy = forms.BooleanField()
+    makeBuy = forms.BooleanField(required=False)
     partCost = forms.FloatField(required=False)
     partQuantity = forms.IntegerField()
-    partCurrency = forms.CharField(max_length=3, required=False)
     partComment = forms.CharField(max_length=50, required=False)
     partSlug = forms.SlugField(widget=forms.HiddenInput(), required=False)
 
     class Meta:
         model = Part
-        fields = ('partName', 'makeBuy', 'partCost', 'partQuantity', 'partCurrency', 'partComment', 'partSlug')
+        fields = ('partName', 'makeBuy', 'partCost', 'partQuantity', 'partComment', 'partSlug')
 
 
 class PMFTForm(forms.ModelForm):
+
+    pmftTypeOptions = (
+        ("P", "P"),
+        ("M", "M"),
+        ("F", "F"),
+        ("T", "T"),
+    )
+
     pmftName = forms.CharField(max_length=15)
     pmftComment = forms.CharField(max_length=50,  required=False)
-    pmftCost = forms.FloatField()
-    pmftCurrency = forms.CharField(max_length=3, required = False)
+    pmftCost = forms.FloatField(required=False)
     pmftCostComment =  forms.CharField(max_length=50,  required=False)
     pmftQuantity = forms.IntegerField()
-    pmftType = forms.CharField(max_length=1)
+    pmftType = forms.MultipleChoiceField(choices=pmftTypeOptions)
     pmftSlug = forms.SlugField(widget=forms.HiddenInput(), required=False)
     class Meta:
         model = PMFT
-        fields = ('pmftName', 'pmftComment', 'pmftCost', 'pmftCurrency', 'pmftCostComment', 'pmftQuantity', 'pmftType', 'pmftSlug')
+        fields = ('pmftName', 'pmftComment', 'pmftCost', 'pmftCostComment', 'pmftQuantity', 'pmftType', 'pmftSlug')
 
 class EditSubteam(forms.ModelForm):
     subteamQ = forms.ModelChoiceField(queryset=Subteam.objects.all().order_by('teamName'),required=True)

@@ -11,6 +11,7 @@
 
 .car-card {
   height: 20vh;
+
 }
 
 .hack_carousel {
@@ -45,7 +46,6 @@
   width: 59%;
   margin-left: 40px;
   margin-top: 20px;
-  /*border: solid black; */
   border-width: 1px 1px;
   border-radius: 10px;
   height: 180px;
@@ -73,4 +73,22 @@
 .car_image {
     position: absolute;
     right: 60px;
+}
+
+.system_image{
+    margin-top: 10px;
+}
+
+.edit-system-btn {
+    position: absolute;
+    left: 0px;
+    top: 0;
+}
+
+/*edit-system-btn:hover{
+    background-color: #f8de7e;
+}*/
+
+.m-auto h5 {
+    text-align: center;
 }

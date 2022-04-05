@@ -1,146 +1,164 @@
 {% extends 'tool/base.html' %}
 {% load static %}
 
-
 {% block css_block %}
 <link rel="stylesheet" type="text/css" href="{% static 'home.css' %}">
 {% endblock %}
 
 {% block body_block %}
-
-  <h3 class="font-weight-bold">
+<h3 class="font-weight-bold">
     {% if car.archived %}
-      Car: <span class="text-uppercase">{{car.carName }} {{ car.carYear }} ARCHIVED</span></br>
+    Car: <span class="text-uppercase">{{car.carName }} {{ car.carYear }} ARCHIVED</span><br>
     {% else %}
-      Car: <span class="text-uppercase">{{car.carName }} {{ car.carYear }}</span></br>
+    Car: <span class="text-uppercase">{{car.carName }} {{ car.carYear }}</span><br>
     {% endif %}
-    Systems:
-  </h3>
-  <hr>
-  {%if display_add_system %}
-  <div>
-      <button class="btn btn-light add-btn" type="button"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-plus-lg" viewBox="0 0 16 16">
+    Systems
+</h3>
+
+<hr>
+
+{%if display_add_system %}
+<div>
+    <button class="btn btn-light add-btn" type="button"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-plus-lg" viewBox="0 0 16 16">
   <path fill-rule="evenodd" d="M8 2a.5.5 0 0 1 .5.5v5h5a.5.5 0 0 1 0 1h-5v5a.5.5 0 0 1-1 0v-5h-5a.5.5 0 0 1 0-1h5v-5A.5.5 0 0 1 8 2Z"/>
 </svg><a href="{% url 'tool:add_system' car.carSlug %}">Add System</a></button>
-  </div>
-  {% endif %}
-  <br>
-  <div class="system-wrapper">
+</div>
+{% endif %}
+
+<br>
+<div class="system-wrapper">
     {% if systems %}
-      <div class="row">
+    <div class="row gy-4">
         {% for system in systems %}
-            {% for key, value in access_bool.items %}
-              {% if key == system.systemID %}
-                <div class= "col-3">
-                  <div class="card bg-ugr-primary car-card" id="{{system.systemName}}">
-                    <div class="d-flex car-card-title">
-                      <div class="m-auto">
+        <div class="col-3">
+            <div class="card bg-ugr-primary car-card" id="{{system.systemName}}">
+                <div class="d-flex car-card-title">
+                    <div class="m-auto">
+                        <br>
+                        {% for key, value in access_bool.items %}
+                        {% if key == system.systemID %}
                         {% if value.0 %}
                           {% if value.1 %}
                           {# an assigned TH #}
-                            <a class="text-black fw-bold" href ="{% url 'tool:system_display' car.carSlug system.systemSlug %}">{{system.systemName}}</a>
-                            <a class="text-black fw-bold" href ="{% url 'tool:add_system' car.carSlug system.systemSlug %}">edit </a>
-                            {% else %}
+                            <button class="btn btn-light edit-system-btn" type="button"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-pencil-square" viewBox="0 0 16 16">
+                            <path d="M15.502 1.94a.5.5 0 0 1 0 .706L14.459 3.69l-2-2L13.502.646a.5.5 0 0 1 .707 0l1.293 1.293zm-1.75 2.456-2-2L4.939 9.21a.5.5 0 0 0-.121.196l-.805 2.414a.25.25 0 0 0 .316.316l2.414-.805a.5.5 0 0 0 .196-.12l6.813-6.814z"/>
+                            <path fill-rule="evenodd" d="M1 13.5A1.5 1.5 0 0 0 2.5 15h11a1.5 1.5 0 0 0 1.5-1.5v-6a.5.5 0 0 0-1 0v6a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5v-11a.5.5 0 0 1 .5-.5H9a.5.5 0 0 0 0-1H2.5A1.5 1.5 0 0 0 1 2.5v11z"/>
+                            </svg><a class="text-black" href ="{% url 'tool:add_system' car.carSlug system.systemSlug %}"> Edit </a></button>
+
+                            <h5><a class="text-black fw-bold" href ="{% url 'tool:system_display' car.carSlug system.systemSlug %}">{{system.systemName}}</a></h5>
+                        {% else %}
                           {# an assigned engineer #}
-                            <a class="text-black fw-bold" href="{% url 'tool:system_display' car.carSlug system.systemSlug %}">{{system.systemName}} accessable</a>
+                            <h5><a class="text-black fw-bold" href="{% url 'tool:system_display' car.carSlug system.systemSlug %}">{{system.systemName}} accessable</a></h5>
                           {% endif %}
                         {% else %}
                         {# not an assigned user #}
-                          <a class="text-black fw-bold" href="{% url 'tool:system_display' car.carSlug system.systemSlug %}">{{system.systemName}} not accessable</a>
+                        <h5><a class="text-black fw-bold" href="{% url 'tool:system_display' car.carSlug system.systemSlug %}">{{system.systemName}}</a></h5>
+                        <!-- <p>not accessable</p> -->
                         {% endif %}
-                          {% for key, value in systemSubteams.items %}
+
+                        <p class="d-inline"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="currentColor" class="bi bi-people-fill" viewBox="0 0 16 16">
+                            <path d="M7 14s-1 0-1-1 1-4 5-4 5 3 5 4-1 1-1 1H7zm4-6a3 3 0 1 0 0-6 3 3 0 0 0 0 6z"/>
+                            <path fill-rule="evenodd" d="M5.216 14A2.238 2.238 0 0 1 5 13c0-1.355.68-2.75 1.936-3.72A6.325 6.325 0 0 0 5 9c-4 0-5 3-5 4s1 1 1 1h4.216z"/>
+                            <path d="M4.5 8a2.5 2.5 0 1 0 0-5 2.5 2.5 0 0 0 0 5z"/>
+                            </svg></p>
+                        {% if display_edit_subteam %}
+                            <p class="d-inline"><a href="{% url 'tool:edit_subteam' car.carSlug system.systemSlug %}"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="green" class="bi bi-pencil-fill" viewBox="0 0 16 16">
+                            <path d="M12.854.146a.5.5 0 0 0-.707 0L10.5 1.793 14.207 5.5l1.647-1.646a.5.5 0 0 0 0-.708l-3-3zm.646 6.061L9.793 2.5 3.293 9H3.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.207l6.5-6.5zm-7.468 7.468A.5.5 0 0 1 6 13.5V13h-.5a.5.5 0 0 1-.5-.5V12h-.5a.5.5 0 0 1-.5-.5V11h-.5a.5.5 0 0 1-.5-.5V10h-.5a.499.499 0 0 1-.175-.032l-.179.178a.5.5 0 0 0-.11.168l-2 5a.5.5 0 0 0 .65.65l5-2a.5.5 0 0 0 .168-.11l.178-.178z"/>
+                            </svg></a></p>
+                        {% endif %}
+
+                        <p class="d-inline"> Assignee: </p>
+
+                        {% for key, value in systemSubteams.items %}
                           {% if key == system.systemID %}
                             {% for subteam in value %}
-                              {{subteam.teamName}}
+                              <p class="d-inline"> {{subteam.teamName}},</p>
                             {% endfor %}
                           {% endif %}
-                          {% endfor %}
-                        {% if display_edit_subteam %}
-                        <a class="text-black fw-bold" href="{% url 'tool:edit_subteam' car.carSlug system.systemSlug %}">edit-subteam</a>
+                        {% endfor %}
+
+
                         {% endif %}
-                        </div>
-                      </div>
+                        {% endfor %}
                     </div>
-                  </div>
-              {% endif %}
-            {% endfor %}
-           {% endfor %} 
+                </div>
+            </div>
         </div>
+        {% endfor %}
+    </div>
+
     {% else %}
-      <strong>There are no systems yet</strong>
-    {% endif %}
-  </div>
+    <strong>There are no systems yet</strong> {% endif %}
+
+</div>
+
 
 <script>
+    window.onload = function() {
+        // Engine and Drivetrain
+        var engine_and_drivetrain = document.createElement("img");
+        engine_and_drivetrain.setAttribute("class", "system_image");
+        engine_and_drivetrain.setAttribute("src", "{% static 'images/engine_and_drivetrain.png' %}");
+        engine_and_drivetrain.setAttribute("style", "height: 70px; width: 70px; display: block; margin-left: auto; margin-right: auto;");
+        document.getElementById("E & Drivetrain").appendChild(engine_and_drivetrain);
 
-  window.onload = function() {
-    // Engine and Drivetrain
-    var engine_and_drivetrain = document.createElement("img");
-    engine_and_drivetrain.setAttribute("class", "system_image");
-    engine_and_drivetrain.setAttribute("src", "{% static 'images/engine_and_drivetrain.png' %}");
-    engine_and_drivetrain.setAttribute("style", "height: 70px; width: 70px; display: block; margin-left: auto; margin-right: auto;");
-    document.getElementById("E & Drivetrain").appendChild(engine_and_drivetrain);
+        // Brakes
+        var brakes = document.createElement("img");
+        brakes.setAttribute("class", "system_image");
+        brakes.setAttribute("src", "{% static 'images/brakes.png' %}");
+        brakes.setAttribute("style", "height: 70px; width: 70px; display: block; margin-left: auto; margin-right: auto;");
+        document.getElementById("Brakes").appendChild(brakes);
 
-    // Brakes
-    var brakes = document.createElement("img");
-    brakes.setAttribute("class", "system_image");
-    brakes.setAttribute("src", "{% static 'images/brakes.png' %}");
-    brakes.setAttribute("style", "height: 70px; width: 70px; display: block; margin-left: auto; margin-right: auto;");
-    document.getElementById("Brakes").appendChild(brakes);
+        // Frame and <body>
+        var frame_and_body = document.createElement("img");
+        frame_and_body.setAttribute("class", "system_image");
+        frame_and_body.setAttribute("src", "{% static 'images/frame_and_body.png' %}");
+        frame_and_body.setAttribute("style", "height: 46px; width: 140px; display: block; margin-left: auto; margin-right: auto; margin-top: 30px;");
+        document.getElementById("Frame & Body").appendChild(frame_and_body);
 
-    // Frame and <body>
-    var frame_and_body = document.createElement("img");
-    frame_and_body.setAttribute("class", "system_image");
-    frame_and_body.setAttribute("src", "{% static 'images/frame_and_body.png' %}");
-    frame_and_body.setAttribute("style", "height: 46px; width: 140px; display: block; margin-left: auto; margin-right: auto;");
-    document.getElementById("Frame & Body").appendChild(frame_and_body);
+        // Electrical
+        var electrical = document.createElement("img");
+        electrical.setAttribute("class", "system_image");
+        electrical.setAttribute("src", "{% static 'images/electrical.png' %}");
+        electrical.setAttribute("style", "height: 70px; width: 70px; display: block; margin-left: auto; margin-right: auto;");
+        document.getElementById("Electrical").appendChild(electrical);
 
-    // Electrical
-    var electrical = document.createElement("img");
-    electrical.setAttribute("class", "system_image");
-    electrical.setAttribute("src", "{% static 'images/electrical.png' %}");
-    electrical.setAttribute("style", "height: 70px; width: 70px; display: block; margin-left: auto; margin-right: auto;");
-    document.getElementById("Electrical").appendChild(electrical);
+        // Miscellaneous, Fit, Finish & Assembly
+        var misc = document.createElement("img");
+        misc.setAttribute("class", "system_image");
+        misc.setAttribute("src", "{% static 'images/misc.png' %}");
+        misc.setAttribute("style", "height: 70px; width: 26px; display: block; margin-left: auto; margin-right: auto;");
+        document.getElementById("Miscellaneous").appendChild(misc);
 
-    // Miscellaneous, Fit, Finish & Assembly
-    var misc = document.createElement("img");
-    misc.setAttribute("class", "system_image");
-    misc.setAttribute("src", "{% static 'images/misc.png' %}");
-    misc.setAttribute("style", "height: 70px; width: 26px; display: block; margin-left: auto; margin-right: auto;");
-    document.getElementById("Miscellaneous").appendChild(misc);
+        // Steering System
+        var steering = document.createElement("img");
+        steering.setAttribute("class", "system_image");
+        steering.setAttribute("src", "{% static 'images/steering.png' %}");
+        steering.setAttribute("style", "height: 70px; width: 70px; display: block; margin-left: auto; margin-right: auto;");
+        document.getElementById("Steering System").appendChild(steering);
 
-    // Steering System
-    var steering = document.createElement("img");
-    steering.setAttribute("class", "system_image");
-    steering.setAttribute("src", "{% static 'images/steering.png' %}");
-    steering.setAttribute("style", "height: 70px; width: 70px; display: block; margin-left: auto; margin-right: auto;");
-    document.getElementById("Steering System").appendChild(steering);
+        // Suspension System
+        var suspension = document.createElement("img");
+        suspension.setAttribute("class", "system_image");
+        suspension.setAttribute("src", "{% static 'images/suspension.png' %}");
+        suspension.setAttribute("style", "height: 70px; width: 70px; display: block; margin-left: auto; margin-right: auto;");
+        document.getElementById("Suspension").appendChild(suspension);
 
-    // Suspension System
-    var suspension = document.createElement("img");
-    suspension.setAttribute("class", "system_image");
-    suspension.setAttribute("src", "{% static 'images/suspension.png' %}");
-    suspension.setAttribute("style", "height: 70px; width: 70px; display: block; margin-left: auto; margin-right: auto;");
-    document.getElementById("Suspension").appendChild(suspension);
-
-    // Wheels, Wheel  Bearings & Tyres
-    var wheels = document.createElement("img");
-    wheels.setAttribute("class", "system_image");
-    wheels.setAttribute("src", "{% static 'images/wheels.png' %}");
-    wheels.setAttribute("style", "height: 55px; width: 70px; display: block; margin-left: auto; margin-right: auto;");
-    document.getElementById("Wheels & Tyres").appendChild(wheels);
-  }
+        // Wheels, Wheel  Bearings & Tyres
+        var wheels = document.createElement("img");
+        wheels.setAttribute("class", "system_image");
+        wheels.setAttribute("src", "{% static 'images/wheels.png' %}");
+        wheels.setAttribute("style", "height: 55px; width: 70px; display: block; margin-left: auto; margin-right: auto;");
+        document.getElementById("Wheels & Tyres").appendChild(wheels);
+      }
 </script>
 
-  <!--<ul>
+<!--<ul>
     <li><a href = "{% url 'tool:home' %}"> Home Page </a> </li>
   </ul>-->
 
-  <div id="clear"></div>
+<div id="clear"></div>
 
-
-{% endblock %}
-
-{% block js_block %}
+{% endblock %} {% block js_block %}
 <!--<script type="text/javascript" src="{% static 'car_display.js' %}"></script>-->
 {% endblock %}

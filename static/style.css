@@ -22,6 +22,9 @@ body {
 .bg-grey {
   background-color: #A6A6A6;
 }
+.bg-archived{
+background-color: #D2C48F !important;
+}
 
 /* Header, logo */
 #userspace {
@@ -72,7 +75,8 @@ a{
   height: 15rem;
   border-width: 0.9px;
   border-color: black;
-    border-radius: 10px;
+  border-radius: 10px;
+
 }
 
 .car-card-title {
@@ -112,14 +116,18 @@ a{
     border-radius: 10px;
 }
 .btn:hover a {
-    color:black;
+    color:#ffcc00;
 }
+
 .btn:hover {
     border-color: black;
     border-radius: 10px;
-    background-color: #FFCC00;
+    background: #212529;
+    color: #ffcc00;
 }
 
-.text-black:hover {
-    color: white;
+.accordion-container{
+    width: 1500px;
+    margin-left: 30px;
+
 }

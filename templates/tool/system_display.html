@@ -61,6 +61,11 @@
             <a href="{% url 'tool:add_part' car.carSlug system.systemSlug assembly_key.assemblySlug %}"><button class="btn" style="margin-left:400px;"> Add </button></a>
             <a href="{% url 'tool:add_assembly' car.carSlug system.systemSlug assembly_key.assemblySlug %}"><button class="btn"> Edit</button></a>
           {% endif %}
+
+          {% if display_edit_assignees %}
+          <a href="{% url 'tool:assembly_delete' car.carSlug system.systemSlug assembly_key.assemblySlug %}"><button class="btn"> Del</button></a>
+          {%endif %}
+
       </div>
     </h2>
     <div id="a{{assembly_key.assemblyID}}-collapse"  class="accordion-collapse collapse" aria-labelledby="a{{assembly_key.assemblyID}}-heading">
@@ -87,7 +92,6 @@
                     Cost Comment
                   </div>
                   <div class="col-2" style="font-weight: 600;">
-                    edit
                   </div>
             </div>
         </div>

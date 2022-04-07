@@ -257,16 +257,16 @@ def add_system(request, car_slug, system_slug=None):
 
     if system_slug:
         system = get_object_or_404(System, systemSlug=system_slug)
-        form = SystemForm(dict(request.POST), instance=system)
+        form = SystemForm(request.POST, instance=system)
     else:
-        form = SystemForm(dict(request.POST))
+        form = SystemForm(request.POST)
 
     if request.method == 'POST' and form.is_valid():
         newSystem = form.save(commit=False)
         if not system_slug:
-            systemName = form.cleaned_data.get('systemName')
             newSystem.carID = Car.objects.get(carSlug=car_slug)
-            newSystem.systemName = systemName[0]
+        systemName = form.cleaned_data.get('systemName')    
+        newSystem.systemName = systemName[0]    
         newSystem.save()
         newSystem.save()
         return redirect(reverse('tool:car_display', args=[car_slug]))
@@ -365,17 +365,16 @@ def add_pmft(request, car_slug, system_slug, assembly_slug, part_slug, pmft_slug
 
     if pmft_slug:
         pmft = get_object_or_404(PMFT, pmftSlug=pmft_slug)
-        form = PMFTForm(dict(request.POST), instance=pmft)
+        form = PMFTForm(request.POST, instance=pmft)
     else:
         form = PMFTForm(request.POST)
 
     if request.method == 'POST' and form.is_valid():
         newPMFT = form.save(commit=False)
         if not pmft_slug:
-            pmftType = form.cleaned_data.get('pmftType')
-            print(pmftType)
             newPMFT.partID = Part.objects.get(partSlug=part_slug)
-            newPMFT.pmftType = pmftType[0]
+        pmftType = form.cleaned_data.get('pmftType')    
+        newPMFT.pmftType = pmftType[0]
         newPMFT.save()
         newPMFT.save()
         return redirect(reverse('tool:system_display', args=[car_slug, system_slug]))

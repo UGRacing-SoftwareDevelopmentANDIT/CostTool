@@ -11,6 +11,9 @@ from django.contrib.auth.models import User
 
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
+from django.contrib.auth import update_session_auth_hash
+from django.contrib.auth.forms import PasswordChangeForm
+from django.contrib import messages
 
 from django.template.defaulttags import register
 
@@ -506,7 +509,20 @@ def user_logout(request):
   
 @login_required
 def change_password(request):
-    return render(request, 'tool/change_password.html')
+    if request.method == 'POST':
+        form = PasswordChangeForm(request.user, request.POST)
+        if form.is_valid():
+            user = form.save()
+            update_session_auth_hash(request, user)  # Important!
+            messages.success(request, 'Your password was successfully updated!')
+            return redirect('tool:home')
+        else:
+            messages.error(request, 'Please correct the error below.')
+    else:
+        form = PasswordChangeForm(request.user)
+    return render(request, 'tool/change_password.html', {
+        'form': form
+    })
   
 ########################################## Delete Model Instance ###############################################
 

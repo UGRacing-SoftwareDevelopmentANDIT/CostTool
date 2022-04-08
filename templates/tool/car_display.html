@@ -31,12 +31,16 @@
     <div class="row gy-4">
         {% for system in systems %}
         <div class="col-3">
+            {% for key, value in access_bool.items %}
+            {% if key == system.systemID %}
+            {% if value.0 %}
             <div class="card bg-ugr-primary car-card" id="{{system.systemName}}">
+            {% else %}
+            <div class="card bg-grey car-card" id="{{system.systemName}}">
+            {% endif %}
                 <div class="d-flex car-card-title">
                     <div class="m-auto">
                         <br>
-                        {% for key, value in access_bool.items %}
-                        {% if key == system.systemID %}
                         {% if value.0 %}
                           {% if value.1 %}
                           {# an assigned TH #}
@@ -48,12 +52,11 @@
                             <h5><a class="text-black fw-bold" href ="{% url 'tool:system_display' car.carSlug system.systemSlug %}">{{system.systemName}}</a></h5>
                         {% else %}
                           {# an assigned engineer #}
-                            <h5><a class="text-black fw-bold" href="{% url 'tool:system_display' car.carSlug system.systemSlug %}">{{system.systemName}} accessable</a></h5>
+                            <h5><a class="text-black fw-bold" href="{% url 'tool:system_display' car.carSlug system.systemSlug %}">{{system.systemName}}</a></h5>
                           {% endif %}
                         {% else %}
                         {# not an assigned user #}
-                        <h5><a class="text-black fw-bold" href="{% url 'tool:system_display' car.carSlug system.systemSlug %}">{{system.systemName}}</a></h5>
-                        <!-- <p>not accessable</p> -->
+                        <h5 class="text-black fw-bold">{{system.systemName}}</h5>
                         {% endif %}
 
                         <p class="d-inline"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="currentColor" class="bi bi-people-fill" viewBox="0 0 16 16">

@@ -41,7 +41,6 @@ class Car(models.Model):
     ]
        
 
-
 class System(models.Model):
     systemID = models.AutoField(primary_key=True)
     systemName = models.CharField(max_length=30)
@@ -60,8 +59,7 @@ class System(models.Model):
         constraints = [
         models.UniqueConstraint(fields=['systemName', 'carID'], name='unique_carID_systemName')
         ]
-
-        
+   
 
 class Assembly(models.Model):
     assemblyID = models.AutoField(primary_key=True)
@@ -84,8 +82,7 @@ class Assembly(models.Model):
         constraints = [
             models.UniqueConstraint(fields=['assemblyName', 'systemID'], name='unique_assemblyName_systemID')
         ]
-
-        
+   
 
 class Part(models.Model):
     partID = models.AutoField(primary_key=True)
@@ -110,7 +107,6 @@ class Part(models.Model):
             models.UniqueConstraint(fields=['partName', 'assemblyID'], name='unique_partName_assemblyID')
         ]
       
-
 
 class PMFT(models.Model):
     pmftID = models.AutoField(primary_key=True)
@@ -144,6 +140,7 @@ class Subteam(models.Model):
 
     def __str__(self):
             return self.teamName     
+
 
 class TeamLinking(models.Model):
     id = models.AutoField(primary_key=True)

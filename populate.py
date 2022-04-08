@@ -1,4 +1,8 @@
 import os
+import string
+import random
+import csv
+
 
 os.environ.setdefault('DJANGO_SETTINGS_MODULE',
                       'costing-web-app.settings')
@@ -7,153 +11,225 @@ import django
 
 django.setup()
 from django.core.files import File
+from django.db.models import Q
 from tool.models import *
 from datetime import datetime
 from pytz import utc
 from django.contrib.auth.models import User
 
-'''
-def populate():
-    userInfo = [
-         {'user': 'Amanda',
-          'email': 'Amanda99@gmail.com',
-          'password': 'AmandaPass1',
-          'verified': False},
-         {'user': 'Charlie',
-         'email': 'Charlie66@gmail.com',
-          'password': 'CharliePass2098',
-          'verified': True},
-         {'user': 'lifehackfan',
-         'email': 'lifehackfan@gmail.com',
-          'password': 'passThis69',
-          'verified': False},
-         {'user': 'jasper999',
-         'email': 'jasper999@gmail.com',
-          'password': 'weflknlkqcnkq',
-          'verified': True},
-         {'user': 'davidf99',
-         'email': 'davidf99@gmail.com',
-          'password': 'notMyPass420',
-          'verified': True}]
-    userAccounts = []
-    for info in userInfo:
-        userAccounts.append(AddUserAccount(info['user'], info['email'], info['password'], info['verified']))
-'''
-
 
 def populate():
+    # Add Admins
     userInfoAdmins = [
-        {'user': 'Jolie',
-          'email': 'Jolie@gmail.com',
-          'password': 'Jolie1234'},
+        "REDACTED"
     ]
     userAccounts = []
     for user in userInfoAdmins:
-        userAccounts.append(AddUserAccountAdmins(user['user'], user['email'], user['password']))
+        AddUserAccount(user['user'], user['email'], user['password'], is_staff=True, is_superuser=True, rank=4)
+        userAccounts.append([user['user'], user['password']])
 
-
+    # Add Cost Heads
     userInfoCostHeads = [
-         {'user': 'Fraser',
-          'email': 'Fraser@gmail.com',
-          'password': 'Fraser1234'},
-           {'user': 'Riccardo',
-          'email': 'Riccardo@gmail.com',
-          'password': 'Riccardo1234'},
+        "REDACTED"
     ]
-    userAccounts = []
     for user in userInfoCostHeads:
-        userAccounts.append(AddUserAccountCostHeads(user['user'], user['email'], user['password']))
+        AddUserAccount(user['user'], user['email'], user['password'], is_staff=False, is_superuser=False, rank=4)
+        userAccounts.append([user['user'], user['password']])
 
+    # Add Engineers
+    user_engineers, eng_allocs = import_engineers("import_engineers.csv")
+    added_users = []
+    for user in user_engineers:
+        if user['user'] not in added_users:
+            AddUserAccount(user['user'], user['email'], user['password'])
+            userAccounts.append([user['user'], user['password']])
+            added_users.append(user["user"])
 
-
+    # Car Populate
     carinfo = [
-         {
-          'carID': 'Test2021',   
-          'carName': 'Test',
-          'carYear': '2021'
-          }
-         ]
+        {
+            'carID': 'IC2022',   
+            'carName': 'UGR22 IC',
+            'carYear': '2022'
+        }
+    ]
     Car = []
     for car in carinfo:
         c= add_car(car['carID'],car['carName'], car['carYear'])
         Car.append(c)
 
+    # System Populate
     systeminfo = [
-         {
-          'systemName': 'ELECTRICAL',   
-          'carID': 'Test2021',
-          'costed': True
-          }
-         ]
-    System = []
+        {
+            'systemName': 'Brakes',   
+            'carID': 'IC2022',
+            'costed': False
+        },
+        {
+            'systemName': 'Powertrain',   
+            'carID': 'IC2022',
+            'costed': True
+        },
+        {
+            'systemName': 'Frame and Body',   
+            'carID': 'IC2022',
+            'costed': True
+        },
+        {
+            'systemName': 'Electrical',   
+            'carID': 'IC2022',
+            'costed': False
+        },
+        {
+            'systemName': 'Miscellanous',   
+            'carID': 'IC2022',
+            'costed': False
+        },
+        {
+            'systemName': 'Steering System',   
+            'carID': 'IC2022',
+            'costed': False
+        },
+        {
+            'systemName': 'Suspension',   
+            'carID': 'IC2022',
+            'costed': False
+        },
+        {
+            'systemName': 'Wheels',   
+            'carID': 'IC2022',
+            'costed': False
+        },
+    ]
     for system in systeminfo:
-        s=add_system(system['systemName'],c, system['costed'])
-        System.append(s)
+        s=add_system(system['systemName'], c, system['costed'])
 
+    # Assembly Populate
     assemblyinfo = [
-         {
-          'assemblyName': 'Test 1',   
-          'assemblyQuantity': 10
-          }
-         ]
+        {
+            'assemblyName': 'Test 1',   
+            'assemblyQuantity': 10
+        }
+    ]
     Assembly = []
     for assembly in assemblyinfo:
-        a=add_assembly(assembly['assemblyName'],s, assembly['assemblyQuantity'])
+        a=add_assembly(assembly['assemblyName'], s, assembly['assemblyQuantity'])
         Assembly.append(a)
 
+    # Part Populate
     partinfo = [
-         {
-          'partName': 'Test part 12',
-          'makeBuy': True ,
-          'partCost': 120 ,
-          'partQuantity': 6,
-          'partComment': 'This is a comment'
-          }
-         ]
+        {
+            'partName': 'Test part 12',
+            'makeBuy': True ,
+            'partCost': 120 ,
+            'partQuantity': 6,
+            'partComment': 'This is a comment'
+        }
+    ]
     Part = []
     for part in partinfo:
-        p=add_part(part['partName'],a, part['makeBuy'], part['partCost'], part['partQuantity'], part['partComment'])
+        p=add_part(part['partName'], a, part['makeBuy'], part['partCost'], part['partQuantity'], part['partComment'])
         Part.append(p)
 
+    # PMFT Populate
     pmftinfo = [
-         {
-          'pmftName': 'test',
-          'pmftComment': 'this is a comment',
-          'pmftCost': 60,
-          'pmftCostComment': 'This is a cost commemt',
-          'pmftQuantity': 8,
-          'pmftType': 'M'
-          }
-         ]
+        {
+            'pmftName': 'test',
+            'pmftComment': 'this is a comment',
+            'pmftCost': 60,
+            'pmftCostComment': 'This is a cost commemt',
+            'pmftQuantity': 8,
+            'pmftType': 'M'
+        }
+    ]
     PMFT = []
     for pmft in pmftinfo:
         pm=add_pmft(pmft['pmftName'],pmft['pmftComment'],pmft['pmftCost'],pmft['pmftCostComment'],pmft['pmftQuantity'],p,pmft['pmftType'])
         PMFT.append(pm)
 
+    # Add Subteams
+    subteam_info = [
+        {
+            'teamName': 'Electrical',
+            'abbr': 'EL',
+            'systems': System.objects.get(systemName="Electrical"),
+        },
+        {
+            'teamName': 'Brakes',
+            'abbr': 'BR',
+            'systems': System.objects.get(systemName="Brakes"),
+        },
+        {
+            'teamName': 'Powertrain',
+            'abbr': 'ED',
+            'systems': System.objects.get(systemName="Powertrain"),
+        },
+        {
+            'teamName': 'Frame and Body',
+            'abbr': 'FR',
+            'systems': System.objects.get(systemName="Frame and Body"),
+        },
+        {
+            'teamName': 'Miscellanous',
+            'abbr': 'MS',
+            'systems': System.objects.get(systemName="Miscellanous"),
+        },
+        {
+            'teamName': 'Steering System',
+            'abbr': 'ST',
+            'systems': System.objects.get(systemName="Steering System"),
+        },
+        {
+            'teamName': 'Suspension',
+            'abbr': 'SU',
+            'systems': System.objects.get(systemName="Suspension"),
+        },
+        {
+            'teamName': 'Wheels',
+            'abbr': 'WT',
+            'systems': System.objects.get(systemName="Wheels"),
+        },
+    ]
+    for subteam in subteam_info:
+        st = add_subteam(subteam["teamName"], subteam["abbr"], subteam["systems"])
 
-def AddUserAccountAdmins(userName, email, pword):
-    user=User.objects.create_user(userName, email=email, password=pword)
-    user.is_superuser=True
-    user.is_staff=True
+    # Add Engineers to Subteams
+    teamlinking_info = [{
+        'user':UserAccount.objects.get(user=User.objects.get(username=eng_alloc["user"])),
+        'subteam':Subteam.objects.get(teamName=eng_alloc["subteam"]),
+        'teamHead':eng_alloc["teamHead"],
+    } for eng_alloc in eng_allocs]
+
+    TeamLinking = []
+    for teamlinking in teamlinking_info:
+        tl = add_team_linking(teamlinking["user"], teamlinking["subteam"], teamlinking["teamHead"])
+        TeamLinking.append(tl)
+
+    # Finish Populate
+    export_users(userAccounts, "user_export.csv")
+
+
+# Helper Functions
+# Model Helper Functions
+def add_user(userName, email, pword, is_staff, is_superuser):
+    user = User.objects.create_user(userName, email=email, password=pword)
+    user.is_superuser = is_superuser
+    user.is_staff = is_staff
     user.save()
-    u = UserAccount.objects.get_or_create(user=user, rank = 4)[0]
+
+    return user
+
+
+def AddUserAccount(userName, email, pword, is_staff=False, is_superuser=False, rank=2):
+    user = add_user(userName, email, pword, is_staff, is_superuser)
+    u = UserAccount.objects.get_or_create(user=user, rank=rank)[0]
     u.user = user
     u.save()
+    
     return u
 
-def AddUserAccountCostHeads(userName, email, pword):
-    user=User.objects.create_user(userName, email=email, password=pword)
-    user.is_superuser=False
-    user.is_staff=False
-    user.save()
-    u = UserAccount.objects.get_or_create(user=user, rank = 4)[0]
-    u.user = user
-    u.save()
-    return u    
 
 def add_car(carID,carName,carYear):
-
-
     c = Car.objects.get_or_create(carID=carID,carName=carName, carYear=carYear)[0]
     c.carName = carName
     c.carYear = carYear
@@ -161,8 +237,8 @@ def add_car(carID,carName,carYear):
 
     return c
 
-def add_system(systemName,carID,costed):
 
+def add_system(systemName,carID,costed):
     s = System.objects.get_or_create(systemName=systemName,carID=carID, costed=costed)[0]
     s.systemName = systemName
     s.carID = carID
@@ -171,8 +247,8 @@ def add_system(systemName,carID,costed):
 
     return s
 
-def add_assembly(assemblyName,systemID,assemblyQuantity):
 
+def add_assembly(assemblyName,systemID,assemblyQuantity):
     a = Assembly.objects.get_or_create(assemblyName=assemblyName,systemID=systemID, assemblyQuantity=assemblyQuantity)[0]
     a.assemblyName = assemblyName
     a.systemID = systemID
@@ -181,8 +257,8 @@ def add_assembly(assemblyName,systemID,assemblyQuantity):
 
     return a
 
-def add_part(partName,assemblyID,makeBuy,partCost,partQuantity,partComment):
 
+def add_part(partName,assemblyID,makeBuy,partCost,partQuantity,partComment):
     p = Part.objects.get_or_create(partName=partName,assemblyID=assemblyID, makeBuy=makeBuy,partCost=partCost,partQuantity=partQuantity,partComment=partComment)[0]
     p.partName = partName
     p.assemblyID = assemblyID
@@ -194,8 +270,8 @@ def add_part(partName,assemblyID,makeBuy,partCost,partQuantity,partComment):
 
     return p
 
-def add_pmft(pmftName,pmftComment,pmftCost,pmftCostComment,pmftQuantity,partID,pmftType):
 
+def add_pmft(pmftName,pmftComment,pmftCost,pmftCostComment,pmftQuantity,partID,pmftType):
     pm = PMFT.objects.get_or_create(pmftName=pmftName,pmftComment=pmftComment, pmftCost=pmftCost, pmftCostComment=pmftCostComment,pmftQuantity=pmftQuantity,partID=partID,pmftType=pmftType)[0]
     pm.pmftName = pmftName
     pm.pmftComment = pmftComment
@@ -209,16 +285,61 @@ def add_pmft(pmftName,pmftComment,pmftCost,pmftCostComment,pmftQuantity,partID,p
     return pm
 
 
-def AddUserAccount(userName, email, pword, verified):
-    user=User.objects.create_user(userName, email=email, password=pword)
-    user.is_superuser=True
-    user.is_staff=True
-    user.save()
-    u = UserAccount.objects.get_or_create(user=user, verified=verified)[0]
-    u.user = user
-    u.verified = verified
-    u.save()
-    return u
+def add_subteam(teamName, abbr, systems):
+    st = Subteam.objects.get_or_create(teamName=teamName, abbr=abbr)[0]
+    st.teamName = teamName
+    st.abbr = abbr
+    st.systems.add(systems)
+    
+    st.save()
+
+    return st
+
+
+def add_team_linking(user, subteam, teamHead=False):
+    tl = TeamLinking.objects.get_or_create(user=user, subteam=subteam, teamHead=teamHead)[0]
+    tl.user = user
+    tl.subteam = subteam
+    tl.teamHead = teamHead   
+    
+    tl.save()
+
+    return tl
+
+
+# General Helper Functions
+def generate_random_pass():
+    characters = string.ascii_letters + string.digits + string.punctuation
+    out_pass = "".join(random.choice(characters) for i in range(12))
+    return out_pass
+
+
+def import_engineers(filename):
+    engineers = []
+    eng_allocs = []
+
+    with open(filename, "r", encoding="utf-8-sig") as f:
+        reader = csv.reader(f)
+        for row in reader:
+            engineer = {}
+            engineer["user"] = f"{row[0].split()[0]}_{row[0].split()[-1]}"
+            engineer["email"] = row[1]
+            engineer["password"] = generate_random_pass()
+            engineers.append(engineer)
+
+            ea = {}
+            ea["user"] = engineer["user"]
+            ea["subteam"] = row[2]
+            ea["teamHead"] = True if row[3] == "1" else False
+            eng_allocs.append(ea)
+
+    return engineers, eng_allocs
+
+
+def export_users(userAccounts, output_filename):
+    with open(output_filename, "w", newline="") as f:
+        writer = csv.writer(f)
+        writer.writerows(userAccounts)
 
 
 if __name__ == '__main__':

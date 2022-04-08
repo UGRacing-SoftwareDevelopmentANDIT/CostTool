@@ -10,9 +10,9 @@
   <div id = "font-weight-bold">
     <h3>
       {% if car.archived %}
-      <a href="{% url 'tool:car_display' car.carSlug %}"> Car: <span class="text-uppercase"></span>{{car.carName }}{{ car.carYear }} Archived </a> <br>
+      <a href="{% url 'tool:car_display' car.carSlug %}"> Car: <span class="text-uppercase"></span>{{car.carName }} {{ car.carYear }} Archived </a> <br>
       {% else %}
-          <a href="{% url 'tool:car_display' car.carSlug %}"> Car: <span class="text-uppercase"></span>{{car.carName }}{{ car.carYear }} </a> <br>
+          <a href="{% url 'tool:car_display' car.carSlug %}"> Car: <span class="text-uppercase"></span>{{car.carName }} {{ car.carYear }}</a> <br>
       {% endif %}
 
       {% if system %}

@@ -33,13 +33,13 @@
 			{% for field in form %}
 				{% for error in field.errors %}
 					<div class="ERROR"
-						<strong>{{ error|escape }}</strong>
+                              <b><strong><FONT COLOR="RED">{{ error|escape }}</FONT></strong></b>
 					</div>
 				{% endfor %}
 			{% endfor %}
 			{% for error in form.non_field_errors %}
 				<div class="ERROR">
-					<strong>{{ error|escape }}</strong>
+					<b><strong><FONT COLOR="RED">{{ error|escape }}</FONT></strong></b>
 				</div>
 			{% endfor %}
 		{% endif %}

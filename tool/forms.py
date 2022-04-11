@@ -42,8 +42,13 @@ class SystemForm(forms.ModelForm):
 
     #I think the first str is the value and the 2nd is the text displayed
     systemNameOptions = (
+        ('Brakes', 'Brakes'),
+        ('Powertrain', 'Powertrain'),
+        ('Frame and Body', 'Frame and Body'),
         ("Electrical", "Electrical"),
-        ("Wheel and Suspension", "Wheel and Suspension"),
+        ("Suspension", "Suspension"),
+        ("Wheels", "Wheels"),
+        ("Steering System", "Steering System"),
         ("Miscelaneous", "Miscelaneous"),
     )
    # systemName = forms.CharField(max_length=20, help_text="Please enter the system name.")

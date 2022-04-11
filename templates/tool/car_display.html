@@ -70,12 +70,12 @@
                             </svg></a></p>
                         {% endif %}
 
-                        <p class="d-inline"> Subteam(s): </p>
+                        <p class="d-inline"> Subteam: </p>
 
                         {% for key, value in systemSubteams.items %}
                           {% if key == system.systemID %}
                             {% for subteam in value %}
-                              <p class="d-inline"> {{subteam.teamName}},</p>
+                              <p class="d-inline"> {{subteam.teamName}}</p>
                             {% endfor %}
                           {% endif %}
                         {% endfor %}

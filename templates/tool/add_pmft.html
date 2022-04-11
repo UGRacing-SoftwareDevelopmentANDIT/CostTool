@@ -44,12 +44,12 @@
             <br />
             {% if costed %}
 
-            <label for="pmftCost"><b>Pmft Cost in EUR: </b></label>
+            <label for="pmftCost"><b>Pmft Cost per-unit in EUR: </b></label>
             <input type="float" name="pmftCost" value="" size="50"/>
             <br />
             <br />
             <label for="pmftCostComment"><b>Cost Comment: </b></label>
-            <input type="text" name="pmftCostComment" value="" size="50"/>
+                  {{form.pmftCostComment}}
             <br />
             <br />
 
@@ -93,11 +93,12 @@
 
             {% if costed %}
 
-            <label for="pmftCost"><b>Pmft Cost in EUR: </b></label>
+            <label for="pmftCost"><b>Pmft Cost per-unit in EUR: </b></label>
             <input type="float" name="pmftCost" value="" size="50"/>
             <br />
             <br />
             <label for="pmftCostComment"><b>Cost Comment: </b></label>
+                   {{form.pmftCostComment}}
             <input type="text" name="pmftCostComment" value="" size="50"/>
             <br />
             <br />

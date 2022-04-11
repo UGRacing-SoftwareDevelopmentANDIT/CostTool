@@ -35,18 +35,19 @@
 
             <br />
             <br />
-            {% if part.makeBuy %}
-                  <input type="checkbox" id="makeBuy" name="makeBuy" checked>
-                  <label for="makeBuy">makeBuy</label>
-            {% else %}
-                  <input type="checkbox" id="makeBuy" name="makeBuy">
-                  <label for="makeBuy">makeBuy</label>
-            {% endif %}
-            <br />
-            <br />
+            
+            <div id="wrapper">
+                  <label for="yes_no_radio_makeBuy"><b>Is the part made?</b></label>
+                <p>
+                <input type="radio" name="makeBuy" value="True">Yes</input>
+                <input type="radio" name="makeBuy" value="False">No</input>
+                </p>
+            </div>
 
             {% if costed %}
-            <label for="partCost"><b>Part Cost in EUR: </b></label>
+
+            <p> If the part is not made enter cost (otherwise leave blank). </p>
+            <label for="partCost"><b>Part Cost per-unit in EUR: </b></label>
             <input type="float" name="partCost" value="" size="50"/>
 
             <br />
@@ -88,14 +89,17 @@
             <br />
             <br />
 
-            <input type="checkbox" id="makeBuy" name="makeBuy">
-            <label for="makeBuy">makeBuy</label>
-
-            <br />
-            <br />
+            <div id="wrapper">
+                  <label for="yes_no_radio_makeBuy"><b>Is the part made?</b></label>
+                <p>
+                <input type="radio" name="makeBuy" value="True">Yes</input>
+                <input type="radio" name="makeBuy" value="False">No</input>
+                </p>
+            </div>
 
             {% if costed %}
-            <label for="partCost"><b>Part Cost in EUR: </b></label>
+            <p> If the part is not made enter cost (otherwise leave blank). </p>
+            <label for="partCost"><b>Part Cost per-unit in EUR: </b></label>
             <input type="float" name="partCost" value="" size="50"/>
 
             <br />

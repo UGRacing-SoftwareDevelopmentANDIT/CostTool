@@ -42,8 +42,13 @@ class SystemForm(forms.ModelForm):
 
     #I think the first str is the value and the 2nd is the text displayed
     systemNameOptions = (
+        ('Brakes', 'Brakes'),
+        ('Powertrain', 'Powertrain'),
+        ('Frame and Body', 'Frame and Body'),
         ("Electrical", "Electrical"),
-        ("Wheel and Suspension", "Wheel and Suspension"),
+        ("Suspension", "Suspension"),
+        ("Wheels", "Wheels"),
+        ("Steering System", "Steering System"),
         ("Miscelaneous", "Miscelaneous"),
     )
    # systemName = forms.CharField(max_length=20, help_text="Please enter the system name.")
@@ -57,7 +62,7 @@ class SystemForm(forms.ModelForm):
 
 
 class AssemblyForm(forms.ModelForm):
-    assemblyName = forms.CharField(max_length=15)
+    assemblyName = forms.CharField(max_length=100)
     assemblyQuantity = forms.IntegerField()
     assemblySlug = forms.CharField(widget=forms.HiddenInput(), required=False)
     
@@ -67,11 +72,11 @@ class AssemblyForm(forms.ModelForm):
 
 
 class PartForm(forms.ModelForm):
-    partName = forms.CharField(max_length=15)
+    partName = forms.CharField(max_length=100)
     makeBuy = forms.BooleanField(required=False)
     partCost = forms.FloatField(required=False)
-    partQuantity = forms.IntegerField()
-    partComment = forms.CharField(max_length=50, required=False)
+    partQuantity = forms.FloatField()
+    partComment = forms.CharField(max_length=100, required=False)
     partSlug = forms.SlugField(widget=forms.HiddenInput(), required=False)
 
     class Meta:
@@ -88,10 +93,27 @@ class PMFTForm(forms.ModelForm):
         ("T", "T"),
     )
 
-    pmftName = forms.CharField(max_length=15)
-    pmftComment = forms.CharField(max_length=50,  required=False)
+    pmftCostCommentOptions = (
+        ("Cost/ Hr Unskilled Labour", "Cost/ Hr Unskilled Labour"),
+        ("Cost/ Hr Skilled Labour", "Cost/ Hr Skilled Labour"),
+        ("Cost/ Hr Composite Technician", "Cost/ Hr Composite Technician"),
+        ("Cost/ Hr Skilled Welder", "Cost/ Hr Skilled Welder"),
+        ("Cost/ Hr Skilled Machinist", "Cost/ Hr Skilled Machinist"), 
+        ("Cost per Metre", "Cost per Metre"),
+        ("Cost per m^2", "Cost per m^2"),
+        ("Cost per m^3", "Cost per m^3"),
+        ("Cost per 100g", "Cost per 100g"),
+        ("Cost per kg", "Cost per kg"),
+        ("Cost per ml", "Cost per ml"),
+        ("Cost per Litre", "Cost per Litre"),
+        ("Cost per Faster", "Cost per Fastner"),
+        ("Cost per Unit", "Cost per Unit"),   
+    )
+
+    pmftName = forms.CharField(max_length=100)
+    pmftComment = forms.CharField(max_length=100,  required=False)
     pmftCost = forms.FloatField(required=False)
-    pmftCostComment =  forms.CharField(max_length=50,  required=False)
+    pmftCostComment =  forms.MultipleChoiceField(choices=pmftCostCommentOptions)
     pmftQuantity = forms.IntegerField()
     pmftType = forms.MultipleChoiceField(choices=pmftTypeOptions)
     pmftSlug = forms.SlugField(widget=forms.HiddenInput(), required=False)

@@ -72,11 +72,11 @@ class AssemblyForm(forms.ModelForm):
 
 
 class PartForm(forms.ModelForm):
-    partName = forms.CharField(max_length=15)
+    partName = forms.CharField(max_length=100)
     makeBuy = forms.BooleanField(required=False)
     partCost = forms.FloatField(required=False)
     partQuantity = forms.FloatField()
-    partComment = forms.CharField(max_length=50, required=False)
+    partComment = forms.CharField(max_length=100, required=False)
     partSlug = forms.SlugField(widget=forms.HiddenInput(), required=False)
 
     class Meta:
@@ -110,8 +110,8 @@ class PMFTForm(forms.ModelForm):
         ("Cost per Unit", "Cost per Unit"),   
     )
 
-    pmftName = forms.CharField(max_length=15)
-    pmftComment = forms.CharField(max_length=50,  required=False)
+    pmftName = forms.CharField(max_length=100)
+    pmftComment = forms.CharField(max_length=100,  required=False)
     pmftCost = forms.FloatField(required=False)
     pmftCostComment =  forms.MultipleChoiceField(choices=pmftCostCommentOptions)
     pmftQuantity = forms.IntegerField()

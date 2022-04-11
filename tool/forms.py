@@ -93,10 +93,27 @@ class PMFTForm(forms.ModelForm):
         ("T", "T"),
     )
 
+    pmftCostCommentOptions = (
+        ("Cost/ Hr Unskilled Labour", "Cost/ Hr Unskilled Labour"),
+        ("Cost/ Hr Skilled Labour", "Cost/ Hr Skilled Labour"),
+        ("Cost/ Hr Composite Technician", "Cost/ Hr Composite Technician"),
+        ("Cost/ Hr Skilled Welder", "Cost/ Hr Skilled Welder"),
+        ("Cost/ Hr Skilled Machinist", "Cost/ Hr Skilled Machinist"), 
+        ("Cost per Metre", "Cost per Metre"),
+        ("Cost per m^2", "Cost per m^2"),
+        ("Cost per m^3", "Cost per m^3"),
+        ("Cost per 100g", "Cost per 100g"),
+        ("Cost per kg", "Cost per kg"),
+        ("Cost per ml", "Cost per ml"),
+        ("Cost per Litre", "Cost per Litre"),
+        ("Cost per Faster", "Cost per Fastner"),
+        ("Cost per Unit", "Cost per Unit"),   
+    )
+
     pmftName = forms.CharField(max_length=15)
     pmftComment = forms.CharField(max_length=50,  required=False)
     pmftCost = forms.FloatField(required=False)
-    pmftCostComment =  forms.CharField(max_length=50,  required=False)
+    pmftCostComment =  forms.MultipleChoiceField(choices=pmftCostCommentOptions)
     pmftQuantity = forms.IntegerField()
     pmftType = forms.MultipleChoiceField(choices=pmftTypeOptions)
     pmftSlug = forms.SlugField(widget=forms.HiddenInput(), required=False)

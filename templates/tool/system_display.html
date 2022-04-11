@@ -114,7 +114,11 @@
                           {{part_key.partName}}
                         </div>
                         <div class="col-1" style="font-weight: 600;">
-                          {{part_key.makeBuy}}
+                          {% if part_key.makeBuy %}
+                            Make
+                          {% else %}
+                            Buy
+                          {% endif %}
                         </div>
                         <div class="col-1" style="font-weight: 600;">
                           {{part_key.partCost}}

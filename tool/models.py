@@ -63,7 +63,7 @@ class System(models.Model):
 
 class Assembly(models.Model):
     assemblyID = models.AutoField(primary_key=True)
-    assemblyName = models.CharField(max_length=30)
+    assemblyName = models.CharField(max_length=100)
     systemID = models.ForeignKey(System, on_delete=models.SET_NULL, null = True)
     assemblyQuantity = models.IntegerField()
     assemblySlug = models.SlugField(unique=True, default="assembly-")
@@ -86,13 +86,13 @@ class Assembly(models.Model):
 
 class Part(models.Model):
     partID = models.AutoField(primary_key=True)
-    partName = models.CharField(max_length=15)
+    partName = models.CharField(max_length=100)
     assemblyID = models.ForeignKey(Assembly, on_delete=models.SET_NULL, null = True)
     makeBuy = models.BooleanField()
     #choose validation location for things like 2dp etc
     partCost = models.FloatField(null = True)
     partQuantity = models.IntegerField(default=1)
-    partComment = models.CharField(max_length=50, null = True)
+    partComment = models.CharField(max_length=100, null = True)
     partSlug = models.SlugField(unique=True, default='part-')
 
     def save(self, *args, **kwargs):
@@ -110,11 +110,11 @@ class Part(models.Model):
 
 class PMFT(models.Model):
     pmftID = models.AutoField(primary_key=True)
-    pmftName = models.CharField(max_length=15)
-    pmftComment = models.CharField(max_length=50,  null=True)
+    pmftName = models.CharField(max_length=100)
+    pmftComment = models.CharField(max_length=100,  null=True)
     pmftCost = models.FloatField(default=0)
-    pmftCostComment =  models.CharField(max_length=50,  null=True)
-    pmftQuantity = models.IntegerField(default=1)
+    pmftCostComment =  models.CharField(max_length=100,  null=True)
+    pmftQuantity = models.FloatField(default=1)
     partID = models.ForeignKey(Part, on_delete=models.SET_NULL, null = True)
     #a char field must have a max length, when set to 1 it creates an error with the multiple select box, this is a work around
     pmftType = models.CharField(max_length=5)

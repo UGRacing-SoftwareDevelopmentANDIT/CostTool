@@ -108,13 +108,17 @@
             <div class="accordion-item">
                 <div class="accordion-header" id="p{{part_key.partID}}-heading">
 
-                    <div class="accordion-button collapsed" style="background-color:#f3f3f3; color:#1f1f1f; font-size:18px"  data-bs-toggle="collapse" data-bs-target="#p{{part_key.partID}}-collapse" aria-controls="p{{part_key.partID}}-collapse">
+                    <div class="accordion-button collapsed" style="background-color:#f3f3f3; color:#1f1f1f; font-size:18px"  data-bs-toggle="collapse" data-bs-target="#p{{part_key.partID}}-collapse"  aria-controls="p{{part_key.partID}}-collapse">
 
                         <div class="col-2" style="font-weight: 600;">
                           {{part_key.partName}}
                         </div>
                         <div class="col-1" style="font-weight: 600;">
-                          {{part_key.makeBuy}}
+                          {% if part_key.makeBuy %}
+                            Make
+                          {% else %}
+                            Buy
+                          {% endif %}
                         </div>
                         <div class="col-1" style="font-weight: 600;">
                           {{part_key.partCost}}
@@ -150,8 +154,11 @@
                               <div class="col-1" style="font-weight: 600;">
                                 Type
                               </div>
-                              <div class="col-2" style="font-weight: 600;">
+                              <div class="col-1" style="font-weight: 600;">
                                 Comment
+                              </div>
+                              <div class="col-1" style="font-weight: 600;">
+                                Quantity
                               </div>
                               <div class="col-1" style="font-weight: 600;">
                                 Cost
@@ -179,8 +186,11 @@
                                 <div class="col-1" style="font-weight: 600;">
                                   {{pmft.pmftType}}
                                 </div>
-                                <div class="col-2" style="font-weight: 600;">
+                                <div class="col-1" style="font-weight: 600;">
                                   {{pmft.pmftComment}}
+                                </div>
+                                <div class="col-1" style="font-weight: 600;">
+                                  {{pmft.pmftQuantity}}
                                 </div>
                                 <div class="col-1" style="font-weight: 600;">
                                   {{pmft.pmftCost}}

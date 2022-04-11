@@ -63,7 +63,7 @@ class System(models.Model):
 
 class Assembly(models.Model):
     assemblyID = models.AutoField(primary_key=True)
-    assemblyName = models.CharField(max_length=30)
+    assemblyName = models.CharField(max_length=100)
     systemID = models.ForeignKey(System, on_delete=models.SET_NULL, null = True)
     assemblyQuantity = models.IntegerField()
     assemblySlug = models.SlugField(unique=True, default="assembly-")
@@ -114,7 +114,7 @@ class PMFT(models.Model):
     pmftComment = models.CharField(max_length=50,  null=True)
     pmftCost = models.FloatField(default=0)
     pmftCostComment =  models.CharField(max_length=50,  null=True)
-    pmftQuantity = models.IntegerField(default=1)
+    pmftQuantity = models.FloatField(default=1)
     partID = models.ForeignKey(Part, on_delete=models.SET_NULL, null = True)
     #a char field must have a max length, when set to 1 it creates an error with the multiple select box, this is a work around
     pmftType = models.CharField(max_length=5)

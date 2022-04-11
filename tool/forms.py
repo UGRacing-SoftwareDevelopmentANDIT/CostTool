@@ -62,7 +62,7 @@ class SystemForm(forms.ModelForm):
 
 
 class AssemblyForm(forms.ModelForm):
-    assemblyName = forms.CharField(max_length=15)
+    assemblyName = forms.CharField(max_length=100)
     assemblyQuantity = forms.IntegerField()
     assemblySlug = forms.CharField(widget=forms.HiddenInput(), required=False)
     
@@ -75,7 +75,7 @@ class PartForm(forms.ModelForm):
     partName = forms.CharField(max_length=15)
     makeBuy = forms.BooleanField(required=False)
     partCost = forms.FloatField(required=False)
-    partQuantity = forms.IntegerField()
+    partQuantity = forms.FloatField()
     partComment = forms.CharField(max_length=50, required=False)
     partSlug = forms.SlugField(widget=forms.HiddenInput(), required=False)
 

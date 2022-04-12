@@ -196,7 +196,11 @@
                                   {{pmft.pmftCost}}
                                 </div>
                                 <div class="col-2" style="font-weight: 600;">
-                                 {{pmft.pmftCostComment}}
+                                
+                                  {% if pmft.pmftCostComment %}
+                                     {{pmft.pmftCostComment}}
+                                  {% endif %}
+
                                 </div>
                                 <div class="col-4" style="font-weight: 600; margin-left: 17.5%; margin-top:5px; width:250px;">
                                     <!-- EDIT / DELETE PMFT -->

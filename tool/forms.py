@@ -113,8 +113,8 @@ class PMFTForm(forms.ModelForm):
     pmftName = forms.CharField(max_length=100)
     pmftComment = forms.CharField(max_length=100,  required=False)
     pmftCost = forms.FloatField(required=False)
-    pmftCostComment =  forms.MultipleChoiceField(choices=pmftCostCommentOptions)
-    pmftQuantity = forms.IntegerField()
+    pmftCostComment =  forms.MultipleChoiceField(choices=pmftCostCommentOptions, required = False)
+    pmftQuantity = forms.FloatField()
     pmftType = forms.MultipleChoiceField(choices=pmftTypeOptions)
     pmftSlug = forms.SlugField(widget=forms.HiddenInput(), required=False)
     class Meta:

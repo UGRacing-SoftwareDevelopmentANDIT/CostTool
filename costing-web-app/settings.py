@@ -21,12 +21,12 @@ MEDIA_URL = '/media/'
 # See https://docs.djangoproject.com/en/2.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'c7-i(+x+l2k%k064$-n=&bpo=dr6_qd7ple5hvggzuu(7b5*vm'
+SECRET_KEY = os.environ['SECRET_KEY']
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['127.0.0.1', 'www.ugracing.co.uk']
 
 
 # Application definition
@@ -131,5 +131,9 @@ STATICFILES_DIRS = [STATIC_DIR, ]
 
 LOGIN_URL = 'tool:login'
 
+# Deployment settings
 
-
+# CSRF_COOKIE_SECURE = True
+# SESSION_COOKIE_SECURE = True
+# SECURE_SSL_REDIRECT = True
+# SECURE_HSTS_SECONDS = 0

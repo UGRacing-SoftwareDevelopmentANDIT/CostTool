@@ -374,9 +374,14 @@ def add_pmft(request, car_slug, system_slug, assembly_slug, part_slug, pmft_slug
         if not pmft_slug:
             newPMFT.partID = Part.objects.get(partSlug=part_slug)
         pmftType = form.cleaned_data.get('pmftType')    
-        pmftCostComment = form.cleaned_data.get('pmftCostComment') 
+
         newPMFT.pmftType = pmftType[0]
-        newPMFT.pmftCostComment = pmftCostComment[0]
+
+        if system.costed:
+            pmftCostComment = form.cleaned_data.get('pmftCostComment') 
+            newPMFT.pmftCostComment = pmftCostComment[0]    
+        else:
+            newPMFT.pmftCostComment = None
         newPMFT.save()
         newPMFT.save()
         return redirect(reverse('tool:system_display', args=[car_slug, system_slug]))

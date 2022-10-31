@@ -108,24 +108,55 @@ class Part(models.Model):
         ]
       
 
-class PMFT(models.Model):
+class PMFT_Catagory(models.Model):
     pmftID = models.AutoField(primary_key=True)
-    pmftName = models.CharField(max_length=100)
-    pmftComment = models.CharField(max_length=100,  null=True)
-    pmftCost = models.FloatField(default=0)
-    pmftCostComment =  models.CharField(max_length=100,  null=True)
-    pmftQuantity = models.FloatField(default=1)
-    partID = models.ForeignKey(Part, on_delete=models.SET_NULL, null = True)
-    #a char field must have a max length, when set to 1 it creates an error with the multiple select box, this is a work around
-    pmftType = models.CharField(max_length=5)
-    pmftSlug = models.SlugField(unique=True, default='pmft-')
+    pmftSubType = models.CharField(max_length=100)
+    pmftType = models.CharField(max_length=1)
+    
+class Materials_subtype(models.Model):
+	Materials_subtype_ID = models.AutoFIeld(primary_key=True)
+	Materials_subtype = models.CharField(max_length=100)
+	pmft_type_SubtypeID = models.ForeignKey(PMFT_Catagory, on_delete=models.SET_NULL, null=True)
+ 
 
-    def save(self, *args, **kwargs):
-        self.pmftSlug = '-'.join((slugify(self.pmftID),slugify(self.pmftName)))
-        super(PMFT, self).save(*args, **kwargs)
+class Fasteners_subtype(models.Model):
+	Fasteners_subtype_ID = models.AutoFIeld(primary_key=True)
+	Fasteners_subtype = models.CharField(max_length=100)
+	pmft_type_SubtypeID = models.ForeignKey(PMFT_Catagory, on_delete=models.SET_NULL, null=True) 
 
-    def __str__(self):
-        return self.pmftSlug
+    
+class individual_process(models.Model):
+	individualProccess_ID = models.AutoFIeld(primary_key=True)
+	individualProcess_name = models.CharField(max_length=100)
+	pmftCost = models.FloatField(null = True)
+	pmftComment = models.CharField(max_length=100, null = True)
+	pmftQuantity = models.IntegerField(default=1)
+	pmft_type_subtypeID =models.ForeignKey(PMFT_Catagory,on_delete=models.SET_NULL, null=True)
+ 
+class individual_material(models.Model):
+	individualMaterial_ID = models.AutoFIeld(primary_key=True)
+	individualMaterial_name = models.CharField(max_length=100)
+	pmftCost = models.FloatField(null = True)
+	pmftComment = models.CharField(max_length=100, null = True)
+	pmftQuantity = models.IntegerField(default=1)
+	pmft_type_subtypeID =models.ForeignKey(Materials_subtype,on_delete=models.SET_NULL, null=True) 
+ 
+class individual_fastener(models.Model):
+	individualFastener_ID = models.AutoFIeld(primary_key=True)
+	individualFastener_name = models.CharField(max_length=100)
+	pmftCost = models.FloatField(null = True)
+	pmftComment = models.CharField(max_length=100, null = True)
+	pmftQuantity = models.IntegerField(default=1)
+	pmft_type_subtypeID =models.ForeignKey(Fasteners_subtype,on_delete=models.SET_NULL, null=True) 
+ 
+class individual_tool(models.Model):
+	individualTool_ID = models.AutoFIeld(primary_key=True)
+	individualTool_name = models.CharField(max_length=100)
+	pmftCost = models.FloatField(null = True)
+	pmftComment = models.CharField(max_length=100, null = True)
+	pmftQuantity = models.IntegerField(default=1)
+	pmft_type_subtypeID =models.ForeignKey(PMFT_Catagory,on_delete=models.SET_NULL, null=True)
+
 
 
 class Subteam(models.Model):

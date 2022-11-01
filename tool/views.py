@@ -20,6 +20,9 @@ from django.template.defaulttags import register
 from tool.forms import *
 from tool.consts import USER_RANKS
 
+##test push
+
+
 ########################################## Base ###############################################
 
 @login_required

@@ -108,55 +108,60 @@ class Part(models.Model):
         ]
       
 
-class PMFT_Catagory(models.Model):
+class PMFTCategory(models.Model):
     pmftID = models.AutoField(primary_key=True)
-    pmftSubType = models.CharField(max_length=100)
     pmftType = models.CharField(max_length=1)
+    pmftSubtype = models.CharField(max_length=100)
+
+
+class IndividualProcess(models.Model):
+	individualProcessID = models.AutoField(primary_key=True)
+	individualProcessName = models.CharField(max_length=100)
+	processCost = models.FloatField(null=True)
+	processComment = models.CharField(max_length=100, null=True)
+	processQuantity = models.IntegerField(default=1)
+	processCategoryID = models.ForeignKey(PMFTCategory, on_delete=models.SET_NULL, null=True)
     
-class Materials_subtype(models.Model):
-	Materials_subtype_ID = models.AutoFIeld(primary_key=True)
-	Materials_subtype = models.CharField(max_length=100)
-	pmft_type_SubtypeID = models.ForeignKey(PMFT_Catagory, on_delete=models.SET_NULL, null=True)
+
+class MaterialSubtype(models.Model):
+	materialSubtypeID = models.AutoField(primary_key=True)
+	materialSubtypeName = models.CharField(max_length=100)
+	materialCategoryID = models.ForeignKey(PMFTCategory, on_delete=models.SET_NULL, null=True)
+
+
+class IndividualMaterial(models.Model):
+	individualMaterialID = models.AutoField(primary_key=True)
+	individualMaterialName = models.CharField(max_length=100)
+	materialCost = models.FloatField(null=True)
+	materialComment = models.CharField(max_length=100, null=True)
+	materialQuantity = models.IntegerField(default=1)
+    # the ID of a material's subtype (not its own ID)
+	individualMaterialSubtypeID = models.ForeignKey(MaterialSubtype, on_delete=models.SET_NULL, null=True) 
  
 
-class Fasteners_subtype(models.Model):
-	Fasteners_subtype_ID = models.AutoFIeld(primary_key=True)
-	Fasteners_subtype = models.CharField(max_length=100)
-	pmft_type_SubtypeID = models.ForeignKey(PMFT_Catagory, on_delete=models.SET_NULL, null=True) 
+class FastenerSubtype(models.Model):
+	fastenerSubtypeID = models.AutoField(primary_key=True)
+	fastenerSubtypeName = models.CharField(max_length=100)
+	fastenerCategoryID = models.ForeignKey(PMFTCategory, on_delete=models.SET_NULL, null=True) 
+ 
 
-    
-class individual_process(models.Model):
-	individualProccess_ID = models.AutoFIeld(primary_key=True)
-	individualProcess_name = models.CharField(max_length=100)
-	pmftCost = models.FloatField(null = True)
-	pmftComment = models.CharField(max_length=100, null = True)
-	pmftQuantity = models.IntegerField(default=1)
-	pmft_type_subtypeID =models.ForeignKey(PMFT_Catagory,on_delete=models.SET_NULL, null=True)
+class IndividualFastener(models.Model):
+	individualFastenerID = models.AutoField(primary_key=True)
+	individualFastenerName = models.CharField(max_length=100)
+	fastenerCost = models.FloatField(null=True)
+	fastenerComment = models.CharField(max_length=100, null=True)
+	fastenerQuantity = models.IntegerField(default=1)
+    # the ID of a fastener's subtype (not its own ID)
+	individualFastenerSubtypeID = models.ForeignKey(FastenerSubtype, on_delete=models.SET_NULL, null=True) 
  
-class individual_material(models.Model):
-	individualMaterial_ID = models.AutoFIeld(primary_key=True)
-	individualMaterial_name = models.CharField(max_length=100)
-	pmftCost = models.FloatField(null = True)
-	pmftComment = models.CharField(max_length=100, null = True)
-	pmftQuantity = models.IntegerField(default=1)
-	pmft_type_subtypeID =models.ForeignKey(Materials_subtype,on_delete=models.SET_NULL, null=True) 
- 
-class individual_fastener(models.Model):
-	individualFastener_ID = models.AutoFIeld(primary_key=True)
-	individualFastener_name = models.CharField(max_length=100)
-	pmftCost = models.FloatField(null = True)
-	pmftComment = models.CharField(max_length=100, null = True)
-	pmftQuantity = models.IntegerField(default=1)
-	pmft_type_subtypeID =models.ForeignKey(Fasteners_subtype,on_delete=models.SET_NULL, null=True) 
- 
-class individual_tool(models.Model):
-	individualTool_ID = models.AutoFIeld(primary_key=True)
-	individualTool_name = models.CharField(max_length=100)
-	pmftCost = models.FloatField(null = True)
-	pmftComment = models.CharField(max_length=100, null = True)
-	pmftQuantity = models.IntegerField(default=1)
-	pmft_type_subtypeID =models.ForeignKey(PMFT_Catagory,on_delete=models.SET_NULL, null=True)
 
+class IndividualTool(models.Model):
+	individualToolID = models.AutoField(primary_key=True)
+	individualToolName = models.CharField(max_length=100)
+	toolCost = models.FloatField(null=True)
+	toolComment = models.CharField(max_length=100, null=True)
+	toolQuantity = models.IntegerField(default=1)
+	toolCategoryID = models.ForeignKey(PMFTCategory, on_delete=models.SET_NULL, null=True)
 
 
 class Subteam(models.Model):

@@ -107,11 +107,30 @@ class Part(models.Model):
             models.UniqueConstraint(fields=['partName', 'assemblyID'], name='unique_partName_assemblyID')
         ]
       
-
-class PMFTCategory(models.Model):
+class PMFT(models.Model):
     pmftID = models.AutoField(primary_key=True)
-    pmftType = models.CharField(max_length=1)
-    pmftSubtype = models.CharField(max_length=100)
+    pmftName = models.CharField(max_length=100)
+    pmftComment = models.CharField(max_length=100,  null=True)
+    pmftCost = models.FloatField(default=0)
+    pmftCostComment =  models.CharField(max_length=100,  null=True)
+    pmftQuantity = models.FloatField(default=1)
+    partID = models.ForeignKey(Part, on_delete=models.SET_NULL, null = True)
+    #a char field must have a max length, when set to 1 it creates an error with the multiple select box, this is a work around
+    pmftType = models.CharField(max_length=5)
+    pmftSlug = models.SlugField(unique=True, default='pmft-')
+
+    def save(self, *args, **kwargs):
+        self.pmftSlug = '-'.join((slugify(self.pmftID),slugify(self.pmftName)))
+        super(PMFT, self).save(*args, **kwargs)
+
+    def __str__(self):
+        return self.pmftSlug
+
+class PmftCategory(models.Model):
+    pmftID = models.AutoField(primary_key=True)
+    pmftCatagory = models.CharField(max_length=100)
+    pmftType = models.CharField(max_length=1) # P, M , F or T
+    
 
 
 class IndividualProcess(models.Model):
@@ -120,13 +139,13 @@ class IndividualProcess(models.Model):
 	processCost = models.FloatField(null=True)
 	processComment = models.CharField(max_length=100, null=True)
 	processQuantity = models.IntegerField(default=1)
-	processCategoryID = models.ForeignKey(PMFTCategory, on_delete=models.SET_NULL, null=True)
+	processCategoryID = models.ForeignKey(PmftCategory, on_delete=models.SET_NULL, null=True)
     
 
 class MaterialSubtype(models.Model):
 	materialSubtypeID = models.AutoField(primary_key=True)
 	materialSubtypeName = models.CharField(max_length=100)
-	materialCategoryID = models.ForeignKey(PMFTCategory, on_delete=models.SET_NULL, null=True)
+	materialCategoryID = models.ForeignKey(PmftCategory, on_delete=models.SET_NULL, null=True)
 
 
 class IndividualMaterial(models.Model):
@@ -142,7 +161,7 @@ class IndividualMaterial(models.Model):
 class FastenerSubtype(models.Model):
 	fastenerSubtypeID = models.AutoField(primary_key=True)
 	fastenerSubtypeName = models.CharField(max_length=100)
-	fastenerCategoryID = models.ForeignKey(PMFTCategory, on_delete=models.SET_NULL, null=True) 
+	fastenerCategoryID = models.ForeignKey(PmftCategory, on_delete=models.SET_NULL, null=True) 
  
 
 class IndividualFastener(models.Model):
@@ -161,7 +180,7 @@ class IndividualTool(models.Model):
 	toolCost = models.FloatField(null=True)
 	toolComment = models.CharField(max_length=100, null=True)
 	toolQuantity = models.IntegerField(default=1)
-	toolCategoryID = models.ForeignKey(PMFTCategory, on_delete=models.SET_NULL, null=True)
+	toolCategoryID = models.ForeignKey(PmftCategory, on_delete=models.SET_NULL, null=True)
 
 
 class Subteam(models.Model):

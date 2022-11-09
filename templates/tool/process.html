@@ -1,0 +1,29 @@
+{% extends 'tool/base.html' %}
+{% load static %}
+
+{% block css_block %}
+
+<link rel="stylesheet" type="text/css" href="{% static 'home.css' %}">
+
+{% endblock %}
+
+{% block body_block %}
+
+<h1>Process</h1>
+
+<table border="1">
+    <tr>
+        <td> Process Name </td>
+        <td> Process cost </td>
+        <td> Process comment </td>
+        <td> Process Quantity </td>
+{% for x in process %}
+    <tr>
+        <td>{{ x.individualProcessName }}</td>
+        <td>{{ x.processCost}}</td>
+        <td>{{ x.processComment}}</td>
+        <td>{{ x.processQuantity}}</td>
+    </tr>
+{% endfor %}
+</table>
+{% endblock %}

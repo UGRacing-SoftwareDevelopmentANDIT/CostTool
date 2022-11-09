@@ -135,3 +135,13 @@ class EditAssignEng(forms.ModelForm):
     class Meta:
         model = Assembly
         fields = ('engineer',)
+
+class ChoosePmft(forms.Form):
+    pmftTypeOptions = (
+        ("P", "Process"),
+        ("M", "Material"),
+        ("F", "Fastener"),
+        ("T", "Tool"),
+    )
+    pmftCatagory = forms.ChoiceField(choices= pmftTypeOptions, widget = forms.RadioSelect, required= True)
+

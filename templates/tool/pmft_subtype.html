@@ -9,13 +9,13 @@
 
 {% block body_block %}
 
-<h1>Process</h1>
+<h1>{{PMFT}}</h1>
 
 <table border="1">
 {% for x in pmft_type %}
     <tr>
         <td>{{ x.pmftCatagory }}</td>
-        <td><a href="/tool/choosepmft/P/{{ x.pmftID }}">Select</a></td>
+        <td><a href="/tool/choosepmft/{{PMFT}}/{{ x.pmftID }}">Select</a></td>
     </tr>
 {% endfor %}
 </table>

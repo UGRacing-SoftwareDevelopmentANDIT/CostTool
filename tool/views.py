@@ -594,12 +594,14 @@ def individual_process(request,pmfttype,id):
     mydata = IndividualProcess.objects.filter(processCategoryID = id)
     context = {
         'process': mydata,
+        'PMFT' : pmfttype
     }
     return render(request, "tool/process.html" , context)
 
 def pmft_subtype(request,pmfttype):
     mydata = PmftCategory.objects.filter(pmftType = pmfttype)
     context = {
-        'pmft_type': mydata
+        'pmft_type': mydata,
+        'PMFT' : pmfttype
     }
     return render(request, "tool/pmft_subtype.html", context)

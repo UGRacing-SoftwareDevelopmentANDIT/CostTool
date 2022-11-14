@@ -591,10 +591,16 @@ def choosepmft(response):
         return render(response, "tool/choosepmft.html", {"form":form})
     
 def individual_process(request,pmfttype,id):
-    mydata = IndividualProcess.objects.filter(processCategoryID = id)
+    if pmfttype == "P":
+        individualPMFT = IndividualProcess.objects.filter(processCategoryID = id)
+        subtype = None
+    elif pmfttype == "T":
+        individualPMFT = IndividualTool.objects.filter(toolCategoryID = id)
+        subtype = None
     context = {
-        'process': mydata,
-        'PMFT' : pmfttype
+        'individualPMFT': individualPMFT,
+        'subtype': subtype,
+        'PMFT' : pmfttype,
     }
     return render(request, "tool/process.html" , context)
 

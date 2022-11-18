@@ -138,7 +138,6 @@ class IndividualProcess(models.Model):
 	individualProcessName = models.CharField(max_length=100)
 	processCost = models.FloatField(null=True)
 	processComment = models.CharField(max_length=100, null=True)
-	processQuantity = models.IntegerField(default=1)
 	processCategoryID = models.ForeignKey(PmftCategory, on_delete=models.SET_NULL, null=True)
     
 
@@ -153,7 +152,6 @@ class IndividualMaterial(models.Model):
 	individualMaterialName = models.CharField(max_length=100)
 	materialCost = models.FloatField(null=True)
 	materialComment = models.CharField(max_length=100, null=True)
-	materialQuantity = models.IntegerField(default=1)
     # the ID of a material's subtype (not its own ID)
 	individualMaterialSubtypeID = models.ForeignKey(MaterialSubtype, on_delete=models.SET_NULL, null=True) 
  
@@ -169,7 +167,6 @@ class IndividualFastener(models.Model):
 	individualFastenerName = models.CharField(max_length=100)
 	fastenerCost = models.FloatField(null=True)
 	fastenerComment = models.CharField(max_length=100, null=True)
-	fastenerQuantity = models.IntegerField(default=1)
     # the ID of a fastener's subtype (not its own ID)
 	individualFastenerSubtypeID = models.ForeignKey(FastenerSubtype, on_delete=models.SET_NULL, null=True) 
  
@@ -179,7 +176,6 @@ class IndividualTool(models.Model):
 	individualToolName = models.CharField(max_length=100)
 	toolCost = models.FloatField(null=True)
 	toolComment = models.CharField(max_length=100, null=True)
-	toolQuantity = models.IntegerField(default=1)
 	toolCategoryID = models.ForeignKey(PmftCategory, on_delete=models.SET_NULL, null=True)
 
 

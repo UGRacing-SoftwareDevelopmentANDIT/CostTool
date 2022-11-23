@@ -11,7 +11,10 @@
 
 <form method="post">
     {% csrf_token %}
-    {{form}}
-    <button type="submit", name = "submit"> Submit </button>
+    {% for field in form %}
+    {{field}}
+    <br>
+    {% endfor %}
+    <input type="submit", value="Submit">
 </form>
 {% endblock %}

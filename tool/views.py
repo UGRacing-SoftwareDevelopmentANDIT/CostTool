@@ -1,3 +1,5 @@
+import json
+from django.http import JsonResponse
 from hashlib import new
 import sys
 from django.shortcuts import render, redirect, get_object_or_404
@@ -584,7 +586,6 @@ def choosepmft(response):
             catagory = form.cleaned_data['pmftCatagory']
         
         return HttpResponseRedirect(f'/tool/choosepmft/{catagory}')
-        #return redirect(reverse('tool:choosepmft', args=[catagory]))
     else:
         form = ChoosePmft()
         
@@ -605,9 +606,60 @@ def individual_process(request,pmfttype,id):
     return render(request, "tool/process.html" , context)
 
 def pmft_subtype(request,pmfttype):
-    mydata = PmftCategory.objects.filter(pmftType = pmfttype)
-    context = {
-        'pmft_type': mydata,
-        'PMFT' : pmfttype
-    }
-    return render(request, "tool/pmft_subtype.html", context)
+    if request.method == "POST":
+        form = Test(request.POST, pmft_type=pmfttype)
+        spec_options = request.POST.get("spec")
+        category_name = PmftCategory.objects.filter(pmftID=request.POST["pmftCatagory"])[0].pmftCatagory
+        pmftName = "-".join([category_name, request.POST["spec"]])
+        pmftComment = request.POST["comment"]
+        if pmfttype == "P":
+            pmftCost = IndividualProcess.objects.filter(individualProcessName=request.POST["spec"])[0].processCost
+        elif pmfttype == "M":
+            pmftCost = IndividualMaterial.objects.filter(individualMaterialName=request.POST["spec"])[0].materialCost
+        elif pmfttype == "F":
+            pmftCost = IndividualFastener.objects.filter(individualFastenerName=request.POST["spec"])[0].fastenerCost
+        elif pmfttype == "T":
+            pmftCost = IndividualTool.objects.filter(individualToolName=request.POST["spec"])[0].toolCost
+        pmftQuantity = request.POST["quantity"]
+        new_pmft = PMFT(pmftName=pmftName, pmftComment=pmftComment, pmftCost=pmftCost, 
+                        pmftQuantity=pmftQuantity, pmftType=pmfttype)
+        new_pmft.save()
+        return HttpResponseRedirect("/tool/choosepmft")
+    elif request.method == "GET":
+        form = Test(pmft_type=pmfttype)
+        return render(request, "tool/pmft_subtype.html", {"form":form})
+
+
+def get_spec_from_category(request):
+    data = json.loads(request.body)
+    # pmft_type = PmftCategory.objects.filter(pmftID=data["category_id"])[0].pmftType
+    pmft_type = data["type"]
+    if pmft_type == "P":
+        processes_extracted = IndividualProcess.objects.filter(processCategoryID=data["category_id"])
+        all_processes = [proc.individualProcessName for proc in processes_extracted]
+        return JsonResponse({"name": all_processes})
+    elif pmft_type == "M":
+        sub_category = MaterialSubtype.objects.filter(materialCategoryID=data["category_id"])
+        all_subtypes = [sub.materialSubtypeName for sub in sub_category]
+        return JsonResponse({"name": all_subtypes})
+    elif pmft_type == "F":
+        sub_category = FastenerSubtype.objects.filter(fastenerCategoryID=data["category_id"])
+        all_subtypes = [fast.fastenerSubtypeName for fast in sub_category]
+        return JsonResponse({"name": all_subtypes})
+    elif pmft_type == "T":
+        tools_extracted = IndividualTool.objects.filter(toolCategoryID=data["category_id"])
+        all_types = [tool.individualToolName for tool in tools_extracted]
+        return JsonResponse({"name": all_types})
+
+
+def get_spec_from_subtype(request):
+    data = json.loads(request.body)
+    pmft_type = data["type"]
+    if pmft_type == "M":
+        subtype_id = MaterialSubtype.objects.filter(materialSubtypeName=data["category_id"])[0].materialSubtypeID
+        all_materials = [mat.individualMaterialName for mat in IndividualMaterial.objects.filter(individualMaterialSubtypeID=subtype_id)]
+        return JsonResponse({"name": all_materials})
+    elif pmft_type == "F":
+        subtype_id = FastenerSubtype.objects.filter(fastenerSubtypeName=data["category_id"])[0].fastenerSubtypeID
+        all_fasteners = [fast.individualFastenerName for fast in IndividualFastener.objects.filter(individualFastenerSubtypeID=subtype_id)]
+        return JsonResponse({"name": all_fasteners})

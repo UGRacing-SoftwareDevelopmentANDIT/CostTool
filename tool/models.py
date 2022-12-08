@@ -162,10 +162,12 @@ class MaterialSubtype(models.Model):
 
 
 class IndividualMaterial(models.Model):
-    individualMaterialID = models.AutoField(primary_key=True)
-    individualMaterialName = models.CharField(max_length=100)
-    materialCost = models.FloatField(null=True)
-    materialComment = models.CharField(max_length=100, null=True)
+	individualMaterialID = models.AutoField(primary_key=True)
+	individualMaterialName = models.CharField(max_length=100) #spec
+	materialCost = models.FloatField(null=True)
+	materialCostComment = models.CharField(max_length=100, null=True)
+	imecheName = models.CharField(max_length=100, null = True)
+	materialComment = models.CharField(max_length=100)
     # the ID of a material's subtype (not its own ID)
     individualMaterialSubtypeID = models.ForeignKey(MaterialSubtype, on_delete=models.SET_NULL, null=True) 
 

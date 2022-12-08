@@ -160,20 +160,20 @@ class MaterialSubtype(models.Model):
     def __str__(self):
         return self.materialSubtypeName
 
-
 class IndividualMaterial(models.Model):
-	individualMaterialID = models.AutoField(primary_key=True)
-	individualMaterialName = models.CharField(max_length=100) #spec
-	materialCost = models.FloatField(null=True)
-	materialCostComment = models.CharField(max_length=100, null=True)
-	imecheName = models.CharField(max_length=100, null = True)
-	materialComment = models.CharField(max_length=100)
-    # the ID of a material's subtype (not its own ID)
-    individualMaterialSubtypeID = models.ForeignKey(MaterialSubtype, on_delete=models.SET_NULL, null=True) 
+    individualMaterialID = models.AutoField(primary_key=True)
+    individualMaterialName = models.CharField(max_length=100)
+    materialCost = models.FloatField(null=True)
+    materialCostComment = models.CharField(max_length=100, null=True)
+    imecheName = models.CharField(max_length=100, null = True)
+    materialComment = models.CharField(max_length=100)
+    #the ID of a material's subtype (not its own ID)
+    individualMaterialSubtypeID = models.ForeignKey(MaterialSubtype, on_delete=models.SET_NULL, null=True)
 
     def __str__(self):
         return self.individualMaterialName
  
+
 
 class FastenerSubtype(models.Model):
     fastenerSubtypeID = models.AutoField(primary_key=True)

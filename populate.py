@@ -16,14 +16,14 @@ from tool.models import *
 from datetime import datetime
 from pytz import utc
 from django.contrib.auth.models import User
-
+from django.db.utils import IntegrityError
 
 def populate():
-    # Add Admins
+    '''# Add Admins
     userInfoAdmins = [
         "REDACTED"
     ]
-    userAccounts = []
+    
     for user in userInfoAdmins:
         AddUserAccount(user['user'], user['email'], user['password'], is_staff=True, is_superuser=True, rank=4)
         userAccounts.append([user['user'], user['password']])
@@ -35,7 +35,8 @@ def populate():
     for user in userInfoCostHeads:
         AddUserAccount(user['user'], user['email'], user['password'], is_staff=False, is_superuser=False, rank=4)
         userAccounts.append([user['user'], user['password']])
-
+    '''
+    userAccounts = []
     # Add Engineers
     user_engineers, eng_allocs = import_engineers("import_engineers.csv")
     added_users = []
@@ -212,25 +213,33 @@ def populate():
 # Helper Functions
 # Model Helper Functions
 def add_user(userName, email, pword, is_staff, is_superuser):
-    user = User.objects.create_user(userName, email=email, password=pword)
+    try:
+        user = User.objects.get_or_create(username=userName, email=email, password=pword)[0]
+    except IntegrityError:
+        user = User.objects.get(username=userName)
     user.is_superuser = is_superuser
     user.is_staff = is_staff
     user.save()
-
     return user
 
 
 def AddUserAccount(userName, email, pword, is_staff=False, is_superuser=False, rank=2):
     user = add_user(userName, email, pword, is_staff, is_superuser)
-    u = UserAccount.objects.get_or_create(user=user, rank=rank)[0]
-    u.user = user
+    try:
+        u = UserAccount.objects.create(user=user, rank=rank)
+        u.user = user
+    except IntegrityError:
+        u = UserAccount.objects.get(user=user)
     u.save()
     
     return u
 
-
 def add_car(carID,carName,carYear):
-    c = Car.objects.get_or_create(carID=carID,carName=carName, carYear=carYear)[0]
+    print('#######')
+    try:
+        c = Car.objects.get(carName=carName, carYear=carYear)
+    except Car.DoesNotExist:
+        c = Car.objects.create(carID=carID,carName=carName, carYear=carYear)
     c.carName = carName
     c.carYear = carYear
     c.save()

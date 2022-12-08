@@ -273,7 +273,6 @@ def add_system(request, car_slug, system_slug=None):
         systemName = form.cleaned_data.get('systemName')    
         newSystem.systemName = systemName[0]    
         newSystem.save()
-        newSystem.save()
         return redirect(reverse('tool:car_display', args=[car_slug]))
 
     context_dict['form'] = form
@@ -304,7 +303,6 @@ def add_assembly(request, car_slug, system_slug, assembly_slug=None):
         newAssembly = form.save(commit=False)
         if not assembly_slug:
             newAssembly.systemID = System.objects.get(systemSlug=system_slug)
-        newAssembly.save()
         newAssembly.save()
         return redirect(reverse('tool:system_display', args=[car_slug, system_slug]))
     context_dict['form'] = form
@@ -339,7 +337,6 @@ def add_part(request, car_slug, system_slug, assembly_slug, part_slug=None):
         newPart = form.save(commit=False)
         if not part_slug:
             newPart.assemblyID = Assembly.objects.get(assemblySlug=assembly_slug)
-        newPart.save()
         newPart.save()
         return redirect(reverse('tool:system_display', args=[car_slug, system_slug]))
 
@@ -387,7 +384,6 @@ def add_pmft(request, car_slug, system_slug, assembly_slug, part_slug, pmft_slug
             newPMFT.pmftCostComment = pmftCostComment[0]    
         else:
             newPMFT.pmftCostComment = None
-        newPMFT.save()
         newPMFT.save()
         return redirect(reverse('tool:system_display', args=[car_slug, system_slug]))
 

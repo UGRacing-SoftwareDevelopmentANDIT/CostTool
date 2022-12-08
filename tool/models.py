@@ -49,6 +49,12 @@ class System(models.Model):
     systemSlug = models.SlugField(unique=True, default="system-")
     # subteam = models.ManyToManyField(Subteam)
     def save(self, *args, **kwargs):
+
+        if not len(System.objects.values()):
+            self.systemID = 1
+        elif self.systemID is None:
+            self.systemID = System.objects.last().systemID + 1
+
         self.systemSlug = '-'.join((slugify(self.systemID), slugify(self.systemName)))
         super(System, self).save(*args, **kwargs)
 
@@ -70,8 +76,10 @@ class Assembly(models.Model):
     user = models.ForeignKey(UserAccount, on_delete=models.SET_NULL, null=True)
 
     def save(self, *args, **kwargs):
-        # TODO: Need a solution for slugging here
-        # slugify(self.assemblyName) will return None, making each slug: none-<self.assemblyName>
+        if not len(Assembly.objects.values()):
+            self.assemblyID = 1
+        elif self.assemblyID is None:
+            self.assemblyID = Assembly.objects.last().assemblyID + 1
         self.assemblySlug = ('-'.join((slugify(self.assemblyID), slugify(self.assemblyName))))
         super(Assembly, self).save(*args, **kwargs)
 
@@ -96,6 +104,10 @@ class Part(models.Model):
     partSlug = models.SlugField(unique=True, default='part-')
 
     def save(self, *args, **kwargs):
+        if not len(Part.objects.values()):
+            self.partID = 1
+        elif self.partID is None:
+            self.partID = Part.objects.last().partID + 1
         self.partSlug = '-'.join((slugify(self.partID),slugify(self.partName)))
         super(Part, self).save(*args, **kwargs)
     
@@ -121,6 +133,10 @@ class PMFT(models.Model):
     pmftSlug = models.SlugField(unique=True, default='pmft-')
 
     def save(self, *args, **kwargs):
+        if not len(PMFT.objects.values()):
+            self.pmftID = 1
+        elif self.pmftID is None:
+            self.pmftID = PMFT.objects.last().pmftID + 1
         self.pmftSlug = '-'.join((slugify(self.pmftID),slugify(self.pmftName)))
         super(PMFT, self).save(*args, **kwargs)
 

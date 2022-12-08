@@ -1,0 +1,47 @@
+{% extends 'tool/base.html' %}
+{% load static %}
+
+{% block css_block %}
+
+<link rel="stylesheet" type="text/css" href="{% static 'home.css' %}">
+
+{% endblock %}
+
+{% block body_block %}
+
+{% if PMFT == "P" %}
+    <h1>Select Individual Process Type</h1>
+{% elif PMFT == "M" %}
+    <h1>Select Individual Material Type</h1>
+{% elif PMFT == "F" %}
+    <h1>Select Individual Fastener Type</h1>
+{% elif PMFT == "T" %}
+    <h1>Select Individual Tool Type</h1>
+{% endif %}
+
+
+<table border="1">
+    <tr>
+        <td> Process Name </td>
+        <td> Process cost </td>
+        <td> Process comment </td>
+        <td> Process Quantity </td>
+{% for x in individualPMFT %}
+{% if PMFT == "P"%}
+    <tr>
+        <td>{{ x.individualProcessName }}</td>
+        <td>{{ x.processCost}}</td>
+        <td>{{ x.processComment}}</td>
+        <td>{{ x.processQuantity}}</td>
+    </tr>
+ {% elif PMFT == "T" %}
+ <tr>
+    <td>{{ x.individualToolName }}</td>
+    <td>{{ x.toolCost}}</td>
+    <td>{{ x.toolComment}}</td>
+    <td>{{ x.toolQuantity}}</td>
+</tr>
+{% endif %}
+{% endfor %}
+</table>
+{% endblock %}

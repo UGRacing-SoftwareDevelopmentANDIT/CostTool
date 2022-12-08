@@ -578,3 +578,39 @@ def get_user_details(request):
     user_rank = USER_RANKS[user_account.rank]
 
     return user_account, user_rank
+
+def choosepmft(response):
+    if response.method == "POST":
+        form = ChoosePmft(response.POST)
+        
+        if form.is_valid():
+            catagory = form.cleaned_data['pmftCatagory']
+        
+        return HttpResponseRedirect(f'/tool/choosepmft/{catagory}')
+        #return redirect(reverse('tool:choosepmft', args=[catagory]))
+    else:
+        form = ChoosePmft()
+        
+        return render(response, "tool/choosepmft.html", {"form":form})
+    
+def individual_process(request,pmfttype,id):
+    if pmfttype == "P":
+        individualPMFT = IndividualProcess.objects.filter(processCategoryID = id)
+        subtype = None
+    elif pmfttype == "T":
+        individualPMFT = IndividualTool.objects.filter(toolCategoryID = id)
+        subtype = None
+    context = {
+        'individualPMFT': individualPMFT,
+        'subtype': subtype,
+        'PMFT' : pmfttype,
+    }
+    return render(request, "tool/process.html" , context)
+
+def pmft_subtype(request,pmfttype):
+    mydata = PmftCategory.objects.filter(pmftType = pmfttype)
+    context = {
+        'pmft_type': mydata,
+        'PMFT' : pmfttype
+    }
+    return render(request, "tool/pmft_subtype.html", context)

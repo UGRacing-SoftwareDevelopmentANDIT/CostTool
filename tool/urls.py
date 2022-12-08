@@ -34,4 +34,8 @@ path('register/', views.register, name='register'),
 path('login/', views.user_login, name='login'),
 path('change_password/', views.change_password, name='change_password'),
 path('logout/', views.user_logout, name='logout'),
+
+path('choosepmft/', views.choosepmft, name='choosepmft'),
+path('choosepmft/<str:pmfttype>',views.pmft_subtype, name='process_subtypes'),
+path('choosepmft/<str:pmfttype>/<int:id>',views.individual_process, name='individual_process')
 ]

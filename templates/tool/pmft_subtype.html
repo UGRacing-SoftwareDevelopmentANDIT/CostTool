@@ -1,0 +1,30 @@
+{% extends 'tool/base.html' %}
+{% load static %}
+
+{% block css_block %}
+
+<link rel="stylesheet" type="text/css" href="{% static 'home.css' %}">
+
+{% endblock %}
+
+{% block body_block %}
+
+{% if PMFT == "P" %}
+    <h1>Select Process Type</h1>
+{% elif PMFT == "M" %}
+    <h1>Select Material Type</h1>
+{% elif PMFT == "F" %}
+    <h1>Select Fastener Type</h1>
+{% elif PMFT == "T" %}
+    <h1>Select Tool Type</h1>
+{% endif %}
+
+<table border="1">
+{% for x in pmft_type %}
+    <tr>
+        <td>{{ x.pmftCatagory }}</td>
+        <td><a href="/tool/choosepmft/{{PMFT}}/{{ x.pmftID }}">Select</a></td>
+    </tr>
+{% endfor %}
+</table>
+{% endblock %}

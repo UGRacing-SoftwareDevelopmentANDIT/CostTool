@@ -120,6 +120,10 @@ class PMFT(models.Model):
     pmftSlug = models.SlugField(unique=True, default='pmft-')
 
     def save(self, *args, **kwargs):
+        if not len(PMFT.objects.values()):
+            self.pmftID = 1
+        elif self.pmftID is None:
+            self.pmftID = PMFT.objects.last().pmftID + 1
         self.pmftSlug = '-'.join((slugify(self.pmftID),slugify(self.pmftName)))
         super(PMFT, self).save(*args, **kwargs)
 
@@ -130,21 +134,31 @@ class PmftCategory(models.Model):
     pmftID = models.AutoField(primary_key=True)
     pmftCatagory = models.CharField(max_length=100)
     pmftType = models.CharField(max_length=1) # P, M , F or T
+
+    # for the drop down options in the costing tool
+    def __str__(self):
+        return self.pmftCatagory
     
 
 
 class IndividualProcess(models.Model):
-	individualProcessID = models.AutoField(primary_key=True)
-	individualProcessName = models.CharField(max_length=100)
-	processCost = models.FloatField(null=True)
-	processComment = models.CharField(max_length=100, null=True)
-	processCategoryID = models.ForeignKey(PmftCategory, on_delete=models.SET_NULL, null=True)
+    individualProcessID = models.AutoField(primary_key=True)
+    individualProcessName = models.CharField(max_length=100)
+    processCost = models.FloatField(null=True)
+    processComment = models.CharField(max_length=100, null=True)
+    processCategoryID = models.ForeignKey(PmftCategory, on_delete=models.SET_NULL, null=True)
+
+    def __str__(self):
+        return self.individualProcessName
     
 
 class MaterialSubtype(models.Model):
-	materialSubtypeID = models.AutoField(primary_key=True)
-	materialSubtypeName = models.CharField(max_length=100)
-	materialCategoryID = models.ForeignKey(PmftCategory, on_delete=models.SET_NULL, null=True)
+    materialSubtypeID = models.AutoField(primary_key=True)
+    materialSubtypeName = models.CharField(max_length=100)
+    materialCategoryID = models.ForeignKey(PmftCategory, on_delete=models.SET_NULL, null=True)
+
+    def __str__(self):
+        return self.materialSubtypeName
 
 
 class IndividualMaterial(models.Model):
@@ -155,30 +169,42 @@ class IndividualMaterial(models.Model):
 	imecheName = models.CharField(max_length=100, null = True)
 	materialComment = models.CharField(max_length=100)
     # the ID of a material's subtype (not its own ID)
-	individualMaterialSubtypeID = models.ForeignKey(MaterialSubtype, on_delete=models.SET_NULL, null=True) 
+    individualMaterialSubtypeID = models.ForeignKey(MaterialSubtype, on_delete=models.SET_NULL, null=True) 
+
+    def __str__(self):
+        return self.individualMaterialName
  
 
 class FastenerSubtype(models.Model):
-	fastenerSubtypeID = models.AutoField(primary_key=True)
-	fastenerSubtypeName = models.CharField(max_length=100)
-	fastenerCategoryID = models.ForeignKey(PmftCategory, on_delete=models.SET_NULL, null=True) 
+    fastenerSubtypeID = models.AutoField(primary_key=True)
+    fastenerSubtypeName = models.CharField(max_length=100)
+    fastenerCategoryID = models.ForeignKey(PmftCategory, on_delete=models.SET_NULL, null=True) 
+
+    def __str__(self):
+        return self.fastenerSubtypeName
  
 
 class IndividualFastener(models.Model):
-	individualFastenerID = models.AutoField(primary_key=True)
-	individualFastenerName = models.CharField(max_length=100)
-	fastenerCost = models.FloatField(null=True)
-	fastenerComment = models.CharField(max_length=100, null=True)
+    individualFastenerID = models.AutoField(primary_key=True)
+    individualFastenerName = models.CharField(max_length=100)
+    fastenerCost = models.FloatField(null=True)
+    fastenerComment = models.CharField(max_length=100, null=True)
     # the ID of a fastener's subtype (not its own ID)
-	individualFastenerSubtypeID = models.ForeignKey(FastenerSubtype, on_delete=models.SET_NULL, null=True) 
+    individualFastenerSubtypeID = models.ForeignKey(FastenerSubtype, on_delete=models.SET_NULL, null=True) 
+
+    def __str__(self):
+        return self.individualFastenerName
  
 
 class IndividualTool(models.Model):
-	individualToolID = models.AutoField(primary_key=True)
-	individualToolName = models.CharField(max_length=100)
-	toolCost = models.FloatField(null=True)
-	toolComment = models.CharField(max_length=100, null=True)
-	toolCategoryID = models.ForeignKey(PmftCategory, on_delete=models.SET_NULL, null=True)
+    individualToolID = models.AutoField(primary_key=True)
+    individualToolName = models.CharField(max_length=100)
+    toolCost = models.FloatField(null=True)
+    toolComment = models.CharField(max_length=100, null=True)
+    toolCategoryID = models.ForeignKey(PmftCategory, on_delete=models.SET_NULL, null=True)
+
+    def __str__(self):
+        return self.individualToolName
 
 
 class Subteam(models.Model):

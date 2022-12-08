@@ -37,5 +37,7 @@ path('logout/', views.user_logout, name='logout'),
 
 path('choosepmft/', views.choosepmft, name='choosepmft'),
 path('choosepmft/<str:pmfttype>',views.pmft_subtype, name='process_subtypes'),
-path('choosepmft/<str:pmfttype>/<int:id>',views.individual_process, name='individual_process')
+path('choosepmft/<str:pmfttype>/<int:id>',views.individual_process, name='individual_process'),
+path('get_spec_from_category', views.get_spec_from_category, name='get_spec_from_category'),
+path('get_spec_from_subtype', views.get_spec_from_subtype, name="get_spec_from_subtype"),
 ]

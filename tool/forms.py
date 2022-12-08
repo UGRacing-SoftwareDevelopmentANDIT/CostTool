@@ -145,3 +145,53 @@ class ChoosePmft(forms.Form):
     )
     pmftCatagory = forms.ChoiceField(choices= pmftTypeOptions, widget = forms.RadioSelect, required= True)
 
+class ChoosePmftType(forms.Form):
+
+    def __init__(self, *args, **kwargs):
+        super(ChoosePmftType, self).__init__(*args, **kwargs)
+        self.fields["category"].label = "Category"
+
+    choices = []
+
+    for pmftType in ["P", "M", "F", "T"]:
+        categories = [type.pmftCatagory for type in PmftCategory.objects.filter(pmftType=pmftType)]
+        for category in categories:
+            choices.append((category, category))
+
+    category = forms.ChoiceField(choices=choices, widget=forms.Select, required=True)
+
+
+class Test(forms.ModelForm):
+
+    def __init__(self, *args, pmft_type=None, **kwargs):
+        self.pmft_type = pmft_type
+        super(Test, self).__init__(*args, **kwargs)
+        self.fields["pmftCatagory"] = forms.ModelChoiceField(queryset=PmftCategory.objects.filter(pmftType=self.pmft_type),
+                                                            widget=forms.Select, required=True, label="Category")
+        if self.pmft_type == "M" or self.pmft_type == "F":
+            self.fields["pmftSubCategory"] = forms.ModelChoiceField(MaterialSubtype.objects.none(), label="Sub-category")
+        self.fields["spec"] = forms.ModelChoiceField(IndividualMaterial.objects.none(),
+                                                    widget=forms.Select, required=True, label="Spec")
+        self.fields["comment"] = forms.CharField(max_length=100)
+        self.fields["quantity"] = forms.IntegerField(widget=forms.NumberInput, required=True, min_value=0)
+        if "pmftCatagory" in self.data:
+            try:
+
+                if self.pmft_type == "P":
+                    process_category = self.data["pmftCatagory"]
+                    options = IndividualProcess.objects.filter(processCategoryID=process_category)
+                    self.fields["spec"].queryset=IndividualProcess.objects.filter(processCategoryID=process_category)
+                elif self.pmft_type == "M":
+                    self.fields["pmftSubCategory"].queryset=MaterialSubtype.objects.filter(materialCategoryID=self.data["pmftCatagory"])
+                elif self.pmft_type == "F":
+                    self.fields["pmftSubCategory"].queryset=MaterialSubtype.objects.filter(materialCategoryID=self.data["pmftCatagory"])
+                elif self.pmft_type == "T":
+                    process_category = self.fields["pmftCatagory"]
+                    self.fields["spec"] = forms.ModelChoiceField(IndividualProcess.objects.filter(processCategoryID=process_category),
+                                                                widget=forms.Select, required=True, label="Spec")
+            except (ValueError, TypeError) as err:
+                print(err)
+
+    class Meta:
+        model = PmftCategory
+        fields = ("pmftCatagory",)

@@ -9,22 +9,117 @@
 
 {% block body_block %}
 
-{% if PMFT == "P" %}
-    <h1>Select Process Type</h1>
-{% elif PMFT == "M" %}
-    <h1>Select Material Type</h1>
-{% elif PMFT == "F" %}
-    <h1>Select Fastener Type</h1>
-{% elif PMFT == "T" %}
-    <h1>Select Tool Type</h1>
-{% endif %}
 
-<table border="1">
-{% for x in pmft_type %}
-    <tr>
-        <td>{{ x.pmftCatagory }}</td>
-        <td><a href="/tool/choosepmft/{{PMFT}}/{{ x.pmftID }}">Select</a></td>
-    </tr>
-{% endfor %}
-</table>
+<form style="text-align: left", method="post">
+    {% csrf_token %}
+    {% for field in form %}
+    {% if field is not None %}
+        <label class="form-label">{{field.label}}</label>
+        {{field}}
+        <br>
+    {% endif %}
+    {% endfor %}
+    {{form.errors}}
+    <br>
+    <input type="submit", value="Submit">
+</form>
+
+<script>
+    function getCookie(name) {
+        let cookieValue = null;
+        if (document.cookie && document.cookie !== '') {
+            const cookies = document.cookie.split(';');
+            for (let i = 0; i < cookies.length; i++) {
+                const cookie = cookies[i].trim();
+                if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                    cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                    break;
+                }
+            }
+        }
+        return cookieValue;
+    }
+    const csrftoken = getCookie('csrftoken');
+    let category_field = document.getElementById("id_pmftCatagory");
+    let subCategory_field = document.getElementById("id_pmftSubCategory");
+    let spec_field = document.getElementById("id_spec");
+    if (subCategory_field !== null) {
+        category_field.addEventListener("change", getSubCategory);
+        subCategory_field.addEventListener("change", getSpec);
+        function getSubCategory(e) {
+            let url = " {% url 'tool:get_spec_from_category' %} ";
+            current_url = window.location.href;
+            pmft_type = current_url.charAt(current_url.length-1);
+            const category = {category_id: e.target.value, type: pmft_type};
+            fetch(url, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRFToken': csrftoken
+                },
+                body: JSON.stringify(category),
+                })
+                .then(response => response.json())
+                .then(data => {
+                    for(let i = 0; i < data.name.length; i++){
+                        let name = data.name[i];
+                        subCategory_field.innerHTML += `<option value = "${name}" selected>${name}</option>`;
+                    }
+                    subCategory_field.value = "----------";
+                }).catch((error) => {
+                console.error('Error:', error);
+            });
+        }
+        function getSpec(e) {
+            let url = " {% url 'tool:get_spec_from_subtype' %} ";
+            current_url = window.location.href;
+            pmft_type = current_url.charAt(current_url.length-1);
+            let category = {category_id: e.target.value, type: pmft_type};
+            fetch(url, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRFToken': csrftoken
+                },
+                body: JSON.stringify(category),
+                })
+                .then(response => response.json())
+                .then(data => {
+                    for(let i = 0; i < data.name.length; i++){
+                        let newOption = data.name[i];
+                        spec_field.innerHTML += `<option value = "${newOption}" selected>${newOption}</option>`;
+                    }
+                    spec_field.value = "----------";
+                }).catch((error) => {
+                console.error('Error:', error);
+            });
+        }
+    } else {
+        category_field.addEventListener("change", getSpec);
+        function getSpec(e) {
+            let url = " {% url 'tool:get_spec_from_category' %} ";
+            current_url = window.location.href;
+            pmft_type = current_url.charAt(current_url.length-1);
+            let category = {category_id: e.target.value, type: pmft_type};
+            fetch(url, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRFToken': csrftoken
+                },
+                body: JSON.stringify(category),
+                })
+                .then(response => response.json())
+                .then(data => {
+                    for(let i = 0; i < data.name.length; i++){
+                        let newOption = data.name[i];
+                        spec_field.innerHTML += `<option value = "${newOption}" selected>${newOption}</option>`;
+                    }
+                    spec_field.value = "----------";
+                }).catch((error) => {
+                console.error('Error:', error);
+            });
+        }
+    }
+</script>
 {% endblock %}

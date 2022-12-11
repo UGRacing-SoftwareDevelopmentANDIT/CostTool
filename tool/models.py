@@ -17,6 +17,7 @@ class UserAccount(models.Model):
     def __str__(self):
         return self.user.username
 
+########################################## Imeche ###############################################
       
 class Car(models.Model):
     #this will be auto created by conjoining name and year
@@ -142,6 +143,10 @@ class PMFT(models.Model):
     def __str__(self):
         return self.pmftSlug
 
+
+########################################## PMFT ###############################################
+
+
 class PmftCategory(models.Model):
     pmftID = models.AutoField(primary_key=True)
     pmftCatagory = models.CharField(max_length=100)
@@ -151,13 +156,12 @@ class PmftCategory(models.Model):
     def __str__(self):
         return self.pmftCatagory
     
-
-
 class IndividualProcess(models.Model):
     individualProcessID = models.AutoField(primary_key=True)
     individualProcessName = models.CharField(max_length=100)
     processCost = models.FloatField(null=True)
     processComment = models.CharField(max_length=100, null=True)
+    processCostComment = models.CharField(max_length=100)
     processCategoryID = models.ForeignKey(PmftCategory, on_delete=models.SET_NULL, null=True)
 
     def __str__(self):
@@ -175,9 +179,10 @@ class MaterialSubtype(models.Model):
 class IndividualMaterial(models.Model):
     individualMaterialID = models.AutoField(primary_key=True)
     individualMaterialName = models.CharField(max_length=100)
-    materialCost = models.FloatField(null=True)
     materialCostComment = models.CharField(max_length=100, null=True)
     imecheName = models.CharField(max_length=100, null = True)
+    materialCost = models.FloatField(null=True)
+    materialCostComment = models.CharField(max_length=100, null=True)
     materialComment = models.CharField(max_length=100)
     #the ID of a material's subtype (not its own ID)
     individualMaterialSubtypeID = models.ForeignKey(MaterialSubtype, on_delete=models.SET_NULL, null=True)
@@ -218,7 +223,7 @@ class IndividualTool(models.Model):
     def __str__(self):
         return self.individualToolName
 
-
+########################################## User  ###############################################
 class Subteam(models.Model):
     teamName = models.CharField(max_length=20, unique=True, primary_key=True)
     abbr = models.CharField(max_length=10, unique=True)
